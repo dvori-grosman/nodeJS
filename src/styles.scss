@@ -1,1 +1,141 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+:root {
+  --primary-pink: #e91e63;
+  --secondary-pink: #f48fb1;
+  --light-pink: #fce4ec;
+  --dark-pink: #c2185b;
+  --gradient-pink: linear-gradient(135deg, #ed799f 100%, #faf4f6 50%, #e91e63 100%);
+  --white: #ffffff;
+  --text-dark: #2c2c2c;
+  --shadow: 0 6px 20px rgba(233, 30, 99, 0.2);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Open Sans";
+  line-height: 1.7;
+  font-size: 16px;
+  background-color: var(--white);
+  color: var(--text-dark);
+  overflow-x: hidden;
+}
+
+.open-sans {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+  "wdth" 100;
+}
+
+
+// ===== אנימציות מעודנות ===== //
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes softPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(233, 30, 99, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(233, 30, 99, 0);
+  }
+}
+
+// ===== מחלקות עזר לאנימציה ===== //
+
+.animate-fadeInUp {
+  animation: fadeInUp 1s ease-out both;
+}
+
+.animate-zoomIn {
+  animation: zoomIn 0.8s ease-in-out both;
+}
+
+.soft-pulse {
+  animation: softPulse 2.5s infinite;
+}
+
+// ===== צבעים ורקעים ===== //
+
+.bg-gradient-pink {
+  background: var(--gradient-pink);
+}
+
+.text-gradient {
+  background: var(--gradient-pink);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.shadow-pink {
+  box-shadow: var(--shadow);
+}
+
+// ===== כפתור ורוד מודרני ===== //
+
+.btn-pink {
+  background: var(--gradient-pink);
+  color: var(--white);
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 30px;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(233, 30, 99, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.2);
+  }
+}
+
+// ===== יישור וכתיבה מימין לשמאל ===== //
+body[dir="rtl"], [dir="rtl"] * {
+    direction: rtl;
+    text-align: right !important;
+}
+
