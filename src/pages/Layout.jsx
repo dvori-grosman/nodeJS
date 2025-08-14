@@ -51,7 +51,7 @@ function AppHeader() {
 
           {/* כפתור תפריט למובייל */}
           <button className="md:hidden p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-             {isMobileMenuOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6 text-white" />}
+            {isMobileMenuOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6 text-white" />}
           </button>
         </div>
       </div>
@@ -59,7 +59,7 @@ function AppHeader() {
       {/* תפריט נפתח למובייל */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-darker-bg/95 backdrop-blur-sm absolute top-20 left-0 w-full">
-           <nav className="flex flex-col items-center gap-6 py-8">
+          <nav className="flex flex-col items-center gap-6 py-8">
             {navLinks.map(link => (
               <Link
                 key={link.page}
@@ -86,7 +86,7 @@ function AppFooter() {
           {/* מידע על החברה */}
           <div>
             <div className="flex items-center gap-3 mb-6">
-               <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/debe541b7_.png" alt="לוגו ריקוד ברוח הטובה" className="h-20 w-auto" />
+              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/debe541b7_.png" alt="לוגו ריקוד ברוח הטובה" className="h-20 w-auto" />
             </div>
             <p className="text-gray-400 leading-relaxed mb-6">
               ריקוד ברוח הטובה הוקם מתוך חזון, אהבה ושליחות להביא לכל בת במגזר החרדי את מתנת המחול.
@@ -152,7 +152,11 @@ export default function AppLayout({ children, currentPageName }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-900" dir="rtl">
+    <div className="min-h-screen bg-gray-900" dir="rtl" style={{
+      minHeight: '100vh',
+      backgroundColor: '#111827',
+      width: '100%'
+    }}>
       {/* הגדרת Schema וסגנונות גלובליים */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
       <style>{`
@@ -237,7 +241,7 @@ export default function AppLayout({ children, currentPageName }) {
           50% { opacity: 1; transform: scale(1.2); }
         }
       `}</style>
-      
+
       {/* מבנה העמוד */}
       <AppHeader />
       <main className="flex-1">{children}</main>

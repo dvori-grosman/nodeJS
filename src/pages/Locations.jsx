@@ -19,7 +19,7 @@ export default function LocationsPage() {
           schedule: {
             title: "מערכת שעות - גבעת שאול",
             days: [
-              { day: "ראשון", class: "16:00 - בלט קלאסי מתחילות" },
+              { day: "ראשון", teacher:"חדווה", class: "16:00 - בלט קלאסי מתחילות" },
               { day: "שני", class: "15:30 - מחול לגיל הרך" },
               { day: "רביעי", class: "16:30 - התעמלות קרקע ממשיכות" },
               { day: "חמישי", class: "18:00 - נבחרת התעמלות קרקע" }
@@ -221,8 +221,7 @@ export default function LocationsPage() {
                       <div className="pt-4 border-t border-gray-700 mt-auto">
                         <Button 
                           onClick={() => setSelectedBranch(branch)}
-                          className="w-full dark-bg p-3 rounded-lg text-center border border-gray-600 hover:bg-gray-700 transition-colors"
-                        >
+                          className="w-full dark-bg p-3 rounded-lg text-center border border-gray-600 hover:bg-gray-700 transition-colors"  >
                           <p className="pink-text font-medium text-sm">מערכת שעות תשפ"ו</p>
                           <p className="text-gray-400 text-xs mt-1">לחץ לצפייה במערכת השעות</p>
                         </Button>
@@ -236,7 +235,7 @@ export default function LocationsPage() {
           ))}
         </div>
       </section>
-
+      
       {/* Schedule Popup */}
       {selectedBranch && (
         <div className="fixed inset-0 z-50 flex items-center justify-center animate-in fade-in-0 duration-300">
@@ -268,6 +267,7 @@ export default function LocationsPage() {
                     {selectedBranch.schedule.days.map((item, index) => (
                       <div key={index} className="dark-bg p-4 rounded-lg border border-gray-700 flex justify-between items-center">
                         <span className="font-semibold white-text">{item.day}</span>
+                        <span className="font-semibold white-text">{item.teacher}</span>
                         <span className="gold-text text-left">{item.class}</span>
                       </div>
                     ))}
