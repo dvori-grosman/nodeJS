@@ -8,7 +8,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ContactPage() {
-  // משתני מצב טופס יצירת הקשר
   const [inquiryFormData, setInquiryFormData] = useState({
     studentName: "",
     parentPhone: "",
@@ -50,7 +49,7 @@ export default function ContactPage() {
 
       // שליחת המייל דרך EmailJS
       const result = await emailjs.send(
-        EMAILJS_CONFIG.SERVICE_ID,
+        EMAILJS_CONFIG.service_xjex7s2,
         EMAILJS_CONFIG.TEMPLATE_ID,
         emailData,
         EMAILJS_CONFIG.PUBLIC_KEY

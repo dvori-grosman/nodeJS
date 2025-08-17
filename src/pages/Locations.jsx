@@ -6,6 +6,15 @@ import { Button } from "@/components/ui/button";
 export default function LocationsPage() {
 
   const [selectedBranch, setSelectedBranch] = useState(null);
+  const [isPdfOpen, setIsPdfOpen] = useState(false);
+
+  const openPdf = () => {
+    setIsPdfOpen(true);
+  };
+
+  const closePdf = () => {
+    setIsPdfOpen(false);
+  };
 
   const locations = [
     {
@@ -13,13 +22,14 @@ export default function LocationsPage() {
       branches: [
         {
           name: "גבעת שאול",
+          src : "/givatShaulSchedule.pdf",
           address: "מרכז הספורט בית חינוך עוורים, רחוב דגל ראובן 8",
           facilities: ["סטודיו מחול", "אולם ספורט התעמלות קרקע"],
           extension: "שלוחה לגיל הרך - אלקבץ 16",
           schedule: {
             title: "מערכת שעות - גבעת שאול",
             days: [
-              { day: "ראשון", teacher:"חדווה", class: "16:00 - בלט קלאסי מתחילות" },
+              { day: "ראשון", teacher: "חדווה", class: "16:00 - בלט קלאסי מתחילות" },
               { day: "שני", class: "15:30 - מחול לגיל הרך" },
               { day: "רביעי", class: "16:30 - התעמלות קרקע ממשיכות" },
               { day: "חמישי", class: "18:00 - נבחרת התעמלות קרקע" }
@@ -27,7 +37,9 @@ export default function LocationsPage() {
           }
         },
         {
-          name: "גאולה", 
+          name: "גאולה",
+          // לשנות כאן
+          src : "/schedule.pdf",
           address: "סטודיו מחול ישעיהו 19",
           facilities: ["סטודיו מחול מקצועי"],
           extension: "התעמלות קרקע - אולם ספורט סנהדרין רח' מנחת יצחק 23",
@@ -41,6 +53,7 @@ export default function LocationsPage() {
         },
         {
           name: "רמות",
+          src : "/ramotSchedule.pdf",
           address: "מתנס מעלה רמות גולה מאיר 474",
           facilities: ["מתנס עירוני"],
           schedule: {
@@ -53,6 +66,7 @@ export default function LocationsPage() {
         },
         {
           name: "רמת שלמה",
+          src : "/ramatShlomoSchedule.pdf",
           address: "מתנס רמת שלמה",
           facilities: ["מתנס עירוני"],
           schedule: {
@@ -64,9 +78,10 @@ export default function LocationsPage() {
         },
         {
           name: "עזרת תורה",
+          src : "/neveChemedSchedule.pdf",
           address: "עזרת תורה 16 מתנס נווה חמד",
           facilities: ["מתנס איכותי"],
-           schedule: {
+          schedule: {
             title: "מערכת שעות - עזרת תורה",
             days: [
               { day: "שני", class: "16:30 - בלט קלאסי ממשיכות" },
@@ -76,17 +91,19 @@ export default function LocationsPage() {
         },
         {
           name: "הגבעה הצרפתית",
+          src : "/neveChemedSchedule.pdf",
           address: "מתנס הגבעה הצרפתית רח' ההגנה 13",
           facilities: ["מתנס מודרני"],
           schedule: {
             title: "מערכת שעות - הגבעה הצרפתית",
             days: [
-               { day: "רביעי", class: "17:30 - מחול מודרני מתקדמות" }
+              { day: "רביעי", class: "17:30 - מחול מודרני מתקדמות" }
             ]
           }
         },
         {
           name: "נווה יעקב",
+          src : "/neveYaakovSchedule.pdf",
           address: "מתנס נווה יעקב סטודיו ספארק",
           facilities: ["סטודיו מתקדם"],
           schedule: {
@@ -103,12 +120,13 @@ export default function LocationsPage() {
       branches: [
         {
           name: "ביתר עילית",
+          src : "/beitarSchedule.pdf",
           address: "המגיד ממעזריטש 78 ביתר עילית",
           facilities: ["התעמלות קרקע סטודיו B"],
           schedule: {
             title: "מערכת שעות - ביתר עילית",
             days: [
-               { day: "שני", class: "17:30 - התעמלות קרקע מתחילות" }
+              { day: "שני", class: "17:30 - התעמלות קרקע מתחילות" }
             ]
           }
         }
@@ -119,12 +137,14 @@ export default function LocationsPage() {
       branches: [
         {
           name: "בית שמש",
+          // לשנות כאן
+          src : "/schedule.pdf",
           address: "רמת אברהם",
           facilities: ["מתנס עירוני"],
           schedule: {
             title: "מערכת שעות - בית שמש",
             days: [
-               { day: "רביעי", class: "15:30 - מחול לגיל הרך" }
+              { day: "רביעי", class: "15:30 - מחול לגיל הרך" }
             ]
           }
         }
@@ -167,7 +187,7 @@ export default function LocationsPage() {
                     <CardHeader className="relative overflow-hidden">
                       {/* Header Background */}
                       <div className="absolute inset-0 gold-bg opacity-90"></div>
-                      
+
                       {/* Content */}
                       <div className="relative z-10">
                         <div className="flex items-center gap-3 mb-2">
@@ -181,8 +201,8 @@ export default function LocationsPage() {
                       </div>
 
                       {/* Decorative Elements */}
-                      <div className="sparkles" style={{top: '20%', right: '15%', animationDelay: '0s'}}></div>
-                      <div className="sparkles" style={{bottom: '20%', left: '15%', animationDelay: '1s'}}></div>
+                      <div className="sparkles" style={{ top: '20%', right: '15%', animationDelay: '0s' }}></div>
+                      <div className="sparkles" style={{ bottom: '20%', left: '15%', animationDelay: '1s' }}></div>
                     </CardHeader>
 
                     <CardContent className="p-6 flex-grow flex flex-col">
@@ -219,13 +239,12 @@ export default function LocationsPage() {
 
                       {/* Schedule Link */}
                       <div className="pt-4 border-t border-gray-700 mt-auto">
-                        <Button 
+                        <Button
                           onClick={() => setSelectedBranch(branch)}
                           className="w-full dark-bg p-3 rounded-lg text-center border border-gray-600 hover:bg-gray-700 transition-colors"  >
                           <p className="pink-text font-medium text-sm">מערכת שעות תשפ"ו</p>
                           <p className="text-gray-400 text-xs mt-1">לחץ לצפייה במערכת השעות</p>
                         </Button>
-                        <DownloadButton/>
                       </div>
                     </CardContent>
                   </Card>
@@ -235,16 +254,16 @@ export default function LocationsPage() {
           ))}
         </div>
       </section>
-      
+
       {/* Schedule Popup */}
       {selectedBranch && (
         <div className="fixed inset-0 z-50 flex items-center justify-center animate-in fade-in-0 duration-300">
           {/* Backdrop */}
-          <div 
+          <div
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             onClick={() => setSelectedBranch(null)}
           ></div>
-          
+
           {/* Popup Content */}
           <div className="relative z-10 max-w-md w-full mx-4 animate-in zoom-in-95 duration-300">
             <Card className="darker-bg border-gray-700 elegant-shadow">
@@ -260,7 +279,7 @@ export default function LocationsPage() {
                   <X className="w-4 h-4 text-gray-300" />
                 </Button>
               </CardHeader>
-              
+
               <CardContent className="p-6 max-h-[60vh] overflow-y-auto">
                 {selectedBranch.schedule && selectedBranch.schedule.days.length > 0 ? (
                   <div className="space-y-4">
@@ -275,7 +294,23 @@ export default function LocationsPage() {
                 ) : (
                   <p className="text-gray-300 text-center">מערכת שעות עבור סניף זה תתפרסם בקרוב.</p>
                 )}
+                <Button onClick={openPdf} className="mt-4">הצג PDF</Button>
               </CardContent>
+              {isPdfOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                  <div className="bg-white p-4 rounded-lg">
+                    <button onClick={closePdf} className="top-2 left-2">
+                      <X className="w-4 h-4 text-gray-600" />
+                    </button>
+                    <iframe
+                      src= {selectedBranch.src }
+                      width="700px"
+                      height="450px"
+                      title="PDF Viewer"
+                    />
+                  </div>
+                </div>
+              )}
             </Card>
           </div>
         </div>
@@ -305,19 +340,4 @@ export default function LocationsPage() {
       </section>
     </div>
   );
-}
-
-const DownloadButton = () => {
-    const handleDownload = () => {
-        const link = document.createElement('a');
-        link.href = '/schedule.pdf'; // שם הקובץ שלך
-        link.download = 'schedule.pdf'; // שם הקובץ להורדה
-        link.click();
-    };
-
-    return (
-        <button onClick={handleDownload}>
-            הורד את הקובץ PDF
-        </button>
-    );
 };
