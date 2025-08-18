@@ -5,7 +5,7 @@ export default function HomePageHeroSection() {
   const studioLogoUrl = "/logo.png"; 
   
   return (
-    <section className="relative min-h-[30vh] flex items-center justify-center dark-bg overflow-hidden text-center">
+    <section className="relative darker-bg py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
       <HeroBackgroundDecorations />
       <HeroContent logoUrl={studioLogoUrl} />
     </section>
@@ -44,11 +44,12 @@ function HeroContent({ logoUrl }) {
   const welcomeMessages = [
     "בשבילנו ריקוד הינו כלי מבורך לבריאות הגוף והנפש המעניק לכל אחת מתלמידותינו כל כך הרבה טוב!",
     "הדרך שאנו עוברות יחד, במקצועיות באהבה ובכיף, יפה ומרגשת.",
-    "ולפני הכל, באווירה איכותית ושמורה ברוח הטובה!!"
+    "ולפני הכל, באווירה איכותית ושמורה!!",
+    "ברוח הטובה!!!"
   ];
 
   return (
-    <div className="relative z-10 max-w-4xl mx-auto px-6">
+    <div className="z-10 max-w-4xl mx-auto px-6">
       <StudioLogo logoUrl={logoUrl} />
       <WelcomeTitle />
       <WelcomeMessages messages={welcomeMessages} />

@@ -31,14 +31,14 @@ export default function DetailedClasses() {
           <p className="text-lg text-gray-400 mt-4">מילה - שתיים על ההבדלים בין סגנונות השיעורים:</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          <ClassCard title="בלט קלאסי" icon={<img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6bd424b70_image.png" alt="נעלי בלט" className="w-12 h-12 object-contain" />}>
+          <ClassCard title="בלט קלאסי" icon={<span className="text-3xl">🩰</span>}>
             <p>השיעור מחולק לתרגילי בר, אמצע ופינה. המתקדמות לומדות לרקוד בנעלי פוינט.</p>
             <p className="font-semibold pink-text">עבודה מדויקת, אצילית, רכה ואומנותית.</p>
           </ClassCard>
-          <ClassCard title="מחול מודרני" icon={<span className="text-3xl">💃</span>}>
+          <ClassCard title="מחול מודרני" icon={<span className="text-3xl">👟</span>}>
             <p>שיעור אנרגטי, חוויתי, עם הרבה זרימה ושחרור. בנוי מתרגילי חימום, רצפה, טכניקה ופינה.</p>
           </ClassCard>
-          <ClassCard title="אקרודאנס" icon={<span className="text-3xl">🤸‍♀️</span>}>
+          <ClassCard title="אקרודאנס" icon={<span className="text-3xl">🪩</span>}>
             <p>שילוב טכניקות מחול עם אלמנטים אקרובטיים מדהימים.</p>
           </ClassCard>
           <ClassCard title="טרום בלט (גילאי 3-6)" icon={<span className="text-3xl">✨</span>}>
