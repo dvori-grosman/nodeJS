@@ -2,10 +2,10 @@ import React from "react";
 
 // קומפוננטת גיבור ראשית של עמוד הבית
 export default function HomePageHeroSection() {
-  const studioLogoUrl = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/debe541b7_.png";
+  const studioLogoUrl = "/logo.png"; 
   
   return (
-    <section className="relative min-h-[20vh] flex items-center justify-center dark-bg overflow-hidden text-center">
+    <section className="relative min-h-[30vh] flex items-center justify-center dark-bg overflow-hidden text-center">
       <HeroBackgroundDecorations />
       <HeroContent logoUrl={studioLogoUrl} />
     </section>
@@ -21,7 +21,7 @@ function HeroBackgroundDecorations() {
   ];
 
   return (
-    <div className="absolute inset-0">
+    <div className="absolute inset-1">
       {sparklePositions.map((position, index) => (
         <div
           key={index}

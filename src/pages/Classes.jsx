@@ -12,7 +12,7 @@ export default function ClassesPage() {
       title: "בלט קלאסי",
       subtitle: "עשירה רכה חכמה אומנותית ואצילית",
       description: "שפת התנועה של הבלט הקלאסי הינה עשירה רכה חכמה אומנותית ואצילית.",
-      icon: <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6bd424b70_image.png" alt="נעלי בלט" className="w-16 h-16 object-contain" />,
+      icon: <img src="/ballet.png" alt="נעלי בלט" className="w-16 h-16 object-contain" />,
       structure: "לשיעור בלט מבנה קבוע:",
       features: [
         "תרגילי בר - עבודה על יציבה ותנוחה",
@@ -29,7 +29,7 @@ export default function ClassesPage() {
       title: "מחול מודרני",
       subtitle: "שפת תנועה מדהימה מלאת הבעה",
       description: "מחול מודרני היא שפת תנועה מדהימה מלאת הבעה, יצירתיות, רגש וזרימה.",
-      icon: <span className="text-4xl">💃</span>,
+      icon: <img src="/ballet.png" alt="נעלי בלט" className="w-16 h-16 object-contain" />,
       structure: "השיעור מורכב מ:",
       features: [
         "תרגילי טכניקה - יסודות המחול המודרני",
@@ -48,7 +48,7 @@ export default function ClassesPage() {
       title: "מחול לגיל הרך",
       subtitle: "חוג מחול מושלם לילדות קטנות",
       description: "שעה של תנועה, מוזיקה וכיף. הבלרינות הקטנות לומדות את שפת התנועה, צעדי הבסיס, מושגים ופוזיציות מתוך משחק, דמיון וחיבור לעולמן. זהו חוג מחול לילדות קטנות המושלם להתחיל בו את דרכן.",
-      icon: <span className="text-4xl">✨</span>,
+      icon: <img src="/ballet.png" alt="נעלי בלט" className="w-16 h-16 object-contain" />,
       structure: "עם בנות הגיל הרך אנו שמות דגש על:",
       features: [
         "פיתוח מוטוריקה גסה ועדינה",
@@ -67,7 +67,7 @@ export default function ClassesPage() {
       title: "אקרודאנס",
       subtitle: "סגנון מחול המשלב בין טכניקות מחול לאלמנטים אקרובטיים",
       description: "אקרודאנס הוא סגנון מחול המשלב בין טכניקות מחול - סיבובים, צעדים, החלקות, עבודת רצפה לאלמנטים מעולם האקרובטיקה.",
-      icon: <span className="text-4xl">🤸‍♀️</span>,
+      icon: <img src="/karaka.png" alt="נעלי בלט" className="w-16 h-16 object-contain" />,
       structure: "האלמנטים כוללים:",
       features: [
         "גלגלונים בכל הווריאציות",
@@ -85,7 +85,7 @@ export default function ClassesPage() {
       title: "אקרובטיקה - התעמלות קרקע",
       subtitle: "עופי על זה! חוג התעמלות קרקע בירושלים והסביבה",
       description: "תחום פופולרי, אנרגטי, מוציא הרבה אנרגיה, מחזק מאתגר ומהנה מאוד! שיעורי האקרובטיקה וההתעמלות קרקע שלנו מפתחים יכולות שיווי משקל, כוח מתפרץ, אומץ, התמצאות במרחב, גמישות, זריזות ומהירות.",
-      icon: <span className="text-4xl">🤸‍♀️</span>,
+      icon: <img src="/akrobatika.png" alt="נעלי בלט" className="w-16 h-16 object-contain" />,
       structure: "במהלך השנה לומדים ומתרגלים:",
       features: [
         "עמידות ידיים בכל הרמות",

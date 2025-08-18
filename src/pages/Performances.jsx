@@ -8,36 +8,36 @@ import { Badge } from "@/components/ui/badge";
 export default function PerformancesPage() {
   const performances = [
     {
-      title: "הנבחרת - מסע אמנותי מסביב לעולם",
+      title: "חוג מחול ואקרובטיקה ירושלים,פליק פלאק,הנבחרת - מסע אמנותי מסביב לעולם",
       year: "מופע שנתי",
       description: "קבוצות המחול בביצועים וכירולוגרפיות מדהימות: להקת פוינט, בלט קלאסי, מחול מודרני ואקרובטיקה.",
-      price: "40",
+      price: "25",
       status: "available",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/4400b3928_.png"
+      image: "/הנבחרת.png"
     },
     {
       title: "לרקוד את הדמעות",
       year: "מופע זמר",
       description: "מופע זמר ייחודי בליווי הרכבי זמר 'שיר אומן' ובשילוב להקת הרקדניות 'ריקוד ברוח טובה'.",
-      price: "65",
+      price: "25",
       status: "available",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/5d5896b1f_.png"
+      image: "לרקוד את הדמעות.png"
     },
     {
       title: "אהבת עולם",
       year: "הפקה שנתית",
       description: "הפקת מחול אומנותית מטלטלת עם מאות מופיעות בביצוע חי על הבמה.",
-      price: "50",
+      price: "25",
       status: "available",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/93301fcfb_2.jpg"
+      image: "אהבת עולם תשפד.png"
     },
     {
       title: "אהבת עולם",
       year: "הפקה שנתית",
       description: "הפקת מחול אומנותית מטלטלת עם מאות מופיעות בביצוע חי על הבמה.",
-      price: "50",
+      price: "25",
       status: "available",
-      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/28d173d0d_-011.jpg"
+      image: "אהבת עולם תשפה.png"
     }
   ];
 
@@ -70,7 +70,7 @@ export default function PerformancesPage() {
           <Card className="max-w-2xl mx-auto darker-bg border-gray-700 elegant-shadow">
             <CardContent className="p-8 text-center">
               <Calendar className="w-16 h-16 pink-text mx-auto mb-4" />
-              <h3 className="text-2xl font-bold white-text mb-4">מופע סיום תשפ\"ו</h3>
+              <h3 className="text-2xl font-bold white-text mb-4">מופע סיום תשפ"ו</h3>
               <p className="text-gray-300 mb-4">הכנות בעיצומן למופע הגדול של השנה!</p>
               <Badge className="bg-pink-600 text-white px-4 py-2 border-0">בהכנה</Badge>
               <p className="text-sm text-gray-400 mt-4">פרטים נוספים יתפרסמו בהמשך השנה</p>
