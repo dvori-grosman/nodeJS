@@ -111,6 +111,12 @@ export default function ContactPage() {
   }
 
   return (
+    <>
+       <Helmet>
+        <title>ריקוד ברוח הטובה – יצירת קשר  </title>
+        <meta name="description" content="שיעורי מחול מקצועיים בסגנון קלאסי-מודרני, אווירה חמה ומקצועיות." />
+        <link rel="canonical" href="https://rikud.netlify.app/" />
+      </Helmet>
     <div className="min-h-screen py-12 dark-bg">
       <InquiryPageHeader />
       <InquiryFormSection 
@@ -121,6 +127,7 @@ export default function ContactPage() {
         emailStatus={emailSendingStatus}
       />
     </div>
+    </>
   );
 }
 
@@ -134,8 +141,8 @@ function InquiryPageHeader() {
             מוכנה להתחיל?
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            השאירי פרטים ונחזור אליך עם כל המידע על הקבוצה המתאימה לך.
-            <br />
+            {/* השאירי פרטים ונחזור אליך עם כל המידע על הקבוצה המתאימה לך.
+            <br /> */}
             <strong className="pink-text">שיעור הכרות ללא התחייבות!</strong>
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-pink-500 to-yellow-500 mx-auto mt-8"></div>
@@ -184,13 +191,13 @@ function InquiryFormSection({ formData, onInputChange, onSubmit, isSubmitting, e
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <InquiryForm 
+        {/* <InquiryForm 
           formData={formData}
           onInputChange={onInputChange}
           onSubmit={onSubmit}
           isSubmitting={isSubmitting}
           emailStatus={emailStatus}
-        />
+        /> */}
         <ContactInformation />
       </div>
     </div>

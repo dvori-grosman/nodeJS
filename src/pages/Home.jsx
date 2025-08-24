@@ -11,7 +11,13 @@ import HomeFinalCtaSection from "../components/home/HomeFinalCtaSection";
 export default function HomePage() {
  
   return (
-    <div >
+    <> 
+     <Helmet>
+        <title>ריקוד ברוח הטובה – בית ספר למחול</title>
+        <meta name="description" content="שיעורי מחול מקצועיים בסגנון קלאסי-מודרני, אווירה חמה ומקצועיות." />
+        <link rel="canonical" href="https://rikud.netlify.app/" />
+      </Helmet>
+     <div >
       <HomePageHeroSection />
       <DanceStylesSection />
       <HomeGroupsLevelsSection />
@@ -20,6 +26,7 @@ export default function HomePage() {
       <HomeDetailedClassesSection />
       <HomeHowToRegisterSection />
       <HomeFinalCtaSection />
-    </div>
+    </div> 
+    </>
   );
 }
