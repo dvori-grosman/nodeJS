@@ -9,6 +9,7 @@ import HomeHowToRegisterSection from "../components/home/HomeHowToRegisterSectio
 import HomeFinalCtaSection from "../components/home/HomeFinalCtaSection";
 
 export default function HomePage() {
+ 
   return (
     <div >
       <HomePageHeroSection />

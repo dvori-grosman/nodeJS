@@ -437,7 +437,7 @@ function EncouragementCard() {
         <Heart className="w-12 h-12 pink-text mx-auto mb-4" />
         <h4 className="font-bold white-text mb-2">מתרגשות לפגוש אותך!</h4>
         <p className="text-gray-300">
-          כאן עבורך עם כל שאלה ובקשה. מחכות לך בסטודיו עם המון אנרגיה טובה 
+            כאן עבורך עם כל שאלה ובקשה. מחכות לך בסטודיו עם המון אנרגיה טובה😆 
         </p>
       </CardContent>
     </Card>

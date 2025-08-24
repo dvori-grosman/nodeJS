@@ -118,7 +118,7 @@ function AppFooter() {
 
         {/* זכויות יוצרים */}
         <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
-          <p>&copy; 2024 ריקוד ברוח הטובה. כל הזכויות שמורות.</p>
+          <p>&copy;כל הזכויות שמורות DG בניית אתרים dgrs326@gmail.com </p>
         </div>
       </div>
     </footer>
@@ -162,6 +162,7 @@ export default function AppLayout({ children, currentPageName }) {
       <style>{`
         /* ... (הסגנונות הקיימים נשארים כאן) ... */
         @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Open+Sans:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Playpen+Sans+Hebrew:wght@100&display=swap');
           
         :root {
           --gold: #D4AF37;
@@ -175,9 +176,15 @@ export default function AppLayout({ children, currentPageName }) {
           font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
-        h1, h2, h3, h4, h5, h6 {
+        h1,h2, h3, h4, h5, h6 {
           font-family: 'Amatic SC', cursive;
           letter-spacing: 0.05em;
+        }
+
+        span {
+          font-family: 'Playpen Sans Hebrew', sans-serif;
+          font-weight: 300;
+          letter-spacing: 0.02em;
         }
         
         .gold-text { color: var(--gold); }

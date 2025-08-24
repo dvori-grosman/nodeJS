@@ -13,7 +13,7 @@ export default function DanceStylesSection() {
   ];
   
   return (
-    <section className="py-16 darker-bg">
+    <section className="py-16 dark-bg">
       <div className="max-w-5xl mx-auto px-6 text-center">
         <DanceStylesTitle />
         <DanceStylesGrid styles={danceStyles} />
