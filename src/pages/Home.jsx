@@ -7,6 +7,7 @@ import HomeTeamPhilosophySection from "../components/home/HomeTeamPhilosophySect
 import HomeDetailedClassesSection from "../components/home/HomeDetailedClassesSection";
 import HomeHowToRegisterSection from "../components/home/HomeHowToRegisterSection";
 import HomeFinalCtaSection from "../components/home/HomeFinalCtaSection";
+import { Helmet } from "react-helmet-async";
 
 export default function HomePage() {
  
