@@ -14,7 +14,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/debe541b7_.png" 
+              src="/logo.png" 
               alt="לוגו ריקוד ברוח הטובה" 
               className="h-32 w-auto mx-auto mb-8" 
             />

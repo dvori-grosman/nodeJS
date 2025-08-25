@@ -33,7 +33,7 @@ function AppHeader() {
         <div className="flex justify-between items-center h-20">
           {/* לוגו */}
           <Link to={createPageUrl("Home")} className="flex-shrink-0">
-            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/debe541b7_.png" alt="לוגו ריקוד ברוח הטובה" className="h-16 w-auto" />
+            <img src="/logo.png" alt="לוגו ריקוד ברוח הטובה" className="h-16 w-auto" />
           </Link>
 
           {/* ניווט למסך רחב */}
@@ -86,7 +86,7 @@ function AppFooter() {
           {/* מידע על החברה */}
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/debe541b7_.png" alt="לוגו ריקוד ברוח הטובה" className="h-20 w-auto" />
+              <img src="/logo.png" alt="לוגו ריקוד ברוח הטובה" className="h-20 w-auto" />
             </div>
             <p className="text-gray-400 leading-relaxed mb-6">
               ריקוד ברוח הטובה הוקם מתוך חזון, אהבה ושליחות להביא לכל בת במגזר החרדי את מתנת המחול.

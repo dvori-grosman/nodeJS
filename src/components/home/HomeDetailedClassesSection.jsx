@@ -30,17 +30,17 @@ export default function HomeDetailedClassesSection() {
 
         {/* רשת כרטיסי השיעורים */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          <ClassInfoCard title="בלט קלאסי" icon={<img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6bd424b70_image.png" alt="נעלי בלט" className="w-12 h-12 object-contain" />}>
+          <ClassInfoCard title="בלט קלאסי" icon={<span className="text-3xl">🩰</span>}>
             <p>השיעור מחולק לתרגילי בר, אמצע ופינה. המתקדמות לומדות לרקוד בנעלי פוינט.</p>
             <p className="font-semibold pink-text">עבודה מדויקת, אצילית, רכה ואומנותית.</p>
           </ClassInfoCard>
-          <ClassInfoCard title="מחול מודרני" icon={<span className="text-3xl">💃</span>}>
+          <ClassInfoCard title="מחול מודרני" icon={<span className="text-3xl">👟</span>}>
             <p>שיעור אנרגטי, חוויתי, עם הרבה זרימה ושחרור. בנוי מתרגילי חימום, רצפה, טכניקה ופינה.</p>
           </ClassInfoCard>
-          <ClassInfoCard title="אקרודאנס" icon={<span className="text-3xl">🤸‍♀️</span>}>
+          <ClassInfoCard title="אקרודאנס" icon={<span className="text-3xl">🏑</span>}>
             <p>שילוב טכניקות מחול עם אלמנטים אקרובטיים מדהימים.</p>
           </ClassInfoCard>
-          <ClassInfoCard title="טרום בלט (גילאי 3-6)" icon={<span className="text-3xl">✨</span>}>
+          <ClassInfoCard title="טרום בלט (גילאי 3-6)" icon={<span className="text-3xl">🥿</span>}>
             <p>שעת תנועה ומוזיקה חוויתית במיוחד! פיתוח מוטוריקה, קורדינציה, ביטחון עצמי וכישורי חברה.</p>
             <p className="font-semibold pink-text">ופשוט לראות את הקטנטנה שלך רוקדת!!!</p>
           </ClassInfoCard>

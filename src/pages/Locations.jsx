@@ -265,7 +265,7 @@ export default function LocationsPage() {
           ></div>
 
           {/* Popup Content */}
-          <div className="relative z-10 max-w-md w-full mx-4 animate-in zoom-in-95 duration-300">
+          <div className="relative z-10 max-w-md w mx-4 animate-in zoom-in-95 duration-450">
             <Card className="darker-bg border-gray-700 elegant-shadow">
               <CardHeader className="flex flex-row items-center justify-between border-b border-gray-700">
                 <div>
@@ -280,7 +280,7 @@ export default function LocationsPage() {
                 </Button>
               </CardHeader>
 
-              <CardContent className="p-6 max-h-[60vh] overflow-y-auto">
+              {/* <CardContent className="p-6 max-h-[60vh] overflow-y-auto">
                 {selectedBranch.schedule && selectedBranch.schedule.days.length > 0 ? (
                   <div className="space-y-4">
                     {selectedBranch.schedule.days.map((item, index) => (
@@ -295,22 +295,22 @@ export default function LocationsPage() {
                   <p className="text-gray-300 text-center">מערכת שעות עבור סניף זה תתפרסם בקרוב.</p>
                 )}
                 <Button onClick={openPdf} className="mt-4">הצג PDF</Button>
-              </CardContent>
-              {isPdfOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                  <div className="bg-white p-4 rounded-lg">
-                    <button onClick={closePdf} className="top-2 left-2">
+              </CardContent> */}
+              
+                {/* <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                  <div className="bg-white p-4 rounded-lg"> */}
+                    {/* <button onClick={closePdf} className="top-2 left-2">
                       <X className="w-4 h-4 text-gray-600" />
-                    </button>
+                    </button> */}
                     <iframe
                       src= {selectedBranch.src }
                       width="700px"
                       height="450px"
                       title="PDF Viewer"
                     />
-                  </div>
-                </div>
-              )}
+                  {/* </div>
+                </div> */}
+              
             </Card>
           </div>
         </div>
