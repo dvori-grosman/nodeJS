@@ -105,11 +105,14 @@ export default function ClassesPage() {
 
   return (
     <>
-      <Helmet>
-        <title>ריקוד ברוח הטובה – שיעורים  </title>
-        <meta name="description" content="בבית הספר מגוון רחב של שיעורי מחול - בלט קלאסי, התעמלות קרקע, אקרובטיקה, מחול לגיל הרך, חוגים לבנים קטנים ועוד, הכל באווירה שמורה ומתאימה לציבור החרדי" />
-        <link rel="canonical" href="https://rikud.netlify.app/" />
-      </Helmet>
+  <Helmet>
+     <title>שיעורי ריקוד - ריקוד ברוח הטובה</title>
+     <meta name="description" content="שיעורי ריקוד מגוונים לכל הרמות והגילאים. מצאו את השיעור המתאים לכם ובואו לרקוד ברוח הטובה" />
+     <meta name="keywords" content="שיעורי ריקוד, מחול, לימוד ריקוד, שיעורים למגוון סגנונות וגילאים, קבוצות ריקוד" />
+     <meta property="og:title" content="שיעורי ריקוד - ריקוד ברוח הטובה" />
+     <meta property="og:description" content="שיעורי ריקוד מגוונים לכל הרמות והגילאים" />
+     <meta property="og:url" content="https://rikud.netlify.app/Classes" />
+  </Helmet>
       <div className="min-h-screen py-12 dark-bg">
         {/* Hero Section */}
         <section className="relative darker-bg py-20">

@@ -1,5 +1,6 @@
 
 import React from "react";
+import { Helmet } from "react-helmet";
 import { Calendar, Download, Play, Star, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -46,6 +47,15 @@ export default function PerformancesPage() {
   ];
 
   return (
+    <>
+    <Helmet>
+       <title>מופעים - ריקוד ברוח הטובה</title>
+      <meta name="description" content="צפו במופעי ריקוד מרגשים ומעוררי השראה. לוח מופעים עתידיים וגלריית מופעים קודמים"/>
+      <meta name="keywords" content="מופעי ריקוד, הופעות, במה, מופעים, תיאטרון מחול"/> 
+      <meta property="og:title" content="מופעים - ריקוד ברוח הטובה"/>
+      <meta property="og:description" content="מופעי ריקוד מרגשים ומעוررי השראה"/>
+      <meta property="og:url" content="https://rikud.netlify.app/Performances"/>     
+    </Helmet>
     <div className="min-h-screen py-12 dark-bg">
       {/* Hero Section */}
       <section className="relative darker-bg py-20">
@@ -152,5 +162,6 @@ export default function PerformancesPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

@@ -8,6 +8,15 @@ import { Heart, Star, Users, ArrowLeft } from "lucide-react";
 
 export default function AboutPage() {
   return (
+    <>
+  <Helmet>
+      <title>אודות - ריקוד ברוח הטובה</title>
+      <meta name="description" content="הכירו את הסיפור מאחורי ריקוד ברוח הטובה, הפילוסופיה שלנו והדרך שלנו לחיבור בין ריקוד לרוחניות" />
+      <meta name="keywords" content="אודות ריקוד ברוח טובה, סיפור, חזון, חדווה ומרים, ריקוד בצניעות," />
+      <meta property="og:title" content="אודות - ריקוד ברוח הטובה" />
+      <meta property="og:description" content="הכירו את הסיפור והחזון מאחורי ריקוד ברוח הטובה" />
+      <meta property="og:url" content="https://rikud.netlify.app/About" />
+  </Helmet>
     <div className="min-h-screen py-12 dark-bg">
       {/* Hero Section */}
       <section className="relative darker-bg py-20">
@@ -205,5 +214,6 @@ export default function AboutPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

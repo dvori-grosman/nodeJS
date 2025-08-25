@@ -15,7 +15,7 @@ export default function ContactPage() {
     parentEmail: "",
     inquiryMessage: ""
   });
-  
+
   const [isSubmittingInquiry, setIsSubmittingInquiry] = useState(false);
   const [hasSubmittedSuccessfully, setHasSubmittedSuccessfully] = useState(false);
   const [emailSendingStatus, setEmailSendingStatus] = useState('');
@@ -29,9 +29,9 @@ export default function ContactPage() {
 
   // פונקציה לעדכון נתוני הטופס
   const handleFormInputChange = (fieldName, fieldValue) => {
-    setInquiryFormData(previousFormData => ({ 
-      ...previousFormData, 
-      [fieldName]: fieldValue 
+    setInquiryFormData(previousFormData => ({
+      ...previousFormData,
+      [fieldName]: fieldValue
     }));
   };
 
@@ -72,7 +72,7 @@ export default function ContactPage() {
     formEvent.preventDefault();
     setIsSubmittingInquiry(true);
     setEmailSendingStatus('');
-    
+
     try {
       // יצירת אובייקט פנייה למסד הנתונים
       const newInquiryData = {
@@ -83,12 +83,12 @@ export default function ContactPage() {
       };
 
       // שמירת הפנייה במסד הנתונים - פעולה קריטית
-    
+
       console.log('פנייה נשמרה במסד הנתונים בהצלחה');
-      
+
       // ניסיון שליחת מייל דרך EmailJS (פעולה משנית)
       await sendEmailViaEmailJS(inquiryFormData);
-      
+
       // הצגת הודעת הצלחה למשתמש
       setHasSubmittedSuccessfully(true);
 
@@ -104,7 +104,7 @@ export default function ContactPage() {
   // הצגת עמוד הצלחה לאחר שליחה
   if (hasSubmittedSuccessfully) {
     return (
-      <InquirySuccessPage 
+      <InquirySuccessPage
         onBackToForm={() => window.location.reload()}
         emailStatus={emailSendingStatus}
       />
@@ -113,21 +113,24 @@ export default function ContactPage() {
 
   return (
     <>
-       <Helmet>
-        <title>ריקוד ברוח הטובה – יצירת קשר  </title>
-        <meta name="description" content="שיעורי מחול מקצועיים בסגנון קלאסי-מודרני, אווירה חמה ומקצועיות." />
-        <link rel="canonical" href="https://rikud.netlify.app/" />
+      <Helmet>
+        <title>יצירת קשר - ריקוד ברוח הטובה</title>
+        <meta name="description" content="צרו קשר איתנו! מידע ליצירת קשר, כתובת, טלפון, אימייל וטופס פנייה לשאלות והצעות" />
+        <meta name="keywords" content="יצירת קשר, טלפון, אימייל, כתובת, פנייה, שאלות" />
+        <meta property="og:title" content="יצירת קשר - ריקוד ברוח הטובה" />
+        <meta property="og:description" content="צרו קשר איתנו עבור שאלות, הצעות ומידע נוסף" />
+        <meta property="og:url" content="https://rikud.netlify.app/Contact" />
       </Helmet>
-    <div className="min-h-screen py-12 dark-bg">
-      <InquiryPageHeader />
-      <InquiryFormSection 
-        formData={inquiryFormData}
-        onInputChange={handleFormInputChange}
-        onSubmit={handleInquiryFormSubmit}
-        isSubmitting={isSubmittingInquiry}
-        emailStatus={emailSendingStatus}
-      />
-    </div>
+      <div className="min-h-screen py-12 dark-bg">
+        <InquiryPageHeader />
+        <InquiryFormSection
+          formData={inquiryFormData}
+          onInputChange={handleFormInputChange}
+          onSubmit={handleInquiryFormSubmit}
+          isSubmitting={isSubmittingInquiry}
+          emailStatus={emailSendingStatus}
+        />
+      </div>
     </>
   );
 }
@@ -166,18 +169,17 @@ function InquirySuccessPage({ onBackToForm, emailStatus }) {
           <p className="text-gray-300 mb-6">
             קיבלנו את הפנייה שלך ונחזור אליך בהקדם עם כל הפרטים על הקבוצה המתאימה.
           </p>
-          
+
           {/* הצגת סטטוס שליחת המייל */}
           {emailStatus && (
-            <div className={`mb-4 p-3 rounded-lg text-sm ${
-              emailStatus.includes('בהצלחה') 
-                ? 'bg-green-100 text-green-800 border border-green-200' 
+            <div className={`mb-4 p-3 rounded-lg text-sm ${emailStatus.includes('בהצלחה')
+                ? 'bg-green-100 text-green-800 border border-green-200'
                 : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
-            }`}>
+              }`}>
               {emailStatus}
             </div>
           )}
-          
+
           <Button onClick={onBackToForm} className="btn-gold">
             חזור לטופס
           </Button>
@@ -224,7 +226,7 @@ function InquiryForm({ formData, onInputChange, onSubmit, isSubmitting, emailSta
             placeholder="השם שלך"
             required
           />
-          
+
           <FormInput
             id="parentPhone"
             label="טלפון *"
@@ -234,7 +236,7 @@ function InquiryForm({ formData, onInputChange, onSubmit, isSubmitting, emailSta
             placeholder="05X-XXXXXXX"
             required
           />
-          
+
           <FormInput
             id="parentEmail"
             label="מייל"
@@ -255,11 +257,10 @@ function InquiryForm({ formData, onInputChange, onSubmit, isSubmitting, emailSta
 
           {/* הצגת סטטוס שליחת מייל בזמן אמת */}
           {emailStatus && (
-            <div className={`p-3 rounded-lg text-sm text-center ${
-              emailStatus.includes('בהצלחה') 
-                ? 'bg-green-100 text-green-800 border border-green-200' 
+            <div className={`p-3 rounded-lg text-sm text-center ${emailStatus.includes('בהצלחה')
+                ? 'bg-green-100 text-green-800 border border-green-200'
                 : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
-            }`}>
+              }`}>
               {emailStatus}
             </div>
           )}
@@ -445,7 +446,7 @@ function EncouragementCard() {
         <Heart className="w-12 h-12 pink-text mx-auto mb-4" />
         <h4 className="font-bold white-text mb-2">מתרגשות לפגוש אותך!</h4>
         <p className="text-gray-300">
-            כאן עבורך עם כל שאלה ובקשה. מחכות לך בסטודיו עם המון אנרגיה טובה😆 
+          כאן עבורך עם כל שאלה ובקשה. מחכות לך בסטודיו עם המון אנרגיה טובה😆
         </p>
       </CardContent>
     </Card>
