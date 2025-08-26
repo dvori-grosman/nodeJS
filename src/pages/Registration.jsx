@@ -17,6 +17,7 @@ import {
   CheckCircle,
   FileText
 } from 'lucide-react';
+import { Helmet } from "react-helmet-async";
 
 export default function RegistrationPage() {
   const [activeTab, setActiveTab] = useState('forms');

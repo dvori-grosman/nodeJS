@@ -5,6 +5,7 @@ import { ArrowLeft, Clock, Users, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Helmet } from "react-helmet-async";
 
 export default function ClassesPage() {
   const classes = [

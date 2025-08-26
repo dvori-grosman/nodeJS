@@ -5,6 +5,7 @@ import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, Star, Users, ArrowLeft } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 export default function AboutPage() {
   return (

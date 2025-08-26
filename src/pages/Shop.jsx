@@ -4,6 +4,7 @@ import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Footprints, Shirt, ShoppingBag, Sparkles, Move, ArrowLeft } from 'lucide-react';
+import { Helmet } from "react-helmet-async";
 
 export default function ShopPage() {
   const products = [

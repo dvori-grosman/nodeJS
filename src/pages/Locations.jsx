@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { MapPin, Phone, Clock, Car, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Helmet } from "react-helmet-async";
 
 export default function LocationsPage() {
 
@@ -14,6 +15,41 @@ export default function LocationsPage() {
 
   const closePdf = () => {
     setIsPdfOpen(false);
+  };
+  /**
+   * Helper function to render a single schedule cell.
+   * It handles two data formats:
+   * 1. Old format: activityString is just the activity name, rowTime is the time for the whole row.
+   * 2. New format: activityString includes time (e.g., "HH:MM-HH:MM Activity Name"), rowTime is undefined.
+   * @param {string} activityString The string representing the activity for the day.
+   * @param {string | undefined} rowTime The time for the entire row (if applicable to the old format).
+   * @returns {JSX.Element | null} The JSX to render the cell content, or null if no activity.
+   */
+  const renderScheduleCell = (activityString, rowTime) => {
+    if (!activityString) return null; // No activity for this day/slot
+
+    let displayActivity = activityString;
+    let displayTime = rowTime;
+
+    if (!rowTime) { // If there's no row-level time (implies new format)
+      const parts = activityString.split(' ');
+      // Check if the first part looks like a time range (contains a hyphen)
+      if (parts.length > 1 && parts[0].includes('-') && parts[0].includes(':')) {
+        displayTime = parts[0];
+        displayActivity = parts.slice(1).join(' ');
+      } else {
+        // It's just an activity name without time prefix (e.g., "שיעונים - ...")
+        displayActivity = activityString;
+        displayTime = ''; // No time to display
+      }
+    }
+
+    return (
+      <div className="text-gray-300 font-medium text-sm leading-tight">
+        <div>{displayActivity}</div>
+        {displayTime && <div className="gold-text text-xs mt-1">{displayTime}</div>}
+      </div>
+    );
   };
 
   const locations = [
@@ -28,11 +64,13 @@ export default function LocationsPage() {
           extension: "שלוחה לגיל הרך - אלקבץ 16",
           schedule: {
             title: "מערכת שעות - גבעת שאול",
-            days: [
-              { day: "ראשון", teacher: "חדווה", class: "16:00 - בלט קלאסי מתחילות" },
-              { day: "שני", class: "15:30 - מחול לגיל הרך" },
-              { day: "רביעי", class: "16:30 - התעמלות קרקע ממשיכות" },
-              { day: "חמישי", class: "18:00 - נבחרת התעמלות קרקע" }
+            titles: { sunday: "מרים", monday: "עדינה", tuesday: "שירה", wednesday: "חדווה ", thursday: "גיטי" },
+            timeSlots: [
+              { sunday: "", monday: "15:30-16:30 כיתות ד-ו מחול מתחילות", tuesday: "", wednesday: "", thursday: "16:30-17:15 קרקע גן" },
+              { sunday: "16:15-17:15 התעמלות לבנים", monday: "", tuesday: "16:30-17:15 גיל 3-4", wednesday: "", thursday: "" },
+              { sunday: "17:15-18:30 קלאסי 1 ה-ו-ז מתקדמות", monday: "17:15-18:15 מודרני מתקדמות ה-ו", tuesday: "17:15-18:15 כיתות א-ב-ג", wednesday: "17:00-18:45 קלאסי 2+ פוינט", thursday: "17:15-18:15 קרקע א-ב" },
+              { sunday: "18:30-20:15 קלאסי 3 פוינט עתודה", monday: "18:30-20:00 מודרני 1", tuesday: "18:30-20:00 קלאסי 1", wednesday: "18:45-20:30 מודרני 3 עתודה", thursday: "18:15-19:30 אקורודנס כיתות ו ומעלה" },
+              { sunday: "20:15-22:00 קלאסי 4 פוינט להקה", monday: "20:00-21:30 מודרני 2", tuesday: "", wednesday: "20:30-22:15 מודרני 4 להקה", thursday: "" }
             ]
           }
         },
@@ -45,9 +83,15 @@ export default function LocationsPage() {
           extension: "התעמלות קרקע - אולם ספורט סנהדרין רח' מנחת יצחק 23",
           schedule: {
             title: "מערכת שעות - גאולה",
-            days: [
-              { day: "ראשון", class: "17:00 - מחול מודרני ממשיכות" },
-              { day: "שלישי", class: "17:00 - אקרודאנס" }
+            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            timeSlots: [
+              { sunday: "15:30-16:15 נטיי - התעמלות ונחול איידיש כיתות א-ג", monday: "שיעונים - ספורט טיפולי בנות 8-10", tuesday: "", wednesday: "התעמלות קורקט כיתות א-ג", thursday: "" },
+              { sunday: "16:15-17:00 התעמלות ונחול איידיש כיתות ד-ה", monday: "ספורט טיפולי בנות 5-7", tuesday: "שירה - סטורם כללי כיתות א-ג + א", wednesday: "התעמלות בנים 5-7", thursday: "" },
+              { sunday: "", monday: "ספורט טיפולי בנות 5-7", tuesday: "מודרני 2 כיתות ז-ח", wednesday: "התעמלות בנים 8-9", thursday: "" },
+              { sunday: "18:00-19:00 התעמלות ונחול איידיש סניור", monday: "ספורט טיפולי בנים 8-9", tuesday: "מריס - מכלל כיתות 2", wednesday: "התעמלות בנים 10-12", thursday: "" },
+              { sunday: "", monday: "", tuesday: "מחול מושלד כיתות ד-ח", wednesday: "", thursday: "מודרני 3" },
+              { sunday: "", monday: "", tuesday: "מכלל 3", wednesday: "מחול מודרני 1", thursday: "" },
+              { sunday: "", monday: "", tuesday: "", wednesday: "חול מודרני נעים", thursday: "" }
             ]
           }
         },
@@ -58,9 +102,12 @@ export default function LocationsPage() {
           facilities: ["מתנס עירוני"],
           schedule: {
             title: "מערכת שעות - רמות",
-            days: [
-              { day: "ראשון", class: "18:00 - אקרובטיקה מתקדמות" },
-              { day: "שלישי", class: "18:00 - בלט קלאסי מתקדמות + פוינט" }
+            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            timeSlots: [
+              { sunday: "15:15-16:15 מחול משולב כיתות ד-ה-ו", monday: "", tuesday: "", wednesday: "15:15-16:15 אקרובטיקה מתקדמות", thursday: "" },
+              { sunday: "", monday: "", tuesday: "", wednesday: "16:15-17:00 טרום בלט גן", thursday: "16:15-17:15 אקרובטיקה כיתות א-ה" },
+              { sunday: "17:00-18:00 מחול משולב כיתות א-ב-ג", monday: "", tuesday: "", wednesday: "", thursday: "17:15-18:30 אקרובטיקה כיתות ו-ז ותיכון" },
+              { sunday: "18:00-19:15 מחול מודרני ז-ח ותיכון", monday: "", tuesday: "", wednesday: "", thursday: "18:30-19:45 בלט קלאסי ח ותיכון" }
             ]
           }
         },
@@ -71,8 +118,12 @@ export default function LocationsPage() {
           facilities: ["מתנס עירוני"],
           schedule: {
             title: "מערכת שעות - רמת שלמה",
-            days: [
-              { day: "חמישי", class: "16:00 - בלט קלאסי מתחילות" }
+            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            timeSlots: [
+              { sunday: "", monday: "16:15-17:00 טרום בלט גן", tuesday: "", wednesday: "16:15-17:15 אקרודנס א-ה", thursday: "" },
+              { sunday: "", monday: "17:00-18:00 מחול משולב א-ד", tuesday: "", wednesday: "17:15-18:15 אקרודנס ו-ח ותיכון", thursday: "" },
+              { sunday: "", monday: "18:00-19:00 מחול משולב כיתות ה-ו-ז", tuesday: "", wednesday: "", thursday: "" },
+              { sunday: "", monday: "19:00-20:15 בלט קלאסי ח ותיכון", tuesday: "", wednesday: "", thursday: "" }
             ]
           }
         },
@@ -83,9 +134,11 @@ export default function LocationsPage() {
           facilities: ["מתנס איכותי"],
           schedule: {
             title: "מערכת שעות - עזרת תורה",
-            days: [
-              { day: "שני", class: "16:30 - בלט קלאסי ממשיכות" },
-              { day: "חמישי", class: "17:00 - אקרובטיקה מתחילות" }
+            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            timeSlots: [
+              { sunday: "", monday: "16:15-17:00 אקורודנס קטנות", tuesday: "", wednesday: "16:30-17:15 טרום בלט גן", thursday: "" },
+              { sunday: "", monday: "17:00-18:00 אקורודנס א-ד", tuesday: "", wednesday: "17:15-18:15 מחול כיתות א-ה", thursday: "18:00-19:00 אקרודנס כיתות א-ד" },
+              { sunday: "", monday: "18:00-19:00 אקורודנס ה-ח", tuesday: "", wednesday: "18:15-19:15 מחול כיתות ה-ח", thursday: "19:00-20:00 אקרודנס כיתות ה-ח" }
             ]
           }
         },
@@ -96,8 +149,11 @@ export default function LocationsPage() {
           facilities: ["מתנס מודרני"],
           schedule: {
             title: "מערכת שעות - הגבעה הצרפתית",
-            days: [
-              { day: "רביעי", class: "17:30 - מחול מודרני מתקדמות" }
+            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            timeSlots: [
+              { sunday: "", monday: "16:15-17:00 אקורודנס קטנות", tuesday: "", wednesday: "16:30-17:15 טרום בלט גן", thursday: "" },
+              { sunday: "", monday: "17:00-18:00 אקורודנס א-ד", tuesday: "", wednesday: "17:15-18:15 מחול כיתות א-ה", thursday: "18:00-19:00 אקרודנס כיתות א-ד" },
+              { sunday: "", monday: "18:00-19:00 אקורודנס ה-ח", tuesday: "", wednesday: "18:15-19:15 מחול כיתות ה-ח", thursday: "19:00-20:00 אקרודנס כיתות ה-ח" }
             ]
           }
         },
@@ -108,8 +164,12 @@ export default function LocationsPage() {
           facilities: ["סטודיו מתקדם"],
           schedule: {
             title: "מערכת שעות - נווה יעקב",
-            days: [
-              { day: "שלישי", class: "16:00 - מחול מודרני מתחילות" }
+            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            timeSlots: [
+              { sunday: "", monday: "16:15-17:00 טרום בלט גן", tuesday: "", wednesday: "", thursday: "" },
+              { sunday: "", monday: "17:00-18:00 מחול משולב א-ד", tuesday: "", wednesday: "", thursday: "" },
+              { sunday: "", monday: "18:00-19:00 מחול משולב כיתות ה-ו-ז", tuesday: "", wednesday: "", thursday: "" },
+              { sunday: "", monday: "19:00-20:15 בלט קלאסי ח ותיכון", tuesday: "", wednesday: "", thursday: "" }
             ]
           }
         }
@@ -124,9 +184,14 @@ export default function LocationsPage() {
           address: "המגיד ממעזריטש 78 ביתר עילית",
           facilities: ["התעמלות קרקע סטודיו B"],
           schedule: {
-            title: "מערכת שעות - ביתר עילית",
-            days: [
-              { day: "שני", class: "17:30 - התעמלות קרקע מתחילות" }
+            title: "מערכת שעות - ביתר",
+            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            timeSlots: [
+              { sunday: "15:15-16:15 קרקע מתקדמות כיתות ג-ו", monday: "15:30-16:30 מחול משולב כיתות ד-ה-ו", tuesday: "", wednesday: "16:00-17:15 בלט קלאסי 1 ה-ו-ז", thursday: "16:30-17:15 טרום בלט" },
+              { sunday: "16:15-17:15 התעמלות קרקע כיתות א-ב", monday: "", tuesday: "", wednesday: "", thursday: "" },
+              { sunday: "17:15-18:15 קרקע מתקדמות כיתות ג-ו", monday: "", tuesday: "17:15-18:15 מחול משולב כיתות א-ב-ג", wednesday: "17:15-19:00 בלט קלאסי 2 עתודה + פוינט", thursday: "17:00-18:15 התעמלות קרקע נבחרת" },
+              { sunday: "", monday: "", tuesday: "18:00-19:15 מחול מודרני 1 ז-ח", wednesday: "19:00-20:30 מודרני 3", thursday: "18:15-19:30 התעמלות קרקע תיכון מתקדמות" },
+              { sunday: "", monday: "", tuesday: "19:30-21:00 מחול מודרני 2", wednesday: "20:30-22:15 קלאסי 3 להקה פוינט", thursday: "19:30-20:45 התעמלות קרקע תיכון מתחילות" }
             ]
           }
         }
@@ -142,9 +207,16 @@ export default function LocationsPage() {
           address: "רמת אברהם",
           facilities: ["מתנס עירוני"],
           schedule: {
-            title: "מערכת שעות - בית שמש",
-            days: [
-              { day: "רביעי", class: "15:30 - מחול לגיל הרך" }
+            title: "מערכת שעות - גאולה",
+            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            timeSlots: [
+              { sunday: "15:30-16:15 נטיי - התעמלות ונחול איידיש כיתות א-ג", monday: "שיעונים - ספורט טיפולי בנות 8-10", tuesday: "", wednesday: "התעמלות קורקט כיתות א-ג", thursday: "" },
+              { sunday: "16:15-17:00 התעמלות ונחול איידיש כיתות ד-ה", monday: "ספורט טיפולי בנות 5-7", tuesday: "שירה - סטורם כללי כיתות א-ג + א", wednesday: "התעמלות בנים 5-7", thursday: "" },
+              { sunday: "", monday: "ספורט טיפולי בנות 5-7", tuesday: "מודרני 2 כיתות ז-ח", wednesday: "התעמלות בנים 8-9", thursday: "" },
+              { sunday: "18:00-19:00 התעמלות ונחול איידיש סניור", monday: "ספורט טיפולי בנים 8-9", tuesday: "מריס - מכלל כיתות 2", wednesday: "התעמלות בנים 10-12", thursday: "" },
+              { sunday: "", monday: "", tuesday: "מחול מושלד כיתות ד-ח", wednesday: "", thursday: "מודרני 3" },
+              { sunday: "", monday: "", tuesday: "מכלל 3", wednesday: "מחול מודרני 1", thursday: "" },
+              { sunday: "", monday: "", tuesday: "", wednesday: "חול מודרני נעים", thursday: "" }
             ]
           }
         }
@@ -152,15 +224,31 @@ export default function LocationsPage() {
     }
   ];
 
+
+  // מערכת שעות - גבעת שאול
+  const givatShaulSchedule = {
+    title: "מערכת שעות - גבעת שאול",
+    timeSlots: [
+      { sunday: "15:30-16:30 כיתות ג-ד-ה", monday: "15:30-16:30 כיתות ג-ד1", tuesday: "16:15-17:15 התעמלות בנים גילאי 4-6", wednesday: "16:30-17:15 קרקע גן", thursday: "16:30-17:15 גן חובה" },
+      { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "16:30-17:15 גן גיל 3-4" },
+      { sunday: "", monday: "17:15-18:15 קרקע א-ב", tuesday: "17:15-18:30 מודרני מתקדמות ה-ו", wednesday: "17:00-18:45 קלאסי 2+ פוינט", thursday: "17:15-18:15 כיתות א-ב" },
+      { sunday: "17:15-18:30 קלאסי 1 ה-ו-ז מתקדמות", monday: "", tuesday: "", wednesday: "", thursday: "" },
+      { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "18:15-19:15 ה-ו1 מודרני" },
+      { sunday: "18:30-20:15 קלאסי 3 פוינט עתודה", monday: "18:30-20:00 מודרני 1", tuesday: "18:30-20:00 קלאסי 1", wednesday: "18:45-20:30 מודרני 3 עתודה", thursday: "" },
+      { sunday: "20:15-22:00 קלאסי 4 פוינט להקה", monday: "20:00-21:30 מודרני 2", tuesday: "", wednesday: "20:30-22:15 מודרני 4 להקה", thursday: "" }
+    ]
+  };
+
+
   return (
     <>
       <Helmet>
-      <title>סניפים - ריקוד ברוח הטובה</title>
-      <meta name="description" content="מצאו את הסניף הקרוב אליכם! סניפי ריקוד ברוח הטובה ברחבי הארץ עם מידע על מיקום, זמנים ויצירת קשר" />
-      <meta name="keywords" content="סניפי ריקוד, מיקומים, חוג מחול, התעמלות קרקע, אקרובטיקה, אקרודאנס, כתובות, זמנים" />
-      <meta property="og:title" content="סניפים - ריקוד ברוח הטובה" />
-      <meta property="og:description" content="מצאו את הסניף הקרוב אליכם ברחבי הארץ" />
-      <meta property="og:url" content="https://rikud.netlify.app/Locations" />
+        <title>סניפים - ריקוד ברוח הטובה</title>
+        <meta name="description" content="מצאו את הסניף הקרוב אליכם! סניפי ריקוד ברוח הטובה ברחבי הארץ עם מידע על מיקום, זמנים ויצירת קשר" />
+        <meta name="keywords" content="סניפי ריקוד, מיקומים, חוג מחול, התעמלות קרקע, אקרובטיקה, אקרודאנס, כתובות, זמנים" />
+        <meta property="og:title" content="סניפים - ריקוד ברוח הטובה" />
+        <meta property="og:description" content="מצאו את הסניף הקרוב אליכם ברחבי הארץ" />
+        <meta property="og:url" content="https://rikud.netlify.app/Locations" />
       </Helmet>
       <div className="min-h-screen py-12 dark-bg">
         {/* Hero Section */}
@@ -274,52 +362,94 @@ export default function LocationsPage() {
             ></div>
 
             {/* Popup Content */}
-            <div className="relative z-10 max-w-md w mx-4 animate-in zoom-in-95 duration-450">
+            <div className="relative z-10 max-w-6xl w-full mx-4 max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-300">
               <Card className="darker-bg border-gray-700 elegant-shadow">
                 <CardHeader className="flex flex-row items-center justify-between border-b border-gray-700">
                   <div>
                     <CardTitle className="text-2xl gold-text">{selectedBranch.schedule.title}</CardTitle>
-                    <p className="text-gray-400 text-sm mt-1">הערה: המערכת עשויה להשתנות</p>
+                    <p className="text-gray-400 text-sm mt-1">שנת תשפ"ו - המערכת עשויה להשתנות</p>
                   </div>
                   <Button
                     onClick={() => setSelectedBranch(null)}
-                    className="w-8 h-8 p-0 bg-gray-700 hover:bg-gray-600"
+                    className="w-8 h-8 p-0 bg-gray-800 hover:bg-gray-700 text-white"
                   >
-                    <X className="w-4 h-4 text-gray-300" />
+                    <X className="w-4 h-4" />
                   </Button>
                 </CardHeader>
 
-                {/* <CardContent className="p-6 max-h-[60vh] overflow-y-auto">
-                {selectedBranch.schedule && selectedBranch.schedule.days.length > 0 ? (
-                  <div className="space-y-4">
-                    {selectedBranch.schedule.days.map((item, index) => (
-                      <div key={index} className="dark-bg p-4 rounded-lg border border-gray-700 flex justify-between items-center">
-                        <span className="font-semibold white-text">{item.day}</span>
-                        <span className="font-semibold white-text">{item.teacher}</span>
-                        <span className="gold-text text-left">{item.class}</span>
-                      </div>
-                    ))}
+                <CardContent className="p-0">
+                  {selectedBranch.schedule && selectedBranch.schedule.timeSlots && selectedBranch.schedule.timeSlots.length > 0 ? (
+                    <div className="overflow-x-auto">
+                      {/* הטבלה עצמה */}
+                      <table className="w-full text-sm border-collapse">
+                        {/* כותרת הטבלה */}
+                        <thead>
+                          <tr>
+                            <th className="gold-bg text-black p-3 text-center font-bold border-r-2 border-white/30">יום א'<br /><span className="font-normal opacity-80">{selectedBranch.schedule.titles.sunday}</span></th>
+                            <th className="gold-bg text-black p-3 text-center font-bold border-r-2 border-white/30">יום ב'<br /><span className="font-normal opacity-80">{selectedBranch.schedule.titles.monday}</span></th>
+                            <th className="gold-bg text-black p-3 text-center font-bold border-r-2 border-white/30">יום ג'<br /><span className="font-normal opacity-80">{selectedBranch.schedule.titles.tuesday}</span></th>
+                            <th className="gold-bg text-black p-3 text-center font-bold border-r-2 border-white/30">יום ד'<br /><span className="font-normal opacity-80">{selectedBranch.schedule.titles.wednesday}</span></th>
+                            <th className="gold-bg text-black p-3 text-center font-bold border-r-2 border-white/30">יום ה'<br /><span className="font-normal opacity-80">{selectedBranch.schedule.titles.thursday}</span></th>
+                          </tr>
+                        </thead>
+
+                        {/* תוכן הטבלה */}
+                        <tbody>
+                          {selectedBranch.schedule.timeSlots.map((slot, index) => (
+                            <tr key={index} className="border-t border-gray-700 hover:bg-gray-800/50 transition-colors">
+
+                              {/* יום א' */}
+                              <td className="p-4 text-center border-r-2 border-white/20 min-h-[60px] align-middle">
+                                {renderScheduleCell(slot.sunday, slot.time)}
+                              </td>
+
+                              {/* יום ב' */}
+                              <td className="p-4 text-center border-r-2 border-white/20 min-h-[60px] align-middle">
+                                {renderScheduleCell(slot.monday, slot.time)}
+                              </td>
+
+                              {/* יום ג' */}
+                              <td className="p-4 text-center border-r-2 border-white/20 min-h-[60px] align-middle">
+                                {renderScheduleCell(slot.tuesday, slot.time)}
+                              </td>
+
+                              {/* יום ד' */}
+                              <td className="p-4 text-center border-r-2 border-white/20 min-h-[60px] align-middle">
+                                {renderScheduleCell(slot.wednesday, slot.time)}
+                              </td>
+
+                              {/* יום ה' */}
+                              <td className="p-4 text-center border-r-2 border-white/20 min-h-[60px] align-middle">
+                                {renderScheduleCell(slot.thursday, slot.time)}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="p-8 text-center">
+                      <p className="text-gray-400">מערכת שעות עבור סניף זה תתפרסם בקרוב.</p>
+                    </div>
+                  )}
+
+                  {/* ציוד נדרש */}
+                  <div className="p-6 dark-bg border-t border-gray-700 text-sm text-gray-300">
+                    <p className="mb-3">
+                      יש להגיע כ5 דק' לפני תחילת השיעור, להתארגן עם שיער אסוף, בקבוק מים ובנוסף:
+                    </p>
+                    <div className="space-y-2">
+                      <p>
+                        <span className="font-semibold text-white">מחול - </span>
+                        <span className="pink-text">בגד גוף / חולצה נעימה ומתאימה לריקוד, חצאית אורך ברך רחבה וקלילה, טייץ, גרבי קרסול / נעלי בלט</span>
+                      </p>
+                      <p>
+                        <span className="font-semibold text-white">אקרובטיקה - </span>
+                        <span className="pink-text">בגד גוף, חצאית אורך ברך רחבה וקלילה, טייץ, גרבים נגד החלקה</span>
+                      </p>
+                    </div>
                   </div>
-                ) : (
-                  <p className="text-gray-300 text-center">מערכת שעות עבור סניף זה תתפרסם בקרוב.</p>
-                )}
-                <Button onClick={openPdf} className="mt-4">הצג PDF</Button>
-              </CardContent> */}
-
-                {/* <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                  <div className="bg-white p-4 rounded-lg"> */}
-                {/* <button onClick={closePdf} className="top-2 left-2">
-                      <X className="w-4 h-4 text-gray-600" />
-                    </button> */}
-                <iframe
-                  src={selectedBranch.src}
-                  width="700px"
-                  height="450px"
-                  title="PDF Viewer"
-                />
-                {/* </div>
-                </div> */}
-
+                </CardContent>
               </Card>
             </div>
           </div>
