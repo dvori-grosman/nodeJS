@@ -66,11 +66,14 @@ export default function LocationsPage() {
             title: "מערכת שעות - גבעת שאול",
             titles: { sunday: "מרים", monday: "עדינה", tuesday: "שירה", wednesday: "חדווה ", thursday: "גיטי" },
             timeSlots: [
-              { sunday: "", monday: "15:30-16:30 כיתות ד-ו מחול מתחילות", tuesday: "", wednesday: "", thursday: "16:30-17:15 קרקע גן" },
-              { sunday: "16:15-17:15 התעמלות לבנים", monday: "", tuesday: "16:30-17:15 גיל 3-4", wednesday: "", thursday: "" },
+              { sunday: "", monday: "15:30-16:30 כיתות ג-ד 2", tuesday: "15:30-16:30 כיתות ד-ו מחול מתחילות", wednesday: "", thursday: "" },
+              { sunday: "16:15-17:15 התעמלות לבנים", monday: "16:30-17:15 גיל 3-4", tuesday: "16:30-17:15 גן חובה", wednesday: "", thursday: "16:30-17:15 קרקע גן" },
               { sunday: "17:15-18:30 קלאסי 1 ה-ו-ז מתקדמות", monday: "17:15-18:15 מודרני מתקדמות ה-ו", tuesday: "17:15-18:15 כיתות א-ב-ג", wednesday: "17:00-18:45 קלאסי 2+ פוינט", thursday: "17:15-18:15 קרקע א-ב" },
               { sunday: "18:30-20:15 קלאסי 3 פוינט עתודה", monday: "18:30-20:00 מודרני 1", tuesday: "18:30-20:00 קלאסי 1", wednesday: "18:45-20:30 מודרני 3 עתודה", thursday: "18:15-19:30 אקורודנס כיתות ו ומעלה" },
-              { sunday: "20:15-22:00 קלאסי 4 פוינט להקה", monday: "20:00-21:30 מודרני 2", tuesday: "", wednesday: "20:30-22:15 מודרני 4 להקה", thursday: "" }
+              { sunday: "20:15-22:00 קלאסי 4 פוינט להקה", monday: "20:00-21:30 מודרני 2", tuesday: "התעמלות קרקע: רעות, סימי, מירי", wednesday: "20:30-22:15 מודרני 4 להקה", thursday: "" },
+              { sunday: "אלקבץ/אילה מחול", monday: "", tuesday: "15:30-16:30 כיתות ג-ד-ה", wednesday: "", thursday: "" },
+              { sunday: "16:15-17:00 גן", monday: "", tuesday: "16:30-17:30 כיתות ו-ז", wednesday: "", thursday: "" },
+              { sunday: "17:00-18:00 כיתות א'-ד'", monday: "", tuesday: "17:30-18:45 ח תיכון", wednesday: "", thursday: "" }
             ]
           }
         },
@@ -83,15 +86,12 @@ export default function LocationsPage() {
           extension: "התעמלות קרקע - אולם ספורט סנהדרין רח' מנחת יצחק 23",
           schedule: {
             title: "מערכת שעות - גאולה",
-            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            titles: { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
             timeSlots: [
-              { sunday: "15:30-16:15 נטיי - התעמלות ונחול איידיש כיתות א-ג", monday: "שיעונים - ספורט טיפולי בנות 8-10", tuesday: "", wednesday: "התעמלות קורקט כיתות א-ג", thursday: "" },
-              { sunday: "16:15-17:00 התעמלות ונחול איידיש כיתות ד-ה", monday: "ספורט טיפולי בנות 5-7", tuesday: "שירה - סטורם כללי כיתות א-ג + א", wednesday: "התעמלות בנים 5-7", thursday: "" },
-              { sunday: "", monday: "ספורט טיפולי בנות 5-7", tuesday: "מודרני 2 כיתות ז-ח", wednesday: "התעמלות בנים 8-9", thursday: "" },
-              { sunday: "18:00-19:00 התעמלות ונחול איידיש סניור", monday: "ספורט טיפולי בנים 8-9", tuesday: "מריס - מכלל כיתות 2", wednesday: "התעמלות בנים 10-12", thursday: "" },
-              { sunday: "", monday: "", tuesday: "מחול מושלד כיתות ד-ח", wednesday: "", thursday: "מודרני 3" },
-              { sunday: "", monday: "", tuesday: "מכלל 3", wednesday: "מחול מודרני 1", thursday: "" },
-              { sunday: "", monday: "", tuesday: "", wednesday: "חול מודרני נעים", thursday: "" }
+              { sunday: "", monday: "", tuesday: "המערכת עדיין לא מעודכנת לשנת תשפ''ה", wednesday: "", thursday: "" },
+              { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
+              { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
+              { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" }
             ]
           }
         },
@@ -104,10 +104,10 @@ export default function LocationsPage() {
             title: "מערכת שעות - רמות",
             titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
             timeSlots: [
-              { sunday: "15:15-16:15 מחול משולב כיתות ד-ה-ו", monday: "", tuesday: "", wednesday: "15:15-16:15 אקרובטיקה מתקדמות", thursday: "" },
-              { sunday: "", monday: "", tuesday: "", wednesday: "16:15-17:00 טרום בלט גן", thursday: "16:15-17:15 אקרובטיקה כיתות א-ה" },
-              { sunday: "17:00-18:00 מחול משולב כיתות א-ב-ג", monday: "", tuesday: "", wednesday: "", thursday: "17:15-18:30 אקרובטיקה כיתות ו-ז ותיכון" },
-              { sunday: "18:00-19:15 מחול מודרני ז-ח ותיכון", monday: "", tuesday: "", wednesday: "", thursday: "18:30-19:45 בלט קלאסי ח ותיכון" }
+              { sunday: "15:15-16:15 מחול משולב כיתות ד-ה-ו", monday: "", tuesday: "15:15-16:15 אקרובטיקה מתקדמות", wednesday: "", thursday: "" },
+              { sunday: "16:15-17:00 טרום בלט גן", monday: "", tuesday: "16:15-17:15 אקרובטיקה כיתות א-ה", wednesday: "", thursday: "" },
+              { sunday: "17:00-18:00 מחול משולב כיתות א-ב-ג", monday: "", tuesday: "17:15-18:30 אקרובטיקה כיתות ו-ז ותיכון", wednesday: "", thursday: "" },
+              { sunday: "18:00-19:15 מחול מודרני ז-ח ותיכון", monday: "", tuesday: "18:30-19:45 בלט קלאסי ח ותיכון", wednesday: "", thursday: "" }
             ]
           }
         },
@@ -118,12 +118,12 @@ export default function LocationsPage() {
           facilities: ["מתנס עירוני"],
           schedule: {
             title: "מערכת שעות - רמת שלמה",
-            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            titles: { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
             timeSlots: [
-              { sunday: "", monday: "16:15-17:00 טרום בלט גן", tuesday: "", wednesday: "16:15-17:15 אקרודנס א-ה", thursday: "" },
-              { sunday: "", monday: "17:00-18:00 מחול משולב א-ד", tuesday: "", wednesday: "17:15-18:15 אקרודנס ו-ח ותיכון", thursday: "" },
-              { sunday: "", monday: "18:00-19:00 מחול משולב כיתות ה-ו-ז", tuesday: "", wednesday: "", thursday: "" },
-              { sunday: "", monday: "19:00-20:15 בלט קלאסי ח ותיכון", tuesday: "", wednesday: "", thursday: "" }
+              { sunday: "16:15-17:00 טרום בלט גן", monday: "", tuesday: "", wednesday: "", thursday: "" },
+              { sunday: "17:00-18:00 מחול משולב א-ד", monday: "16:15-17:15 אקרודנס א-ה", tuesday: "", wednesday: "", thursday: "" },
+              { sunday: "18:00-19:00 מחול משולב כיתות ה-ו-ז", monday: "17:15-18:15 אקרודנס ו-ח ותיכון", tuesday: "", wednesday: "", thursday: "" },
+              { sunday: "19:00-20:15 בלט קלאסי ח ותיכון", monday: "", tuesday: "", wednesday: "", thursday: "" }
             ]
           }
         },
@@ -134,11 +134,16 @@ export default function LocationsPage() {
           facilities: ["מתנס איכותי"],
           schedule: {
             title: "מערכת שעות - עזרת תורה",
-            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            titles: { sunday: "", monday: "", tuesday: "גיטי ברמן", wednesday: "מירי", thursday: "אודל" },
             timeSlots: [
-              { sunday: "", monday: "16:15-17:00 אקורודנס קטנות", tuesday: "", wednesday: "16:30-17:15 טרום בלט גן", thursday: "" },
-              { sunday: "", monday: "17:00-18:00 אקורודנס א-ד", tuesday: "", wednesday: "17:15-18:15 מחול כיתות א-ה", thursday: "18:00-19:00 אקרודנס כיתות א-ד" },
-              { sunday: "", monday: "18:00-19:00 אקורודנס ה-ח", tuesday: "", wednesday: "18:15-19:15 מחול כיתות ה-ח", thursday: "19:00-20:00 אקרודנס כיתות ה-ח" }
+              { sunday: "", monday: "", tuesday: "הגבעה הצרפתית", wednesday: "עזרת תורה", thursday: "" },
+              { sunday: "", monday: "", tuesday: "16:15-17:00 אקורודנס קטנות", wednesday: "", thursday: "16:30-17:15 טרום בלט גן" },
+              { sunday: "", monday: "", tuesday: "17:00-18:00 אקורודנס א-ד", wednesday: "", thursday: "17:15-18:15 מחול כיתות א-ה" },
+              { sunday: "", monday: "", tuesday: "18:00-19:00 אקורודנס ה-ח", wednesday: "", thursday: "18:15-19:15 מחול כיתות ה-ח" },
+              { sunday: "", monday: "", tuesday: "", wednesday: "18:00-19:00 אקרודאנס כיתות א-ד", thursday: "" },
+              { sunday: "", monday: "", tuesday: "", wednesday: "19:00-20:00 אקרודאנס כיתות ה-ח", thursday: "" },
+
+
             ]
           }
         },
@@ -149,11 +154,16 @@ export default function LocationsPage() {
           facilities: ["מתנס מודרני"],
           schedule: {
             title: "מערכת שעות - הגבעה הצרפתית",
-            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            titles: { sunday: "", monday: "", tuesday: "גיטי ברמן", wednesday: "מירי", thursday: "אודל" },
             timeSlots: [
-              { sunday: "", monday: "16:15-17:00 אקורודנס קטנות", tuesday: "", wednesday: "16:30-17:15 טרום בלט גן", thursday: "" },
-              { sunday: "", monday: "17:00-18:00 אקורודנס א-ד", tuesday: "", wednesday: "17:15-18:15 מחול כיתות א-ה", thursday: "18:00-19:00 אקרודנס כיתות א-ד" },
-              { sunday: "", monday: "18:00-19:00 אקורודנס ה-ח", tuesday: "", wednesday: "18:15-19:15 מחול כיתות ה-ח", thursday: "19:00-20:00 אקרודנס כיתות ה-ח" }
+              { sunday: "", monday: "", tuesday: "הגבעה הצרפתית", wednesday: "עזרת תורה", thursday: "" },
+              { sunday: "", monday: "", tuesday: "16:15-17:00 אקורודנס קטנות", wednesday: "", thursday: "16:30-17:15 טרום בלט גן" },
+              { sunday: "", monday: "", tuesday: "17:00-18:00 אקורודנס א-ד", wednesday: "", thursday: "17:15-18:15 מחול כיתות א-ה" },
+              { sunday: "", monday: "", tuesday: "18:00-19:00 אקורודנס ה-ח", wednesday: "", thursday: "18:15-19:15 מחול כיתות ה-ח" },
+              { sunday: "", monday: "", tuesday: "", wednesday: "18:00-19:00 אקרודאנס כיתות א-ד", thursday: "" },
+              { sunday: "", monday: "", tuesday: "", wednesday: "19:00-20:00 אקרודאנס כיתות ה-ח", thursday: "" },
+
+
             ]
           }
         },
@@ -164,7 +174,7 @@ export default function LocationsPage() {
           facilities: ["סטודיו מתקדם"],
           schedule: {
             title: "מערכת שעות - נווה יעקב",
-            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            titles: { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
             timeSlots: [
               { sunday: "", monday: "16:15-17:00 טרום בלט גן", tuesday: "", wednesday: "", thursday: "" },
               { sunday: "", monday: "17:00-18:00 מחול משולב א-ד", tuesday: "", wednesday: "", thursday: "" },
@@ -185,13 +195,13 @@ export default function LocationsPage() {
           facilities: ["התעמלות קרקע סטודיו B"],
           schedule: {
             title: "מערכת שעות - ביתר",
-            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            titles: { sunday: "אביגיל", monday: "חדוה", tuesday: "רצי", wednesday: "פייגי", thursday: "רעות" },
             timeSlots: [
-              { sunday: "15:15-16:15 קרקע מתקדמות כיתות ג-ו", monday: "15:30-16:30 מחול משולב כיתות ד-ה-ו", tuesday: "", wednesday: "16:00-17:15 בלט קלאסי 1 ה-ו-ז", thursday: "16:30-17:15 טרום בלט" },
-              { sunday: "16:15-17:15 התעמלות קרקע כיתות א-ב", monday: "", tuesday: "", wednesday: "", thursday: "" },
-              { sunday: "17:15-18:15 קרקע מתקדמות כיתות ג-ו", monday: "", tuesday: "17:15-18:15 מחול משולב כיתות א-ב-ג", wednesday: "17:15-19:00 בלט קלאסי 2 עתודה + פוינט", thursday: "17:00-18:15 התעמלות קרקע נבחרת" },
-              { sunday: "", monday: "", tuesday: "18:00-19:15 מחול מודרני 1 ז-ח", wednesday: "19:00-20:30 מודרני 3", thursday: "18:15-19:30 התעמלות קרקע תיכון מתקדמות" },
-              { sunday: "", monday: "", tuesday: "19:30-21:00 מחול מודרני 2", wednesday: "20:30-22:15 קלאסי 3 להקה פוינט", thursday: "19:30-20:45 התעמלות קרקע תיכון מתחילות" }
+              { sunday: "15:15-16:15 קרקע מתקדמות כיתות ג-ו", monday: "", tuesday: "", wednesday: "15:30-16:30 מחול משולב כיתות ד-ה-ו", thursday: "" },
+              { sunday: "16:15-17:15 התעמלות קרקע כיתות א-ב", monday: "16:00-17:15 בלט קלאסי 1 ה-ו-ז", tuesday: "", wednesday: "16:30-17:15 טרום בלט", thursday: "" },
+              { sunday: "17:15-18:15 קרקע מתקדמות כיתות ג-ו", monday: "17:15-19:00 בלט קלאסי 2 עתודה + פוינט", tuesday: "", wednesday: "17:15-18:15 מחול משולב כיתות א-ב-ג", thursday: "17:00-18:15 התעמלות קרקע נבחרת" },
+              { sunday: "", monday: "19:00-20:30 מודרני 3", tuesday: "18:00-19:15 מחול מודרני 1 ז-ח", wednesday: "", thursday: "18:15-19:30 התעמלות קרקע תיכון מתקדמות" },
+              { sunday: "", monday: "20:30-22:15 קלאסי 3 להקה פוינט", tuesday: "19:30-21:00 מחול מודרני 2", wednesday: "", thursday: "19:30-20:45 התעמלות קרקע תיכון מתחילות" }
             ]
           }
         }
@@ -207,16 +217,13 @@ export default function LocationsPage() {
           address: "רמת אברהם",
           facilities: ["מתנס עירוני"],
           schedule: {
-            title: "מערכת שעות - גאולה",
-            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
+            title: "מערכת שעות - בית שמש",
+            titles: { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
             timeSlots: [
-              { sunday: "15:30-16:15 נטיי - התעמלות ונחול איידיש כיתות א-ג", monday: "שיעונים - ספורט טיפולי בנות 8-10", tuesday: "", wednesday: "התעמלות קורקט כיתות א-ג", thursday: "" },
-              { sunday: "16:15-17:00 התעמלות ונחול איידיש כיתות ד-ה", monday: "ספורט טיפולי בנות 5-7", tuesday: "שירה - סטורם כללי כיתות א-ג + א", wednesday: "התעמלות בנים 5-7", thursday: "" },
-              { sunday: "", monday: "ספורט טיפולי בנות 5-7", tuesday: "מודרני 2 כיתות ז-ח", wednesday: "התעמלות בנים 8-9", thursday: "" },
-              { sunday: "18:00-19:00 התעמלות ונחול איידיש סניור", monday: "ספורט טיפולי בנים 8-9", tuesday: "מריס - מכלל כיתות 2", wednesday: "התעמלות בנים 10-12", thursday: "" },
-              { sunday: "", monday: "", tuesday: "מחול מושלד כיתות ד-ח", wednesday: "", thursday: "מודרני 3" },
-              { sunday: "", monday: "", tuesday: "מכלל 3", wednesday: "מחול מודרני 1", thursday: "" },
-              { sunday: "", monday: "", tuesday: "", wednesday: "חול מודרני נעים", thursday: "" }
+              { sunday: "", monday: "", tuesday: "המערכת עדיין לא מעודכנת לשנת תשפ''ה", wednesday: "", thursday: "" },
+              { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
+              { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
+              { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" }
             ]
           }
         }
@@ -225,19 +232,8 @@ export default function LocationsPage() {
   ];
 
 
-  // מערכת שעות - גבעת שאול
-  const givatShaulSchedule = {
-    title: "מערכת שעות - גבעת שאול",
-    timeSlots: [
-      { sunday: "15:30-16:30 כיתות ג-ד-ה", monday: "15:30-16:30 כיתות ג-ד1", tuesday: "16:15-17:15 התעמלות בנים גילאי 4-6", wednesday: "16:30-17:15 קרקע גן", thursday: "16:30-17:15 גן חובה" },
-      { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "16:30-17:15 גן גיל 3-4" },
-      { sunday: "", monday: "17:15-18:15 קרקע א-ב", tuesday: "17:15-18:30 מודרני מתקדמות ה-ו", wednesday: "17:00-18:45 קלאסי 2+ פוינט", thursday: "17:15-18:15 כיתות א-ב" },
-      { sunday: "17:15-18:30 קלאסי 1 ה-ו-ז מתקדמות", monday: "", tuesday: "", wednesday: "", thursday: "" },
-      { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "18:15-19:15 ה-ו1 מודרני" },
-      { sunday: "18:30-20:15 קלאסי 3 פוינט עתודה", monday: "18:30-20:00 מודרני 1", tuesday: "18:30-20:00 קלאסי 1", wednesday: "18:45-20:30 מודרני 3 עתודה", thursday: "" },
-      { sunday: "20:15-22:00 קלאסי 4 פוינט להקה", monday: "20:00-21:30 מודרני 2", tuesday: "", wednesday: "20:30-22:15 מודרני 4 להקה", thursday: "" }
-    ]
-  };
+
+
 
 
   return (
