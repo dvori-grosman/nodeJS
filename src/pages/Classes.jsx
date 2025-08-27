@@ -106,14 +106,192 @@ export default function ClassesPage() {
 
   return (
     <>
-  <Helmet>
-     <title>שיעורי ריקוד - ריקוד ברוח הטובה</title>
-     <meta name="description" content="שיעורי ריקוד מגוונים לכל הרמות והגילאים. מצאו את השיעור המתאים לכם ובואו לרקוד ברוח הטובה" />
-     <meta name="keywords" content="שיעורי ריקוד, מחול, לימוד ריקוד, שיעורים למגוון סגנונות וגילאים, קבוצות ריקוד" />
-     <meta property="og:title" content="שיעורי ריקוד - ריקוד ברוח הטובה" />
-     <meta property="og:description" content="שיעורי ריקוד מגוונים לכל הרמות והגילאים" />
-     <meta property="og:url" content="https://rikud.netlify.app/Classes" />
-  </Helmet>
+      <Helmet>
+        <title>שיעורי ריקוד - ריקוד ברוח הטובה</title>
+        <meta name="description" content="שיעורי ריקוד מגוונים לכל הרמות והגילאים. מצאו את השיעור המתאים לכם ובואו לרקוד ברוח הטובה" />
+        <meta name="keywords" content="שיעורי ריקוד, מחול, לימוד ריקוד, שיעורים למגוון סגנונות וגילאים, קבוצות ריקוד" />
+        <meta property="og:title" content="שיעורי ריקוד - ריקוד ברוח הטובה" />
+        <meta property="og:description" content="שיעורי ריקוד מגוונים לכל הרמות והגילאים" />
+        <meta property="og:url" content="https://rikud.netlify.app/Classes" />
+      </Helmet>
+
+      <style>{`
+        .sparkle-dot {
+          position: absolute;
+          background-color: var(--gold);
+          border-radius: 50%;
+          opacity: 0;
+          transform: scale(0.5);
+          transition: opacity 0.5s ease;
+        }
+        .group:hover .sparkle-dot {
+          opacity: 0.8;
+        }
+        .group:hover .sparkle-dot:nth-child(1) {
+          animation: dance-circle-1 4s ease-in-out infinite;
+        }
+        .group:hover .sparkle-dot:nth-child(2) {
+          animation: dance-wave-2 3.5s ease-in-out infinite;
+        }
+        .group:hover .sparkle-dot:nth-child(3) {
+          animation: dance-spiral-3 5s linear infinite;
+        }
+        .group:hover .sparkle-dot:nth-child(4) {
+          animation: dance-bounce-4 3s ease-in-out infinite;
+        }
+        .group:hover .sparkle-dot:nth-child(5) {
+          animation: dance-figure8-5 6s ease-in-out infinite;
+        }
+        .group:hover .sparkle-dot:nth-child(6) {
+          animation: dance-pulse-6 2.5s ease-in-out infinite;
+        }
+        .group:hover .sparkle-dot:nth-child(7) {
+          animation: dance-arc-7 4.5s ease-in-out infinite;
+        }
+        .group:hover .sparkle-dot:nth-child(8) {
+          animation: dance-diagonal-8 3s ease-in-out infinite;
+        }
+        .group:hover .sparkle-dot:nth-child(9) {
+          animation: dance-zigzag-9 4s linear infinite;
+        }
+        .group:hover .sparkle-dot:nth-child(10) {
+          animation: dance-float-10 5s ease-in-out infinite;
+        }
+        .group:hover .sparkle-dot:nth-child(11) {
+          animation: dance-small-circle-11 2s linear infinite;
+        }
+        .group:hover .sparkle-dot:nth-child(12) {
+          animation: dance-line-12 3.5s ease-in-out infinite;
+        }
+        
+        @keyframes dance-circle-1 {
+          0%, 100% {
+            transform: translate(0, 0) scale(0.8);
+            opacity: 0.6;
+          }
+          25% {
+            transform: translate(15px, -10px) scale(1.2);
+            opacity: 1;
+          }
+          50% {
+            transform: translate(30px, 0) scale(0.9);
+            opacity: 0.8;
+          }
+          75% {
+            transform: translate(15px, 10px) scale(1.1);
+            opacity: 0.9;
+          }
+        }
+        
+        @keyframes dance-wave-2 {
+          0%, 100% {
+            transform: translate(0, 0) scale(0.6);
+            opacity: 0.5;
+          }
+          33% {
+            transform: translate(-20px, -15px) scale(1.3);
+            opacity: 1;
+          }
+          66% {
+            transform: translate(10px, 5px) scale(0.8);
+            opacity: 0.7;
+          }
+        }
+        
+        @keyframes dance-spiral-3 {
+          0% {
+            transform: translate(0, 0) scale(1) rotate(0deg);
+            opacity: 0.8;
+          }
+          25% {
+            transform: translate(20px, -20px) scale(1.4) rotate(90deg);
+            opacity: 1;
+          }
+          50% {
+            transform: translate(0, -40px) scale(0.7) rotate(180deg);
+            opacity: 0.6;
+          }
+          75% {
+            transform: translate(-20px, -20px) scale(1.2) rotate(270deg);
+            opacity: 0.9;
+          }
+          100% {
+            transform: translate(0, 0) scale(1) rotate(360deg);
+            opacity: 0.8;
+          }
+        }
+        
+        @keyframes dance-bounce-4 {
+          0%, 100% {
+            transform: translateY(0) scale(0.9);
+            opacity: 0.7;
+          }
+          25% {
+            transform: translateY(-25px) scale(1.3);
+            opacity: 1;
+          }
+          50% {
+            transform: translateY(-10px) scale(0.8);
+            opacity: 0.8;
+          }
+          75% {
+            transform: translateY(-20px) scale(1.1);
+            opacity: 0.9;
+          }
+        }
+        
+        @keyframes dance-figure8-5 {
+          0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+          12.5% { transform: translate(25px, -15px) scale(1.2); opacity: 0.9; }
+          25% { transform: translate(35px, 0) scale(0.8); opacity: 1; }
+          37.5% { transform: translate(25px, 15px) scale(1.1); opacity: 0.8; }
+          50% { transform: translate(0, 20px) scale(1.3); opacity: 0.7; }
+          62.5% { transform: translate(-25px, 15px) scale(0.9); opacity: 0.9; }
+          75% { transform: translate(-35px, 0) scale(1.2); opacity: 1; }
+          87.5% { transform: translate(-25px, -15px) scale(0.8); opacity: 0.8; }
+          100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+        }
+
+        @keyframes dance-pulse-6 {
+          0%, 100% { transform: scale(1); opacity: 0.5; }
+          50% { transform: scale(1.6); opacity: 1; }
+        }
+
+        @keyframes dance-arc-7 {
+          0%, 100% { transform: translate(0, 0) scale(0.9); }
+          25% { transform: translate(20px, -25px) scale(1.2); }
+          50% { transform: translate(40px, 0) scale(1); }
+          75% { transform: translate(20px, 10px) scale(0.8); }
+        }
+
+        @keyframes dance-diagonal-8 {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(30px, 30px) scale(1.3); }
+        }
+
+        @keyframes dance-zigzag-9 {
+          0%, 100% { transform: translate(0, 0); }
+          25% { transform: translate(15px, 10px); }
+          50% { transform: translate(0px, 20px); }
+          75% { transform: translate(-15px, 30px); }
+        }
+
+        @keyframes dance-float-10 {
+          0%, 100% { transform: translate(0, 0); opacity: 0.7; }
+          33% { transform: translate(10px, -15px); opacity: 1; }
+          66% { transform: translate(-10px, 5px); opacity: 0.5; }
+        }
+
+        @keyframes dance-small-circle-11 {
+          0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+          50% { transform: translate(10px, -10px) scale(1.1) rotate(180deg); }
+        }
+
+        @keyframes dance-line-12 {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(40px) scale(1.4); }
+        }
+      `}</style>
       <div className="min-h-screen py-12 dark-bg">
         {/* Hero Section */}
         <section className="relative darker-bg py-20">
@@ -133,140 +311,143 @@ export default function ClassesPage() {
         </section>
 
         {/* Classes Grid */}
+        {/* Classes Grid */}
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="space-y-16">
+            <div className="space-y-0">
               {classes.map((classItem, index) => (
-                <Card key={index} className="overflow-hidden darker-bg border-gray-700 elegant-shadow hover:shadow-2xl transition-all duration-500">
-                  <div className={`grid grid-cols-1 lg:grid-cols-2 ${index % 2 === 1 ? 'lg:grid-cols-2' : ''}`}>
-                    {/* Content */}
-                    <div className={`p-8 lg:p-12 ${index % 2 === 1 ? 'lg:order-2' : ''}`}>
-                      <div className="flex items-center gap-6 mb-6">
-                        <div className="flex-shrink-0 w-20 h-20 rounded-full gold-bg flex items-center justify-center">
-                          {classItem.icon}
-                        </div>
-                        <div>
-                          <h2 className="text-3xl font-bold white-text">{classItem.title}</h2>
-                          <p className="pink-text font-medium">{classItem.subtitle}</p>
-                        </div>
-                      </div>
+                <div key={index} className="group">
+                  <Card className="relative overflow-hidden darker-bg border-gray-700 elegant-shadow hover:shadow-2xl hover:shadow-yellow-500/10 transition-all duration-500">
+                    {/* פס זהב - מחליף צד לפי אינדקס */}
+                    <div className={`absolute top-0 h-full w-3 gold-bg transition-all duration-500 group-hover:w-4 ${index % 2 === 0 ? 'right-0' : 'left-0'}`}></div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 lg:p-12">
 
-                      <p className="text-gray-300 mb-6 leading-relaxed text-lg">
-                        {classItem.description}
-                      </p>
-
-                      {/* Structure/Features */}
-                      <div className="mb-6">
-                        <h4 className="font-semibold white-text mb-3">{classItem.structure || "מה כולל השיעור:"}</h4>
-                        <div className="space-y-2">
-                          {classItem.features.map((feature, idx) => (
-                            <div key={idx} className="flex items-start gap-3">
-                              <div className="w-2 h-2 gold-bg rounded-full flex-shrink-0 mt-2"></div>
-                              <span className="text-gray-400">{feature}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Extra Info */}
-                      {classItem.extraInfo && (
-                        <div className="mb-6 dark-bg p-4 rounded-lg border border-gray-700">
-                          <p className="text-gray-300 italic">{classItem.extraInfo}</p>
-                        </div>
-                      )}
-
-                      {/* Equipment */}
-                      {classItem.equipment && (
-                        <div className="mb-6 dark-bg p-4 rounded-lg border border-gray-700">
-                          <h4 className="font-medium pink-text mb-2">הציוד שלנו:</h4>
-                          <p className="text-gray-300">{classItem.equipment}</p>
-                        </div>
-                      )}
-
-                      {/* Info Grid */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                        <div className="dark-bg p-4 rounded-lg border border-gray-700">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Clock className="w-4 h-4 pink-text" />
-                            <span className="font-medium white-text">משך השיעור</span>
+                      {/* החלק הראשון */}
+                      <div>
+                        <div className="flex items-center gap-6 mb-6">
+                          <div className="flex-shrink-0 w-20 h-20 rounded-full gold-bg flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:-rotate-6">
+                            {classItem.icon}
                           </div>
-                          <p className="text-gray-300">{classItem.duration}</p>
-                        </div>
-                        <div className="dark-bg p-4 rounded-lg border border-gray-700">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Users className="w-4 h-4 pink-text" />
-                            <span className="font-medium white-text">גילאים</span>
+                          <div>
+                            <h2 className="text-3xl font-bold white-text">{classItem.title}</h2>
+                            <p className="pink-text font-medium">{classItem.subtitle}</p>
                           </div>
-                          <p className="text-gray-300">{classItem.ages}</p>
                         </div>
-                      </div>
 
-                      {/* Levels */}
-                      <div className="mb-6">
-                        <h4 className="font-medium white-text mb-2">רמות:</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {classItem.levels.map((level, idx) => (
-                            <Badge key={idx} className="bg-gray-700 text-gray-300 border-gray-600">
-                              {level}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Suitable For */}
-                      <div className="dark-bg p-4 rounded-lg mb-6 border border-gray-700">
-                        <h4 className="font-medium pink-text mb-2 flex items-center gap-2">
-                          <Heart className="w-4 h-4" />
-                          מתאים לי?
-                        </h4>
-                        <p className="text-gray-300">{classItem.suitableFor}</p>
-                      </div>
-
-                      {/* CTA */}
-                      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                        <Link to={createPageUrl("Contact")}>
-                          <Button className="btn-gold w-full sm:w-auto">
-                            טופס הרשמה
-                            <ArrowLeft className="mr-2 w-4 h-4" />
-                          </Button>
-                        </Link>
-                        <Link to={createPageUrl("Contact")}>
-                          <Button className="btn-outline-pink w-full sm:w-auto">
-                            דברי איתנו
-                          </Button>
-                        </Link>
-                      </div>
-
-                      {/* Combination Option */}
-                      <div className="bg-gradient-to-r from-pink-600/20 to-yellow-600/20 p-4 rounded-lg text-center">
-                        <p className="text-gray-300 text-sm mb-2">
-                          <strong className="gold-text">לבחירתך:</strong> ניתן גם לשלב בין שיעורים - מסלול של 2 או 3 שיעורים בשבוע
+                        <p className="text-gray-300 mb-6 leading-relaxed text-lg">
+                          {classItem.description}
                         </p>
-                        <Link to={createPageUrl("Contact")}>
-                          <Button variant="link" className="pink-text text-sm p-0">
-                            דברי איתנו לפרטים נוספים
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
 
-                    {/* Visual Section */}
-                    <div className={`dark-bg relative overflow-hidden min-h-96 flex items-center justify-center ${index % 2 === 1 ? 'lg:order-1' : ''}`}>
-                      <div className="text-center text-white p-8">
-                        <div className="mb-6 opacity-30 transform scale-150">
-                          {React.cloneElement(classItem.icon, { className: 'text-7xl' })}
+                        <div className="mb-6">
+                          <h4 className="font-semibold white-text mb-3">{classItem.structure || "לשיעור מבנה קבוע:"}</h4>
+                          <div className="space-y-2">
+                            {classItem.features.map((feature, idx) => (
+                              <div key={idx} className="flex items-start gap-3">
+                                <div className="w-2 h-2 gold-bg rounded-full flex-shrink-0 mt-2"></div>
+                                <span className="text-gray-400">{feature}</span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                        <h3 className="text-2xl font-bold mb-2 white-text">{classItem.title}</h3>
-                        <p className="text-lg text-gray-400">חוויה בלתי נשכחת</p>
+
+                        <div className="space-y-4">
+                          <div>
+                            <h4 className="font-semibold white-text flex items-center gap-2 mb-2">
+                              <Clock className="w-4 h-4 pink-text" />
+                              משך השיעור:
+                            </h4>
+                            <p className="text-gray-300">{classItem.duration}</p>
+                          </div>
+
+                          <div>
+                            <h4 className="font-semibold white-text flex items-center gap-2 mb-2">
+                              <Users className="w-4 h-4 pink-text" />
+                              גילאים:
+                            </h4>
+                            <p className="text-gray-300">{classItem.ages}</p>
+                          </div>
+                        </div>
                       </div>
 
-                      {/* Decorative Elements */}
-                      <div className="sparkles" style={{ top: '20%', right: '20%', animationDelay: '0s' }}></div>
-                      <div className="sparkles" style={{ bottom: '30%', left: '15%', animationDelay: '1s' }}></div>
-                      <div className="sparkles" style={{ top: '60%', left: '30%', animationDelay: '2s' }}></div>
+                      {/* החלק השני */}
+                      <div className="flex flex-col justify-between h-full">
+                        <div>
+                          <div className="mb-6">
+                            <h4 className="font-semibold white-text mb-3">רמות:</h4>
+                            <div className="flex flex-wrap gap-2">
+                              {classItem.levels.map((level, idx) => (
+                                <Badge key={idx} className="bg-white/5 border border-white/20 text-gray-300 hover:bg-pink-500/10 hover:border-pink-500/40 transition-colors">
+                                  {level}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="mb-6 dark-bg p-4 rounded-lg border border-gray-700 transition-colors hover:border-pink-500/50">
+                            <h4 className="font-medium pink-text mb-2 flex items-center gap-2">
+                              <Heart className="w-4 h-4" />
+                              מתאים לי?
+                            </h4>
+                            <p className="text-gray-300">{classItem.suitableFor}</p>
+                          </div>
+                        </div>
+
+                        <div>
+                          {/* Decorative Burst Element */}
+                          <div className="my-8 h-12 relative" aria-hidden="true">
+                            <div className="absolute w-full h-full top-0 left-0">
+                              <div className="sparkle-dot" style={{ width: '6px', height: '6px', top: '45%', left: '20%' }}></div>
+                              <div className="sparkle-dot" style={{ width: '3px', height: '3px', top: '65%', left: '35%' }}></div>
+                              <div className="sparkle-dot" style={{ width: '8px', height: '8px', top: '50%', left: '50%', transform: 'translateX(-50%)' }}></div>
+                              <div className="sparkle-dot" style={{ width: '4px', height: '4px', top: '30%', left: '75%' }}></div>
+                              <div className="sparkle-dot" style={{ width: '5px', height: '5px', top: '70%', left: '85%' }}></div>
+                              <div className="sparkle-dot" style={{ width: '7px', height: '7px', top: '10%', left: '10%' }}></div>
+                              <div className="sparkle-dot" style={{ width: '4px', height: '4px', top: '25%', left: '55%' }}></div>
+                              <div className="sparkle-dot" style={{ width: '6px', height: '6px', top: '80%', left: '45%' }}></div>
+                              <div className="sparkle-dot" style={{ width: '3px', height: '3px', top: '90%', left: '70%' }}></div>
+                              <div className="sparkle-dot" style={{ width: '5px', height: '5px', top: '5%', left: '80%' }}></div>
+                              <div className="sparkle-dot" style={{ width: '4px', height: '4px', top: '55%', left: '5%' }}></div>
+                              <div className="sparkle-dot" style={{ width: '7px', height: '7px', top: '75%', left: '25%' }}></div>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                            <Link to={createPageUrl("Contact")}>
+                              <Button className="btn-gold w-full sm:w-auto">
+                                טופס הרשמה
+                                <ArrowLeft className="mr-2 w-4 h-4" />
+                              </Button>
+                            </Link>
+                            <Link to={createPageUrl("Contact")}>
+                              <Button className="btn-outline-pink w-full sm:w-auto">
+                                דברי איתנו
+                              </Button>
+                            </Link>
+                          </div>
+
+                          <div className="bg-gradient-to-r from-pink-600/20 to-yellow-600/20 p-4 rounded-lg text-center">
+                            <p className="text-gray-300 text-sm mb-2">
+                              <strong className="gold-text">לבחירתך:</strong> ניתן גם לשלב בין שיעורים - מסלול של 2 או 3 שיעורים בשבוע
+                            </p>
+                            <Link to={createPageUrl("Contact")}>
+                              <Button variant="link" className="pink-text text-sm p-0">
+                                דברי איתנו לפרטים נוספים
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </Card>
+                  </Card>
+
+                  {/* Decorative Separator */}
+                  {index < classes.length - 1 && (
+                    <div className="my-12 flex items-center justify-center opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-700 ease-in-out" aria-hidden="true">
+                      <div className="flex-grow h-px bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent"></div>
+                      <div className="flex-grow h-px bg-gradient-to-l from-transparent via-yellow-500/30 to-transparent"></div>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </div>

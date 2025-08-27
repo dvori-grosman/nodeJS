@@ -53,11 +53,16 @@ export default function ShopPage() {
                           {product.icon}
                         </div>
                         <h3 className="text-2xl font-bold white-text mb-6">{product.name}</h3>
-                        <Link to={createPageUrl("Contact")}>
+                        <a
+                          href="https://forms.fillout.com/t/5UoM23NsYNus"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-semibold pink-text hover:underline"
+                        >
                           <Button className="btn-outline-pink w-full">
                             לרכישה
                           </Button>
-                        </Link>
+                        </a>
                       </CardContent>
                     </Card>
                   ))}

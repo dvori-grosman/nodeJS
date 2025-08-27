@@ -181,12 +181,7 @@ export default function AppLayout({ children, currentPageName }) {
           letter-spacing: 0.05em;
         }
 
-        span {
-          font-family: 'Playpen Sans Hebrew', sans-serif;
-          font-weight: 300;
-          letter-spacing: 0.02em;
-        }
-        
+      
         .gold-text { color: var(--gold); }
         .pink-text { color: var(--soft-pink); }
         .white-text { color: white; }
