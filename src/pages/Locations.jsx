@@ -64,16 +64,16 @@ export default function LocationsPage() {
           extension: "שלוחה לגיל הרך - אלקבץ 16",
           schedule: {
             title: "מערכת שעות - גבעת שאול",
-            titles: { sunday: "מרים", monday: "עדינה", tuesday: "שירה", wednesday: "חדווה ", thursday: "גיטי" },
+            titles: { sunday: "מרים", monday: "עדינה", tuesday: "חדווה", wednesday: "שירה ", thursday: "גיטי" },
             timeSlots: [
-              { sunday: "", monday: "15:30-16:30 כיתות ג-ד 2", tuesday: "15:30-16:30 כיתות ד-ו מחול מתחילות", wednesday: "", thursday: "" },
-              { sunday: "16:15-17:15 התעמלות לבנים", monday: "16:30-17:15 גיל 3-4", tuesday: "16:30-17:15 גן חובה", wednesday: "", thursday: "16:30-17:15 קרקע גן" },
-              { sunday: "17:15-18:30 קלאסי 1 ה-ו-ז מתקדמות", monday: "17:15-18:15 מודרני מתקדמות ה-ו", tuesday: "17:15-18:15 כיתות א-ב-ג", wednesday: "17:00-18:45 קלאסי 2+ פוינט", thursday: "17:15-18:15 קרקע א-ב" },
-              { sunday: "18:30-20:15 קלאסי 3 פוינט עתודה", monday: "18:30-20:00 מודרני 1", tuesday: "18:30-20:00 קלאסי 1", wednesday: "18:45-20:30 מודרני 3 עתודה", thursday: "18:15-19:30 אקורודנס כיתות ו ומעלה" },
-              { sunday: "20:15-22:00 קלאסי 4 פוינט להקה", monday: "20:00-21:30 מודרני 2", tuesday: "התעמלות קרקע: רעות, סימי, מירי", wednesday: "20:30-22:15 מודרני 4 להקה", thursday: "" },
-              { sunday: "אלקבץ/אילה מחול", monday: "", tuesday: "15:30-16:30 כיתות ג-ד-ה", wednesday: "", thursday: "" },
-              { sunday: "16:15-17:00 גן", monday: "", tuesday: "16:30-17:30 כיתות ו-ז", wednesday: "", thursday: "" },
-              { sunday: "17:00-18:00 כיתות א'-ד'", monday: "", tuesday: "17:30-18:45 ח תיכון", wednesday: "", thursday: "" }
+              { sunday: "", monday: "15:15-16:15 כיתות ג-ד 2", tuesday: "16:15-17:15 התעמלות בנים", wednesday: "15:15-16:15 כיתות ד-ו מחול מתחילות", thursday: "" },
+              { sunday: "16:30-17:45 קלאסי 1 ה-ו-ז מתקדמות", monday: "16:15-17:00 קרקע גן בסטודיו", tuesday: "17:15-19:00 קלאסי 2 + פוינט", wednesday: "16:15-17:00 גיל 3-4", thursday: "16:15-17:00 גן חובה" },
+              { sunday: "17:45-19:30 קלאסי 3 פוינט עתודה", monday: "17:00-18:15 אקרודנס", tuesday: "19:00-20:45 מודרני 3 עתודה", wednesday: "18:15-19:15 מודרני מתקדמות ה-ו", thursday: "17:00-18:00 כיתות א-ב-ג" },
+              { sunday: "19:90-21:15 קלאסי 4 פוינט להקה", monday: "18:15-19:45 מודרני 1-2", tuesday: "20:45-22:30 מודרני 4 להקה", wednesday: "19:15-20:45 קלאסי 1", thursday: "" },
+              { sunday: "21:15-22:15 נשים מחול לנשים", monday: "", tuesday: "התעמלות קרקע: רעות, סימי, מירי", wednesday: "", thursday: "" },
+              { sunday: "אלקבץ/אילה מחול", monday: "", tuesday: "15:30-16:30 קרקע שעה 1", wednesday: "", thursday: "" },
+              { sunday: "16:15-17:00 גן", monday: "", tuesday: "16:30-17:30 קרקע שעה 2", wednesday: "", thursday: "" },
+              { sunday: "17:00-18:00 כיתות א'-ד'", monday: "", tuesday: "17:30-18:45 קרקע שעה 3", wednesday: "", thursday: "" }
             ]
           }
         },
@@ -195,9 +195,9 @@ export default function LocationsPage() {
           facilities: ["התעמלות קרקע סטודיו B"],
           schedule: {
             title: "מערכת שעות - ביתר",
-            titles: { sunday: "אביגיל", monday: "חדוה", tuesday: "רצי", wednesday: "פייגי", thursday: "רעות" },
+            titles: { sunday: "קרקע רעות/אביגיל", monday: "חדוה", tuesday: "רצי", wednesday: "פייגי", thursday: "רעות" },
             timeSlots: [
-              { sunday: "15:15-16:15 קרקע מתקדמות כיתות ג-ו", monday: "", tuesday: "", wednesday: "15:30-16:30 מחול משולב כיתות ד-ה-ו", thursday: "" },
+              { sunday: "15:15-16:15 קרקע שעה 1 יסודי מתקדמות/יסודי מתחילות", monday: "", tuesday: "", wednesday: "15:30-16:30 מחול משולב כיתות ד-ה-ו", thursday: "" },
               { sunday: "16:15-17:15 התעמלות קרקע כיתות א-ב", monday: "16:00-17:15 בלט קלאסי 1 ה-ו-ז", tuesday: "", wednesday: "16:30-17:15 טרום בלט", thursday: "" },
               { sunday: "17:15-18:15 קרקע מתקדמות כיתות ג-ו", monday: "17:15-19:00 בלט קלאסי 2 עתודה + פוינט", tuesday: "", wednesday: "17:15-18:15 מחול משולב כיתות א-ב-ג", thursday: "17:00-18:15 התעמלות קרקע נבחרת" },
               { sunday: "", monday: "19:00-20:30 מודרני 3", tuesday: "18:00-19:15 מחול מודרני 1 ז-ח", wednesday: "", thursday: "18:15-19:30 התעמלות קרקע תיכון מתקדמות" },

@@ -13,7 +13,7 @@ export default function ClassesPage() {
       title: "בלט קלאסי",
       subtitle: "עשירה רכה חכמה אומנותית ואצילית",
       description: "שפת התנועה של הבלט הקלאסי הינה עשירה רכה חכמה אומנותית ואצילית.",
-      icon: <img src="/ballet.png" alt="נעלי בלט" className="w-16 h-16 object-contain" />,
+      icon: <img src="/02.png" alt="נעלי בלט" className="w-16 h-16 object-contain" />,
       structure: "לשיעור בלט מבנה קבוע:",
       features: [
         "תרגילי בר - עבודה על יציבה ותנוחה",
@@ -30,7 +30,7 @@ export default function ClassesPage() {
       title: "מחול מודרני",
       subtitle: "שפת תנועה מדהימה מלאת הבעה",
       description: "מחול מודרני היא שפת תנועה מדהימה מלאת הבעה, יצירתיות, רגש וזרימה.",
-      icon: <img src="/ballet.png" alt="מחול מודרני" className="w-16 h-16 object-contain" />,
+      icon: <img src="/01.png" alt="מחול מודרני" className="w-16 h-16 object-contain" />,
       structure: "השיעור מורכב מ:",
       features: [
         "תרגילי טכניקה - יסודות המחול המודרני",
@@ -49,7 +49,7 @@ export default function ClassesPage() {
       title: "מחול לגיל הרך",
       subtitle: "חוג מחול מושלם לילדות קטנות",
       description: "שעה של תנועה, מוזיקה וכיף. הבלרינות הקטנות לומדות את שפת התנועה, צעדי הבסיס, מושגים ופוזיציות מתוך משחק, דמיון וחיבור לעולמן. זהו חוג מחול לילדות קטנות המושלם להתחיל בו את דרכן.",
-      icon: <img src="/ballet.png" alt="מחול לגיל הרך" className="w-16 h-16 object-contain" />,
+      icon: <img src="/04.png" alt="מחול לגיל הרך" className="w-16 h-16 object-contain" />,
       structure: "עם בנות הגיל הרך אנו שמות דגש על:",
       features: [
         "פיתוח מוטוריקה גסה ועדינה",
@@ -68,7 +68,7 @@ export default function ClassesPage() {
       title: "אקרודאנס",
       subtitle: "סגנון מחול המשלב בין טכניקות מחול לאלמנטים אקרובטיים",
       description: "אקרודאנס הוא סגנון מחול המשלב בין טכניקות מחול - סיבובים, צעדים, החלקות, עבודת רצפה לאלמנטים מעולם האקרובטיקה.",
-      icon: <img src="/karaka.png" alt="אקרודאנס" className="w-16 h-16 object-contain" />,
+      icon: <img src="/03.png" alt="אקרודאנס" className="w-16 h-16 object-contain" />,
       structure: "האלמנטים כוללים:",
       features: [
         "גלגלונים בכל הווריאציות",
@@ -86,7 +86,7 @@ export default function ClassesPage() {
       title: "אקרובטיקה - התעמלות קרקע",
       subtitle: "עופי על זה! חוג התעמלות קרקע בירושלים והסביבה",
       description: "תחום פופולרי, אנרגטי, מוציא הרבה אנרגיה, מחזק מאתגר ומהנה מאוד! שיעורי האקרובטיקה וההתעמלות קרקע שלנו מפתחים יכולות שיווי משקל, כוח מתפרץ, אומץ, התמצאות במרחב, גמישות, זריזות ומהירות.",
-      icon: <img src="/akrobatika.png" alt="אקרובטיקה" className="w-16 h-16 object-contain" />,
+      icon: <img src="/01.png" alt="אקרובטיקה" className="w-16 h-16 object-contain" />,
       structure: "במהלך השנה לומדים ומתרגלים:",
       features: [
         "עמידות ידיים בכל הרמות",
@@ -325,7 +325,7 @@ export default function ClassesPage() {
                       {/* החלק הראשון */}
                       <div>
                         <div className="flex items-center gap-6 mb-6">
-                          <div className="flex-shrink-0 w-20 h-20 rounded-full gold-bg flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:-rotate-6">
+                          <div className="flex-shrink-0 w-20 h-20 rounded-full bg-gray-800 flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:-rotate-6">
                             {classItem.icon}
                           </div>
                           <div>

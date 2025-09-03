@@ -53,7 +53,7 @@ export default function PerformancesPage() {
       <meta name="description" content="צפו במופעי ריקוד מרגשים ומעוררי השראה. לוח מופעים עתידיים וגלריית מופעים קודמים"/>
       <meta name="keywords" content="מופעי ריקוד, הופעות, במה, מופעים, תיאטרון מחול"/> 
       <meta property="og:title" content="מופעים - ריקוד ברוח הטובה"/>
-      <meta property="og:description" content="מופעי ריקוד מרגשים ומעוررי השראה"/>
+      <meta property="og:description" content="מופעי ריקוד מרגשים ומעוררי השראה"/>
       <meta property="og:url" content="https://rikud.netlify.app/Performances"/>     
     </Helmet>
     <div className="min-h-screen py-12 dark-bg">
