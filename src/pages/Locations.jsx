@@ -1,235 +1,94 @@
-import React, { useState } from "react";
-import { MapPin, Phone, Clock, Car, X } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { MapPin, Phone, Clock, Car, X, User, Calendar } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Helmet } from "react-helmet-async";
 
 export default function LocationsPage() {
-
   const [selectedBranch, setSelectedBranch] = useState(null);
-  const [isPdfOpen, setIsPdfOpen] = useState(false);
+  const [branches, setBranches] = useState([]);
+  const [schedule, setSchedule] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const openPdf = () => {
-    setIsPdfOpen(true);
-  };
-
-  const closePdf = () => {
-    setIsPdfOpen(false);
-  };
-  /**
-   * Helper function to render a single schedule cell.
-   * It handles two data formats:
-   * 1. Old format: activityString is just the activity name, rowTime is the time for the whole row.
-   * 2. New format: activityString includes time (e.g., "HH:MM-HH:MM Activity Name"), rowTime is undefined.
-   * @param {string} activityString The string representing the activity for the day.
-   * @param {string | undefined} rowTime The time for the entire row (if applicable to the old format).
-   * @returns {JSX.Element | null} The JSX to render the cell content, or null if no activity.
-   */
-  const renderScheduleCell = (activityString, rowTime) => {
-    if (!activityString) return null; // No activity for this day/slot
-
-    let displayActivity = activityString;
-    let displayTime = rowTime;
-
-    if (!rowTime) { // If there's no row-level time (implies new format)
-      const parts = activityString.split(' ');
-      // Check if the first part looks like a time range (contains a hyphen)
-      if (parts.length > 1 && parts[0].includes('-') && parts[0].includes(':')) {
-        displayTime = parts[0];
-        displayActivity = parts.slice(1).join(' ');
-      } else {
-        // It's just an activity name without time prefix (e.g., "שיעונים - ...")
-        displayActivity = activityString;
-        displayTime = ''; // No time to display
+  // Fetch branches and schedule data from server
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch branches
+        const branchesResponse = await fetch('http://localhost:5000/api/branches');
+        const branchesData = await branchesResponse.json();
+        
+        // Fetch schedule
+        const scheduleResponse = await fetch('http://localhost:5000/api/classes/schedule');
+        const scheduleData = await scheduleResponse.json();
+        
+        if (branchesData.success && scheduleData.success) {
+          setBranches(branchesData.data);
+          setSchedule(scheduleData.data);
+        } else {
+          setError('שגיאה בטעינת נתוני הסניפים');
+        }
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('שגיאה בחיבור לשרת');
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
+    fetchData();
+  }, []);
+
+  // Fetch schedule for specific branch when selected
+  const fetchBranchSchedule = async (branchId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/classes/schedule?branch=${branchId}`);
+      const data = await response.json();
+      if (data.success) {
+        return data.data;
+      }
+    } catch (err) {
+      console.error('Error fetching branch schedule:', err);
+    }
+    return {};
+  };
+
+  const handleBranchClick = async (branch) => {
+    const branchSchedule = await fetchBranchSchedule(branch._id);
+    setSelectedBranch({
+      ...branch,
+      schedule: branchSchedule
+    });
+  };
+  const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+
+  if (loading) {
     return (
-      <div className="text-gray-300 font-medium text-sm leading-tight">
-        <div>{displayActivity}</div>
-        {displayTime && <div className="gold-text text-xs mt-1">{displayTime}</div>}
+      <div className="min-h-screen py-12 dark-bg flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto mb-4"></div>
+          <p className="text-gray-300">טוען נתוני סניפים...</p>
+        </div>
       </div>
     );
-  };
+  }
 
-  const locations = [
-    {
-      city: "חוגי מחול בירושלים",
-      branches: [
-        {
-          name: "גבעת שאול",
-          src: "/givatShaulSchedule.pdf",
-          address: "מרכז הספורט בית חינוך עוורים, רחוב דגל ראובן 8",
-          facilities: ["סטודיו מחול", "אולם ספורט התעמלות קרקע"],
-          extension: "שלוחה לגיל הרך - אלקבץ 16",
-          schedule: {
-            title: "מערכת שעות - גבעת שאול",
-            titles: { sunday: "מרים", monday: "עדינה", tuesday: "חדווה", wednesday: "שירה ", thursday: "גיטי" },
-            timeSlots: [
-              { sunday: "", monday: "15:15-16:15 כיתות ג-ד 2", tuesday: "16:15-17:15 התעמלות בנים", wednesday: "15:15-16:15 כיתות ד-ו מחול מתחילות", thursday: "" },
-              { sunday: "16:30-17:45 קלאסי 1 ה-ו-ז מתקדמות", monday: "16:15-17:00 קרקע גן בסטודיו", tuesday: "17:15-19:00 קלאסי 2 + פוינט", wednesday: "16:15-17:00 גיל 3-4", thursday: "16:15-17:00 גן חובה" },
-              { sunday: "17:45-19:30 קלאסי 3 פוינט עתודה", monday: "17:00-18:15 אקרודנס", tuesday: "19:00-20:45 מודרני 3 עתודה", wednesday: "18:15-19:15 מודרני מתקדמות ה-ו", thursday: "17:00-18:00 כיתות א-ב-ג" },
-              { sunday: "19:90-21:15 קלאסי 4 פוינט להקה", monday: "18:15-19:45 מודרני 1-2", tuesday: "20:45-22:30 מודרני 4 להקה", wednesday: "19:15-20:45 קלאסי 1", thursday: "" },
-              { sunday: "21:15-22:15 נשים מחול לנשים", monday: "", tuesday: "התעמלות קרקע: רעות, סימי, מירי", wednesday: "", thursday: "" },
-              { sunday: "אלקבץ/אילה מחול", monday: "", tuesday: "15:30-16:30 קרקע שעה 1", wednesday: "", thursday: "" },
-              { sunday: "16:15-17:00 גן", monday: "", tuesday: "16:30-17:30 קרקע שעה 2", wednesday: "", thursday: "" },
-              { sunday: "17:00-18:00 כיתות א'-ד'", monday: "", tuesday: "17:30-18:45 קרקע שעה 3", wednesday: "", thursday: "" }
-            ]
-          }
-        },
-        {
-          name: "גאולה",
-          // לשנות כאן
-          src: "/schedule.pdf",
-          address: "סטודיו מחול ישעיהו 19",
-          facilities: ["סטודיו מחול מקצועי"],
-          extension: "התעמלות קרקע - אולם ספורט סנהדרין רח' מנחת יצחק 23",
-          schedule: {
-            title: "מערכת שעות - גאולה",
-            titles: { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
-            timeSlots: [
-              { sunday: "", monday: "", tuesday: "המערכת עדיין לא מעודכנת לשנת תשפ''ה", wednesday: "", thursday: "" },
-              { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
-              { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
-              { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" }
-            ]
-          }
-        },
-        {
-          name: "רמות",
-          src: "/ramotSchedule.pdf",
-          address: "מתנס מעלה רמות גולה מאיר 474",
-          facilities: ["מתנס עירוני"],
-          schedule: {
-            title: "מערכת שעות - רמות",
-            titles: { sunday: "ראשון", monday: "שני", tuesday: "שלישי", wednesday: "רביעי", thursday: "חמישי" },
-            timeSlots: [
-              { sunday: "15:15-16:15 מחול משולב כיתות ד-ה-ו", monday: "", tuesday: "15:15-16:15 אקרובטיקה מתקדמות", wednesday: "", thursday: "" },
-              { sunday: "16:15-17:00 טרום בלט גן", monday: "", tuesday: "16:15-17:15 אקרובטיקה כיתות א-ה", wednesday: "", thursday: "" },
-              { sunday: "17:00-18:00 מחול משולב כיתות א-ב-ג", monday: "", tuesday: "17:15-18:30 אקרובטיקה כיתות ו-ז ותיכון", wednesday: "", thursday: "" },
-              { sunday: "18:00-19:15 מחול מודרני ז-ח ותיכון", monday: "", tuesday: "18:30-19:45 בלט קלאסי ח ותיכון", wednesday: "", thursday: "" }
-            ]
-          }
-        },
-        {
-          name: "רמת שלמה",
-          src: "/ramatShlomoSchedule.pdf",
-          address: "מתנס רמת שלמה",
-          facilities: ["מתנס עירוני"],
-          schedule: {
-            title: "מערכת שעות - רמת שלמה",
-            titles: { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
-            timeSlots: [
-              { sunday: "16:15-17:00 טרום בלט גן", monday: "", tuesday: "", wednesday: "", thursday: "" },
-              { sunday: "17:00-18:00 מחול משולב א-ד", monday: "16:15-17:15 אקרודנס א-ה", tuesday: "", wednesday: "", thursday: "" },
-              { sunday: "18:00-19:00 מחול משולב כיתות ה-ו-ז", monday: "17:15-18:15 אקרודנס ו-ח ותיכון", tuesday: "", wednesday: "", thursday: "" },
-              { sunday: "19:00-20:15 בלט קלאסי ח ותיכון", monday: "", tuesday: "", wednesday: "", thursday: "" }
-            ]
-          }
-        },
-        {
-          name: "עזרת תורה",
-          src: "/neveChemedSchedule.pdf",
-          address: "עזרת תורה 16 מתנס נווה חמד",
-          facilities: ["מתנס איכותי"],
-          schedule: {
-            title: "מערכת שעות - עזרת תורה",
-            titles: { sunday: "", monday: "", tuesday: "גיטי ברמן", wednesday: "מירי", thursday: "אודל" },
-            timeSlots: [
-              { sunday: "", monday: "", tuesday: "הגבעה הצרפתית", wednesday: "עזרת תורה", thursday: "" },
-              { sunday: "", monday: "", tuesday: "16:15-17:00 אקורודנס קטנות", wednesday: "", thursday: "16:30-17:15 טרום בלט גן" },
-              { sunday: "", monday: "", tuesday: "17:00-18:00 אקורודנס א-ד", wednesday: "", thursday: "17:15-18:15 מחול כיתות א-ה" },
-              { sunday: "", monday: "", tuesday: "18:00-19:00 אקורודנס ה-ח", wednesday: "", thursday: "18:15-19:15 מחול כיתות ה-ח" },
-              { sunday: "", monday: "", tuesday: "", wednesday: "18:00-19:00 אקרודאנס כיתות א-ד", thursday: "" },
-              { sunday: "", monday: "", tuesday: "", wednesday: "19:00-20:00 אקרודאנס כיתות ה-ח", thursday: "" },
-
-
-            ]
-          }
-        },
-        {
-          name: "הגבעה הצרפתית",
-          src: "/neveChemedSchedule.pdf",
-          address: "מתנס הגבעה הצרפתית רח' ההגנה 13",
-          facilities: ["מתנס מודרני"],
-          schedule: {
-            title: "מערכת שעות - הגבעה הצרפתית",
-            titles: { sunday: "", monday: "", tuesday: "גיטי ברמן", wednesday: "מירי", thursday: "אודל" },
-            timeSlots: [
-              { sunday: "", monday: "", tuesday: "הגבעה הצרפתית", wednesday: "עזרת תורה", thursday: "" },
-              { sunday: "", monday: "", tuesday: "16:15-17:00 אקורודנס קטנות", wednesday: "", thursday: "16:30-17:15 טרום בלט גן" },
-              { sunday: "", monday: "", tuesday: "17:00-18:00 אקורודנס א-ד", wednesday: "", thursday: "17:15-18:15 מחול כיתות א-ה" },
-              { sunday: "", monday: "", tuesday: "18:00-19:00 אקורודנס ה-ח", wednesday: "", thursday: "18:15-19:15 מחול כיתות ה-ח" },
-              { sunday: "", monday: "", tuesday: "", wednesday: "18:00-19:00 אקרודאנס כיתות א-ד", thursday: "" },
-              { sunday: "", monday: "", tuesday: "", wednesday: "19:00-20:00 אקרודאנס כיתות ה-ח", thursday: "" },
-
-
-            ]
-          }
-        },
-        {
-          name: "נווה יעקב",
-          src: "/neveYaakovSchedule.pdf",
-          address: "מתנס נווה יעקב סטודיו ספארק",
-          facilities: ["סטודיו מתקדם"],
-          schedule: {
-            title: "מערכת שעות - נווה יעקב",
-            titles: { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
-            timeSlots: [
-              { sunday: "", monday: "16:15-17:00 טרום בלט גן", tuesday: "", wednesday: "", thursday: "" },
-              { sunday: "", monday: "17:00-18:00 מחול משולב א-ד", tuesday: "", wednesday: "", thursday: "" },
-              { sunday: "", monday: "18:00-19:00 מחול משולב כיתות ה-ו-ז", tuesday: "", wednesday: "", thursday: "" },
-              { sunday: "", monday: "19:00-20:15 בלט קלאסי ח ותיכון", tuesday: "", wednesday: "", thursday: "" }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      city: "חוגי מחול בביתר עילית",
-      branches: [
-        {
-          name: "ביתר עילית",
-          src: "/beitarSchedule.pdf",
-          address: "המגיד ממעזריטש 78 ביתר עילית",
-          facilities: ["התעמלות קרקע סטודיו B"],
-          schedule: {
-            title: "מערכת שעות - ביתר",
-            titles: { sunday: "קרקע רעות/אביגיל", monday: "חדוה", tuesday: "רצי", wednesday: "פייגי", thursday: "רעות" },
-            timeSlots: [
-              { sunday: "15:15-16:15 קרקע שעה 1 יסודי מתקדמות/יסודי מתחילות", monday: "", tuesday: "", wednesday: "15:30-16:30 מחול משולב כיתות ד-ה-ו", thursday: "" },
-              { sunday: "16:15-17:15 התעמלות קרקע כיתות א-ב", monday: "16:00-17:15 בלט קלאסי 1 ה-ו-ז", tuesday: "", wednesday: "16:30-17:15 טרום בלט", thursday: "" },
-              { sunday: "17:15-18:15 קרקע מתקדמות כיתות ג-ו", monday: "17:15-19:00 בלט קלאסי 2 עתודה + פוינט", tuesday: "", wednesday: "17:15-18:15 מחול משולב כיתות א-ב-ג", thursday: "17:00-18:15 התעמלות קרקע נבחרת" },
-              { sunday: "", monday: "19:00-20:30 מודרני 3", tuesday: "18:00-19:15 מחול מודרני 1 ז-ח", wednesday: "", thursday: "18:15-19:30 התעמלות קרקע תיכון מתקדמות" },
-              { sunday: "", monday: "20:30-22:15 קלאסי 3 להקה פוינט", tuesday: "19:30-21:00 מחול מודרני 2", wednesday: "", thursday: "19:30-20:45 התעמלות קרקע תיכון מתחילות" }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      city: "חוגי מחול בבית שמש",
-      branches: [
-        {
-          name: "בית שמש",
-          // לשנות כאן
-          src: "/schedule.pdf",
-          address: "רמת אברהם",
-          facilities: ["מתנס עירוני"],
-          schedule: {
-            title: "מערכת שעות - בית שמש",
-            titles: { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
-            timeSlots: [
-              { sunday: "", monday: "", tuesday: "המערכת עדיין לא מעודכנת לשנת תשפ''ה", wednesday: "", thursday: "" },
-              { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
-              { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" },
-              { sunday: "", monday: "", tuesday: "", wednesday: "", thursday: "" }
-            ]
-          }
-        }
-      ]
-    }
-  ];
+  if (error) {
+    return (
+      <div className="min-h-screen py-12 dark-bg flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-400 mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()} className="btn-gold">
+            נסה שוב
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
 
 
@@ -265,17 +124,17 @@ export default function LocationsPage() {
         {/* Locations */}
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {locations.map((cityData, cityIndex) => (
-              <div key={cityIndex} className="mb-16">
+            {branches.length > 0 ? (
+              <div className="mb-16">
                 {/* City Header */}
                 <div className="text-center mb-12">
-                  <h2 className="text-3xl md:text-4xl font-bold gold-text mb-4">{cityData.city}</h2>
+                  <h2 className="text-3xl md:text-4xl font-bold gold-text mb-4">הסניפים שלנו</h2>
                   <div className="w-24 h-1 gold-bg mx-auto"></div>
                 </div>
 
                 {/* Branches Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {cityData.branches.map((branch, branchIndex) => (
+                  {branches.map((branch, branchIndex) => (
                     <Card key={branchIndex} className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 darker-bg border-gray-700 elegant-shadow flex flex-col">
                       <CardHeader className="relative overflow-hidden">
                         {/* Header Background */}
@@ -307,34 +166,30 @@ export default function LocationsPage() {
                               {branch.address}
                             </p>
                           </div>
-                          {branch.extension && (
-                            <p className="text-gray-400 text-xs mt-2 pr-6">
-                              {branch.extension}
-                            </p>
+                          {branch.phone && (
+                            <div className="flex items-center gap-2 mt-2">
+                              <Phone className="w-3 h-3 pink-text" />
+                              <p className="text-gray-400 text-xs">{branch.phone}</p>
+                            </div>
                           )}
                         </div>
 
-                        {/* Facilities */}
-                        <div className="mb-6">
-                          <h4 className="font-semibold white-text mb-2 flex items-center gap-2">
-                            <Clock className="w-4 h-4 pink-text" />
-                            מתקנים
-                          </h4>
-                          <div className="space-y-1">
-                            {branch.facilities.map((facility, idx) => (
-                              <div key={idx} className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 gold-bg rounded-full"></div>
-                                <span className="text-gray-400 text-sm">{facility}</span>
-                              </div>
-                            ))}
+                        {/* Contact Info */}
+                        {branch.contactPerson && (
+                          <div className="mb-4">
+                            <div className="flex items-center gap-2">
+                              <User className="w-4 h-4 pink-text" />
+                              <span className="text-gray-300 text-sm">{branch.contactPerson}</span>
+                            </div>
                           </div>
-                        </div>
+                        )}
 
                         {/* Schedule Link */}
                         <div className="pt-4 border-t border-gray-700 mt-auto">
                           <Button
-                            onClick={() => setSelectedBranch(branch)}
-                            className="w-full dark-bg p-3 rounded-lg text-center border border-gray-600 hover:bg-gray-700 transition-colors"  >
+                            onClick={() => handleBranchClick(branch)}
+                            className="w-full dark-bg p-3 rounded-lg text-center border border-gray-600 hover:bg-gray-700 transition-colors"
+                          >
                             <p className="pink-text font-medium text-sm">מערכת שעות תשפ"ו</p>
                             <p className="text-gray-400 text-xs mt-1">לחץ לצפייה במערכת השעות</p>
                           </Button>
@@ -344,7 +199,11 @@ export default function LocationsPage() {
                   ))}
                 </div>
               </div>
-            ))}
+            ) : (
+              <div className="text-center py-16">
+                <p className="text-gray-400 text-lg">אין סניפים זמינים כרגע</p>
+              </div>
+            )}
           </div>
         </section>
 
@@ -362,7 +221,7 @@ export default function LocationsPage() {
               <Card className="darker-bg border-gray-700 elegant-shadow">
                 <CardHeader className="flex flex-row items-center justify-between border-b border-gray-700">
                   <div>
-                    <CardTitle className="text-2xl gold-text">{selectedBranch.schedule.title}</CardTitle>
+                    <CardTitle className="text-2xl gold-text">מערכת שעות - {selectedBranch.name}</CardTitle>
                     <p className="text-gray-400 text-sm mt-1">שנת תשפ"ו - המערכת עשויה להשתנות</p>
                   </div>
                   <Button
@@ -374,54 +233,57 @@ export default function LocationsPage() {
                 </CardHeader>
 
                 <CardContent className="p-0">
-                  {selectedBranch.schedule && selectedBranch.schedule.timeSlots && selectedBranch.schedule.timeSlots.length > 0 ? (
-                    <div className="overflow-x-auto">
-                      {/* הטבלה עצמה */}
-                      <table className="w-full text-sm border-collapse">
-                        {/* כותרת הטבלה */}
-                        <thead>
-                          <tr>
-                            <th className="gold-bg text-black p-3 text-center font-bold border-r-2 border-white/30">יום א'<br /><span className="font-normal opacity-80">{selectedBranch.schedule.titles.sunday}</span></th>
-                            <th className="gold-bg text-black p-3 text-center font-bold border-r-2 border-white/30">יום ב'<br /><span className="font-normal opacity-80">{selectedBranch.schedule.titles.monday}</span></th>
-                            <th className="gold-bg text-black p-3 text-center font-bold border-r-2 border-white/30">יום ג'<br /><span className="font-normal opacity-80">{selectedBranch.schedule.titles.tuesday}</span></th>
-                            <th className="gold-bg text-black p-3 text-center font-bold border-r-2 border-white/30">יום ד'<br /><span className="font-normal opacity-80">{selectedBranch.schedule.titles.wednesday}</span></th>
-                            <th className="gold-bg text-black p-3 text-center font-bold border-r-2 border-white/30">יום ה'<br /><span className="font-normal opacity-80">{selectedBranch.schedule.titles.thursday}</span></th>
-                          </tr>
-                        </thead>
-
-                        {/* תוכן הטבלה */}
-                        <tbody>
-                          {selectedBranch.schedule.timeSlots.map((slot, index) => (
-                            <tr key={index} className="border-t border-gray-700 hover:bg-gray-800/50 transition-colors">
-
-                              {/* יום א' */}
-                              <td className="p-4 text-center border-r-2 border-white/20 min-h-[60px] align-middle">
-                                {renderScheduleCell(slot.sunday, slot.time)}
-                              </td>
-
-                              {/* יום ב' */}
-                              <td className="p-4 text-center border-r-2 border-white/20 min-h-[60px] align-middle">
-                                {renderScheduleCell(slot.monday, slot.time)}
-                              </td>
-
-                              {/* יום ג' */}
-                              <td className="p-4 text-center border-r-2 border-white/20 min-h-[60px] align-middle">
-                                {renderScheduleCell(slot.tuesday, slot.time)}
-                              </td>
-
-                              {/* יום ד' */}
-                              <td className="p-4 text-center border-r-2 border-white/20 min-h-[60px] align-middle">
-                                {renderScheduleCell(slot.wednesday, slot.time)}
-                              </td>
-
-                              {/* יום ה' */}
-                              <td className="p-4 text-center border-r-2 border-white/20 min-h-[60px] align-middle">
-                                {renderScheduleCell(slot.thursday, slot.time)}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                  {selectedBranch.schedule && Object.keys(selectedBranch.schedule).length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
+                      {days.map(day => (
+                        <Card key={day} className="darker-bg border-gray-700 hover:border-yellow-500/50 transition-colors">
+                          <CardHeader className="pb-3">
+                            <CardTitle className="text-xl font-bold gold-text text-center flex items-center justify-center gap-2">
+                              <Calendar className="w-5 h-5" />
+                              {day}
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            {selectedBranch.schedule[day] && selectedBranch.schedule[day].length > 0 ? (
+                              <div className="space-y-3">
+                                {selectedBranch.schedule[day].map((classItem, index) => (
+                                  <div key={index} className="bg-gray-800/50 p-3 rounded-lg border border-gray-600 hover:border-pink-500/50 transition-colors">
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <Clock className="w-4 h-4 pink-text" />
+                                      <span className="font-semibold white-text">{classItem.time}</span>
+                                    </div>
+                                    
+                                    <div className="text-sm text-gray-300 mb-2">
+                                      {classItem.description}
+                                    </div>
+                                    
+                                    {classItem.level && (
+                                      <Badge className="bg-pink-500/20 text-pink-300 border-pink-500/30 mb-2">
+                                        {classItem.level}
+                                      </Badge>
+                                    )}
+                                    
+                                    <div className="flex items-center gap-2 text-xs text-gray-400 mb-1">
+                                      <User className="w-3 h-3" />
+                                      <span>{classItem.teacher?.name || 'לא צוין'}</span>
+                                    </div>
+                                    
+                                    <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                                      <Clock className="w-3 h-3" />
+                                      <span>{classItem.duration} דקות</span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="text-center py-8 text-gray-500">
+                                <Calendar className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                                <p>אין שיעורים ביום זה</p>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      ))}
                     </div>
                   ) : (
                     <div className="p-8 text-center">

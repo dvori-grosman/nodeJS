@@ -7,6 +7,7 @@ import Performances from "./Performances";
 import About from "./About";
 import Shop from "./Shop";
 import Registration from "./Registration";
+import Admin from "./Admin";
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
@@ -41,6 +42,11 @@ function PagesContent() {
     useEffect(() => {
         window.scrollTo(0, 0); // גלול לראש העמוד
     }, [location]);
+
+    // Admin page doesn't use the main layout
+    if (location.pathname === '/admin') {
+        return <Admin />;
+    }
 
     return (
         <Layout currentPageName={currentPage}>
