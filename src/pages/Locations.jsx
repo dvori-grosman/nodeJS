@@ -19,11 +19,11 @@ export default function LocationsPage() {
         setLoading(true);
         
         // Fetch branches
-        const branchesResponse = await fetch('http://localhost:5000/api/branches');
+        const branchesResponse = await fetch('https://dance-studio-api.onrender.com/api/branches');
         const branchesData = await branchesResponse.json();
         
         // Fetch schedule
-        const scheduleResponse = await fetch('http://localhost:5000/api/classes/schedule');
+        const scheduleResponse = await fetch('https://dance-studio-api.onrender.com/api/classes/schedule');
         const scheduleData = await scheduleResponse.json();
         
         if (branchesData.success && scheduleData.success) {
@@ -46,7 +46,7 @@ export default function LocationsPage() {
   // Fetch schedule for specific branch when selected
   const fetchBranchSchedule = async (branchId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/classes/schedule?branch=${branchId}`);
+      const response = await fetch(`https://dance-studio-api.onrender.com/api/classes/schedule?branch=${branchId}`);
       const data = await response.json();
       if (data.success) {
         return data.data;
