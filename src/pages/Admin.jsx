@@ -17,7 +17,7 @@ import {
   EyeOff
 } from 'lucide-react';
 
-const API_BASE_URL = 'https://dance-studio-api.onrender.com/api';
+const API_BASE_URL = 'https://dance-studio-server.onrender.com/api';
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
