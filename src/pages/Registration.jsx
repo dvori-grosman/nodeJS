@@ -122,7 +122,7 @@ export default function RegistrationPage() {
 - השתתפות בשיעורים על אחריות המשתתפת
 - חובה להודיע על בעיות רפואיות רלוונטיות
 
-לפרטים נוספים: 03-3130656
+לפרטים נוספים: 03-3130565
     `;
 
     const blob = new Blob([regulationsContent], { type: 'text/plain;charset=utf-8' });
