@@ -348,7 +348,7 @@ function ContactDetailsCard() {
     {
       icon: <Phone className="w-6 h-6 text-white" />,
       title: "מזכירות",
-      main: "03-3130656",
+      main: "03-3130565",
       details: ["שלוחה 1: מענה אנושי (10:00-16:00)", "שלוחה 8: השארת הודעות"]
     },
     {
