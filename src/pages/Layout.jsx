@@ -109,7 +109,7 @@ function AppFooter() {
           <div>
             <h4 className="text-lg font-semibold mb-6 gold-text">יצירת קשר</h4>
             <div className="space-y-4">
-              <div className="flex items-center gap-3 text-gray-400"><Phone className="w-5 h-5 pink-text" /><span>03-3130656</span></div>
+              <div className="flex items-center gap-3 text-gray-400"><Phone className="w-5 h-5 pink-text" /><span>03-3130565</span></div>
               <div className="flex items-center gap-3 text-gray-400"><Mail className="w-5 h-5 pink-text" /><span>b0527182273@gmail.com</span></div>
               <div className="flex items-center gap-3 text-gray-400"><MapPin className="w-5 h-5 pink-text" /><span>סניפים ברחבי ירושלים והסביבה</span></div>
             </div>
@@ -132,7 +132,7 @@ const schemaData = {
   "name": "ריקוד ברוח הטובה",
   "description": "חוגי מחול, אקרובטיקה והתעמלות קרקע בירושלים, ביתר ובית שמש. מגוון חוגי מחול לילדות קטנות, נערות ונשים.",
   "image": "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/debe541b7_.png",
-  "telephone": "03-3130656",
+  "telephone": "03-3130565",
   "email": "b0527182273@gmail.com",
   "address": {
     "@type": "PostalAddress",
