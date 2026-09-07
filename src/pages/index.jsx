@@ -2,12 +2,13 @@ import Layout from "./Layout.jsx";
 import Home from "./Home";
 import Classes from "./Classes";
 import Contact from "./Contact";
-import Locations from "./Locations";
+import Locations from "./LocationsWithSchedules";
 import Performances from "./Performances";
 import About from "./About";
 import Shop from "./Shop";
 import Registration from "./Registration";
 import Admin from "./Admin";
+import ScheduleAdmin from "./ScheduleAdmin";
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
@@ -40,11 +41,14 @@ function PagesContent() {
     const currentPage = _getCurrentPage(location.pathname);
 
     useEffect(() => {
-        window.scrollTo(0, 0); // גלול לראש העמוד
+        window.scrollTo(0, 0);
     }, [location]);
 
-    // Admin page doesn't use the main layout
     if (location.pathname === '/admin') {
+        return <ScheduleAdmin />;
+    }
+
+    if (location.pathname === '/admin/legacy') {
         return <Admin />;
     }
 
