@@ -94,6 +94,31 @@ export default function RegistrationPage() {
     }
   ];
 
+
+  const toHebrewYear = year => {
+  let n = year % 1000, result = "";
+  const values = [[400,"ת"],[300,"ש"],[200,"ר"],[100,"ק"],
+                  [90,"צ"],[80,"פ"],[70,"ע"],[60,"ס"],[50,"נ"],
+                  [40,"מ"],[30,"ל"],[20,"כ"],[10,"י"],
+                  [9,"ט"],[8,"ח"],[7,"ז"],[6,"ו"],[5,"ה"],[4,"ד"],[3,"ג"],[2,"ב"],[1,"א"]];
+
+  for (const [value, letter] of values)
+    while (n >= value) result += letter, n -= value;
+
+  return result.slice(0, -1) + '"' + result.at(-1);
+};
+
+const getRegistrationYear = () => {
+  const parts = new Intl.DateTimeFormat("he-IL-u-ca-hebrew", {
+    year: "numeric", month: "long"
+  }).formatToParts(new Date());
+
+  const year = +parts.find(p => p.type === "year").value;
+  const month = parts.find(p => p.type === "month").value;
+
+  return toHebrewYear(year + (["אב", "אלול"].includes(month) ? 1 : 0));
+};
+
   const handleDownloadRegulations = () => {
     // יצירת תוכן תקנון לדוגמה
     const regulationsContent = `
@@ -136,6 +161,7 @@ export default function RegistrationPage() {
     window.URL.revokeObjectURL(url);
   };
 
+  
   return (
     <>
       <Helmet>
@@ -151,9 +177,9 @@ export default function RegistrationPage() {
         <section className="relative darker-bg py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 gold-text">
-                הרשמה לשנת תשפ"ז
-              </h1>
+           <h1 className="text-4xl md:text-6xl font-bold mb-6 gold-text">
+  הרשמה לשנת {getRegistrationYear()}
+</h1>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto">
                 הצטרפי אלינו לשנת מחול מדהימה! בחרי את האופציה המתאימה לך
               </p>
