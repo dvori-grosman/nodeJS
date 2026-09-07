@@ -9,10 +9,13 @@ import {
   FileText,
   LogOut,
   MapPin,
+  Pencil,
   Plus,
   RefreshCw,
+  Save,
   Trash2,
-  UploadCloud
+  UploadCloud,
+  X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +23,13 @@ import { Input } from '@/components/ui/input';
 const API_BASE_URL = 'https://dance-studio-server.onrender.com/api';
 const ACCEPTED_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'application/pdf'];
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const EMPTY_BRANCH_FORM = {
+  name: '',
+  address: '',
+  phone: '',
+  email: '',
+  description: ''
+};
 
 const formatDate = (value) => {
   if (!value) return 'טרם עודכן';
@@ -28,6 +38,14 @@ const formatDate = (value) => {
     timeStyle: 'short'
   }).format(new Date(value));
 };
+
+const branchToForm = (branch) => ({
+  name: branch.name || '',
+  address: branch.address || '',
+  phone: branch.phone || '',
+  email: branch.email || '',
+  description: branch.description || ''
+});
 
 function SchedulePreview({ branch }) {
   if (!branch.scheduleFileUrl) {
@@ -77,11 +95,18 @@ function BranchScheduleCard({ branch, onChanged, setMessage }) {
   const [year, setYear] = useState(branch.scheduleYear || '');
   const [dragging, setDragging] = useState(false);
   const [working, setWorking] = useState(false);
+  const [editingBranch, setEditingBranch] = useState(false);
+  const [branchWorking, setBranchWorking] = useState(false);
+  const [branchForm, setBranchForm] = useState(() => branchToForm(branch));
 
   useEffect(() => {
     setYear(branch.scheduleYear || '');
     setFile(null);
   }, [branch._id, branch.scheduleUpdatedAt]);
+
+  useEffect(() => {
+    setBranchForm(branchToForm(branch));
+  }, [branch._id, branch.name, branch.address, branch.phone, branch.email, branch.description]);
 
   const validateAndSetFile = (candidate) => {
     if (!candidate) return;
@@ -129,7 +154,7 @@ function BranchScheduleCard({ branch, onChanged, setMessage }) {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDeleteSchedule = async () => {
     if (!branch.scheduleFileUrl || !window.confirm(`למחוק את מערכת השעות של ${branch.name}?`)) return;
 
     setWorking(true);
@@ -152,26 +177,201 @@ function BranchScheduleCard({ branch, onChanged, setMessage }) {
     }
   };
 
+  const handleSaveBranch = async (e) => {
+    e.preventDefault();
+    const payload = {
+      name: branchForm.name.trim(),
+      address: branchForm.address.trim(),
+      phone: branchForm.phone.trim(),
+      email: branchForm.email.trim(),
+      description: branchForm.description.trim(),
+      isActive: true
+    };
+
+    if (!payload.name || !payload.address) {
+      setMessage({ type: 'error', text: 'יש להזין שם סניף וכתובת.' });
+      return;
+    }
+
+    setBranchWorking(true);
+    setMessage(null);
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_BASE_URL}/branches/${branch._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.errors?.join(', ') || data.message || 'שגיאה בעדכון הסניף');
+      }
+
+      setEditingBranch(false);
+      setMessage({ type: 'success', text: `הסניף ${payload.name} עודכן בהצלחה.` });
+      await onChanged();
+    } catch (error) {
+      setMessage({ type: 'error', text: error.message || 'שגיאה בעדכון הסניף' });
+    } finally {
+      setBranchWorking(false);
+    }
+  };
+
+  const handleDeleteBranch = async () => {
+    const scheduleWarning = branch.scheduleFileUrl ? ' מערכת השעות המשויכת אליו לא תוצג יותר באתר.' : '';
+    if (!window.confirm(`למחוק את הסניף ${branch.name}?${scheduleWarning}`)) return;
+
+    setBranchWorking(true);
+    setMessage(null);
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(`${API_BASE_URL}/branches/${branch._id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'שגיאה במחיקת הסניף');
+
+      setMessage({ type: 'success', text: `הסניף ${branch.name} נמחק.` });
+      await onChanged();
+    } catch (error) {
+      setMessage({ type: 'error', text: error.message || 'שגיאה במחיקת הסניף' });
+    } finally {
+      setBranchWorking(false);
+    }
+  };
+
+  const cancelBranchEdit = () => {
+    setBranchForm(branchToForm(branch));
+    setEditingBranch(false);
+  };
+
   return (
     <section className="overflow-hidden rounded-3xl border border-white/10 bg-gray-900/70 shadow-2xl shadow-black/20 backdrop-blur">
       <div className="border-b border-white/10 p-5 sm:p-6">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xl font-bold text-white">{branch.name}</h2>
               {branch.scheduleFileUrl ? (
-                <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-300">פעילה</span>
+                <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-300">מערכת פעילה</span>
               ) : (
-                <span className="rounded-full bg-gray-700/70 px-2.5 py-1 text-xs font-medium text-gray-400">לא הועלתה</span>
+                <span className="rounded-full bg-gray-700/70 px-2.5 py-1 text-xs font-medium text-gray-400">ללא מערכת</span>
               )}
             </div>
-            <p className="mt-1 text-sm text-gray-500">{branch.address}</p>
+            <p className="mt-1 text-sm text-gray-400">{branch.address}</p>
+            {(branch.phone || branch.email) && (
+              <p className="mt-1 text-xs text-gray-500">
+                {[branch.phone, branch.email].filter(Boolean).join(' · ')}
+              </p>
+            )}
+            {branch.description && (
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-500">{branch.description}</p>
+            )}
           </div>
-          <div className="text-left text-xs text-gray-500">
-            <p>עדכון אחרון</p>
-            <p className="mt-1 text-gray-300">{formatDate(branch.scheduleUpdatedAt)}</p>
+
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <div className="ml-2 text-left text-xs text-gray-500">
+              <p>עדכון מערכת</p>
+              <p className="mt-1 text-gray-300">{formatDate(branch.scheduleUpdatedAt)}</p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={branchWorking}
+              onClick={() => setEditingBranch(value => !value)}
+              className="border-white/10 bg-transparent text-gray-300 hover:bg-white/5 hover:text-white"
+            >
+              <Pencil className="ml-2 h-4 w-4" />
+              עריכת סניף
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={branchWorking || working}
+              onClick={handleDeleteBranch}
+              className="border-red-900/70 bg-red-950/20 text-red-300 hover:bg-red-950/50 hover:text-red-200"
+            >
+              {branchWorking ? <RefreshCw className="ml-2 h-4 w-4 animate-spin" /> : <Trash2 className="ml-2 h-4 w-4" />}
+              מחיקת סניף
+            </Button>
           </div>
         </div>
+
+        {editingBranch && (
+          <form onSubmit={handleSaveBranch} className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4 sm:p-5">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h3 className="font-semibold text-white">עריכת פרטי הסניף</h3>
+              <button type="button" onClick={cancelBranchEdit} className="rounded-lg p-1.5 text-gray-500 hover:bg-white/5 hover:text-white" aria-label="סגירת עריכה">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-300">שם הסניף *</label>
+                <Input
+                  value={branchForm.name}
+                  onChange={(e) => setBranchForm({ ...branchForm, name: e.target.value })}
+                  className="border-gray-700 bg-gray-950/60 text-white"
+                  required
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-300">כתובת *</label>
+                <Input
+                  value={branchForm.address}
+                  onChange={(e) => setBranchForm({ ...branchForm, address: e.target.value })}
+                  className="border-gray-700 bg-gray-950/60 text-white"
+                  required
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-300">טלפון</label>
+                <Input
+                  value={branchForm.phone}
+                  onChange={(e) => setBranchForm({ ...branchForm, phone: e.target.value })}
+                  placeholder="02-0000000"
+                  className="border-gray-700 bg-gray-950/60 text-white placeholder:text-gray-600"
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-300">אימייל</label>
+                <Input
+                  type="email"
+                  value={branchForm.email}
+                  onChange={(e) => setBranchForm({ ...branchForm, email: e.target.value })}
+                  placeholder="branch@example.com"
+                  className="border-gray-700 bg-gray-950/60 text-white placeholder:text-gray-600"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-sm font-medium text-gray-300">תיאור</label>
+                <textarea
+                  value={branchForm.description}
+                  onChange={(e) => setBranchForm({ ...branchForm, description: e.target.value })}
+                  rows={3}
+                  maxLength={500}
+                  placeholder="פרטים קצרים על הסניף"
+                  className="w-full rounded-md border border-gray-700 bg-gray-950/60 px-3 py-2 text-sm text-white outline-none placeholder:text-gray-600 focus:border-yellow-500/60"
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Button type="submit" disabled={branchWorking} className="bg-yellow-500 font-semibold text-black hover:bg-yellow-400">
+                {branchWorking ? <RefreshCw className="ml-2 h-4 w-4 animate-spin" /> : <Save className="ml-2 h-4 w-4" />}
+                שמירת שינויים
+              </Button>
+              <Button type="button" variant="outline" disabled={branchWorking} onClick={cancelBranchEdit} className="border-white/10 bg-transparent text-gray-300 hover:bg-white/5 hover:text-white">
+                ביטול
+              </Button>
+            </div>
+          </form>
+        )}
       </div>
 
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.1fr_0.9fr]">
@@ -217,7 +417,7 @@ function BranchScheduleCard({ branch, onChanged, setMessage }) {
           <div className="flex flex-wrap gap-2">
             <Button
               onClick={handleUpload}
-              disabled={!file || working}
+              disabled={!file || working || branchWorking}
               className="flex-1 bg-gradient-to-l from-yellow-500 to-yellow-600 font-semibold text-black hover:from-yellow-400 hover:to-yellow-500"
             >
               {working ? <RefreshCw className="ml-2 h-4 w-4 animate-spin" /> : <UploadCloud className="ml-2 h-4 w-4" />}
@@ -225,13 +425,13 @@ function BranchScheduleCard({ branch, onChanged, setMessage }) {
             </Button>
             {branch.scheduleFileUrl && (
               <Button
-                onClick={handleDelete}
-                disabled={working}
+                onClick={handleDeleteSchedule}
+                disabled={working || branchWorking}
                 variant="outline"
                 className="border-red-900/70 bg-red-950/20 text-red-300 hover:bg-red-950/50 hover:text-red-200"
               >
                 <Trash2 className="ml-2 h-4 w-4" />
-                מחיקה
+                מחיקת מערכת
               </Button>
             )}
           </div>
@@ -250,7 +450,7 @@ export default function ScheduleAdmin() {
   const [message, setMessage] = useState(null);
   const [showAddBranch, setShowAddBranch] = useState(false);
   const [creatingBranch, setCreatingBranch] = useState(false);
-  const [branchForm, setBranchForm] = useState({ name: '', address: '' });
+  const [branchForm, setBranchForm] = useState({ ...EMPTY_BRANCH_FORM });
 
   useEffect(() => {
     const verify = async () => {
@@ -297,10 +497,15 @@ export default function ScheduleAdmin() {
 
   const handleCreateBranch = async (e) => {
     e.preventDefault();
-    const name = branchForm.name.trim();
-    const address = branchForm.address.trim();
+    const payload = {
+      name: branchForm.name.trim(),
+      address: branchForm.address.trim(),
+      phone: branchForm.phone.trim(),
+      email: branchForm.email.trim(),
+      description: branchForm.description.trim()
+    };
 
-    if (!name || !address) {
+    if (!payload.name || !payload.address) {
       setMessage({ type: 'error', text: 'יש להזין שם סניף וכתובת.' });
       return;
     }
@@ -315,14 +520,16 @@ export default function ScheduleAdmin() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ name, address })
+        body: JSON.stringify(payload)
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'שגיאה בהוספת הסניף');
+      if (!response.ok) {
+        throw new Error(data.errors?.join(', ') || data.message || 'שגיאה בהוספת הסניף');
+      }
 
-      setBranchForm({ name: '', address: '' });
+      setBranchForm({ ...EMPTY_BRANCH_FORM });
       setShowAddBranch(false);
-      setMessage({ type: 'success', text: `הסניף ${name} נוסף בהצלחה.` });
+      setMessage({ type: 'success', text: `הסניף ${payload.name} נוסף בהצלחה.` });
       await loadBranches();
     } catch (error) {
       setMessage({ type: 'error', text: error.message || 'שגיאה בהוספת הסניף' });
@@ -365,7 +572,7 @@ export default function ScheduleAdmin() {
         <form onSubmit={handleLogin} className="mx-auto mt-16 max-w-md rounded-3xl border border-white/10 bg-gray-900/70 p-7 shadow-2xl backdrop-blur">
           <div className="mb-7 text-center">
             <CalendarDays className="mx-auto mb-4 h-11 w-11 text-yellow-400" />
-            <h1 className="text-2xl font-bold">ניהול מערכות שעות</h1>
+            <h1 className="text-2xl font-bold">ניהול סניפים ומערכות שעות</h1>
             <p className="mt-2 text-sm text-gray-500">כניסה לממשק הניהול</p>
           </div>
           <div className="space-y-4">
@@ -384,8 +591,8 @@ export default function ScheduleAdmin() {
       <header className="sticky top-0 z-20 border-b border-white/10 bg-gray-950/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
           <div>
-            <h1 className="text-xl font-bold">מערכות שעות</h1>
-            <p className="text-xs text-gray-500">קובץ אחד לכל סניף</p>
+            <h1 className="text-xl font-bold">ניהול סניפים ומערכות שעות</h1>
+            <p className="text-xs text-gray-500">הוספה, עריכה, מחיקה וקובץ מערכת לכל סניף</p>
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -405,7 +612,7 @@ export default function ScheduleAdmin() {
 
       <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6">
         <div className="mb-7">
-          <p className="max-w-2xl text-sm leading-6 text-gray-400">העלי לכל סניף את מערכת השעות המוכנה. העלאה חדשה מחליפה אוטומטית את הקובץ הקודם ומעדכנת מיד את התצוגה באתר.</p>
+          <p className="max-w-3xl text-sm leading-6 text-gray-400">כאן ניתן לנהל את פרטי הסניפים ולהעלות לכל סניף את מערכת השעות המוכנה. שינויים בפרטי הסניף או במערכת השעות מתעדכנים באתר לאחר השמירה.</p>
         </div>
 
         {showAddBranch && (
@@ -416,28 +623,60 @@ export default function ScheduleAdmin() {
               </div>
               <div>
                 <h2 className="font-bold text-white">הוספת סניף חדש</h2>
-                <p className="text-xs text-gray-500">לאחר השמירה הסניף יופיע מיד ברשימת מערכות השעות.</p>
+                <p className="text-xs text-gray-500">שם וכתובת הם שדות חובה. שאר הפרטים אופציונליים.</p>
               </div>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label className="mb-2 block text-sm font-medium text-gray-300">שם הסניף</label>
+                <label className="mb-2 block text-sm font-medium text-gray-300">שם הסניף *</label>
                 <Input
                   value={branchForm.name}
                   onChange={(e) => setBranchForm({ ...branchForm, name: e.target.value })}
                   placeholder="לדוגמה: רמות"
                   className="border-gray-700 bg-gray-950/60 text-white placeholder:text-gray-600"
                   autoFocus
+                  required
                 />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-gray-300">כתובת</label>
+                <label className="mb-2 block text-sm font-medium text-gray-300">כתובת *</label>
                 <Input
                   value={branchForm.address}
                   onChange={(e) => setBranchForm({ ...branchForm, address: e.target.value })}
                   placeholder="רחוב, מספר, עיר"
                   className="border-gray-700 bg-gray-950/60 text-white placeholder:text-gray-600"
+                  required
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-300">טלפון</label>
+                <Input
+                  value={branchForm.phone}
+                  onChange={(e) => setBranchForm({ ...branchForm, phone: e.target.value })}
+                  placeholder="02-0000000"
+                  className="border-gray-700 bg-gray-950/60 text-white placeholder:text-gray-600"
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-gray-300">אימייל</label>
+                <Input
+                  type="email"
+                  value={branchForm.email}
+                  onChange={(e) => setBranchForm({ ...branchForm, email: e.target.value })}
+                  placeholder="branch@example.com"
+                  className="border-gray-700 bg-gray-950/60 text-white placeholder:text-gray-600"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-sm font-medium text-gray-300">תיאור</label>
+                <textarea
+                  value={branchForm.description}
+                  onChange={(e) => setBranchForm({ ...branchForm, description: e.target.value })}
+                  rows={3}
+                  maxLength={500}
+                  placeholder="פרטים קצרים על הסניף"
+                  className="w-full rounded-md border border-gray-700 bg-gray-950/60 px-3 py-2 text-sm text-white outline-none placeholder:text-gray-600 focus:border-yellow-500/60"
                 />
               </div>
             </div>
@@ -450,9 +689,10 @@ export default function ScheduleAdmin() {
               <Button
                 type="button"
                 variant="outline"
+                disabled={creatingBranch}
                 onClick={() => {
                   setShowAddBranch(false);
-                  setBranchForm({ name: '', address: '' });
+                  setBranchForm({ ...EMPTY_BRANCH_FORM });
                 }}
                 className="border-white/10 bg-transparent text-gray-300 hover:bg-white/5 hover:text-white"
               >
@@ -478,7 +718,7 @@ export default function ScheduleAdmin() {
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center text-gray-400">לא נמצאו סניפים פעילים.</div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center text-gray-400">לא נמצאו סניפים פעילים. ניתן להוסיף סניף חדש מהכפתור למעלה.</div>
         )}
       </div>
     </main>
