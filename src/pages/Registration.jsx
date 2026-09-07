@@ -152,7 +152,7 @@ export default function RegistrationPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 gold-text">
-                הרשמה לשנת תשפ"ו
+                הרשמה לשנת תשפ"ז
               </h1>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto">
                 הצטרפי אלינו לשנת מחול מדהימה! בחרי את האופציה המתאימה לך
