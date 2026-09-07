@@ -325,7 +325,7 @@ export default function LocationsPage() {
             <div className="flex flex-col sm:flex-row gap-8 justify-center items-center text-gray-300">
               <div className="flex items-center gap-2">
                 <Phone className="w-5 h-5 pink-text" />
-                <span className="text-lg">03-3130656</span>
+                <span className="text-lg">03-3130565</span>
               </div>
               <div className="hidden sm:block w-px h-6 bg-gray-600"></div>
               <div className="flex items-center gap-2">
