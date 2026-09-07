@@ -2,7 +2,7 @@ import Layout from "./Layout.jsx";
 import Home from "./Home";
 import Classes from "./Classes";
 import Contact from "./Contact";
-import Locations from "./Locations";
+import Locations from "./LocationsWithSchedules";
 import Performances from "./Performances";
 import About from "./About";
 import Shop from "./Shop";
