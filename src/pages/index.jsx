@@ -11,6 +11,7 @@ import Admin from "./Admin";
 import ScheduleAdmin from "./ScheduleAdmin";
 import AxtraPreview from "./AxtraPreview";
 import AxtraClassesPreview from "./AxtraClassesPreview";
+import InteractivePreviewEnhancer from "./InteractivePreviewEnhancer";
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
@@ -148,7 +149,7 @@ function PagesContent() {
     }
 
     return (
-        <>
+        <InteractivePreviewEnhancer>
             <Layout currentPageName={currentPage}>
                 <Routes>
                     <Route path="/Classes" element={<AxtraClassesPreview />} />
@@ -161,7 +162,7 @@ function PagesContent() {
                 </Routes>
             </Layout>
             <PreviewPalette />
-        </>
+        </InteractivePreviewEnhancer>
     );
 }
 
