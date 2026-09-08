@@ -20,11 +20,10 @@ export default function ContactPage() {
   const [hasSubmittedSuccessfully, setHasSubmittedSuccessfully] = useState(false);
   const [emailSendingStatus, setEmailSendingStatus] = useState('');
 
-  // הגדרת מפתחות EmailJS - עדכן אותם עם הערכים שלך
   const EMAILJS_CONFIG = {
-    SERVICE_ID: 'YOUR_SERVICE_ID',       // החלף עם ה-Service ID שלך
-    TEMPLATE_ID: 'YOUR_TEMPLATE_ID',     // החלף עם ה-Template ID שלך
-    PUBLIC_KEY: 'YOUR_PUBLIC_KEY'        // החלף עם ה-Public Key שלך
+    SERVICE_ID: 'service_twe1obj',
+    TEMPLATE_ID: 'template_t30hd19',
+    PUBLIC_KEY: 'Ub_6n8kuhlIM5pW1R'
   };
 
   // פונקציה לעדכון נתוני הטופס
@@ -38,31 +37,31 @@ export default function ContactPage() {
   // פונקציה לשליחת מייל דרך EmailJS
   const sendEmailViaEmailJS = async (formData) => {
     try {
-      // הכנת הנתונים לשליחה לפי פורמט EmailJS
       const emailData = {
         from_name: formData.studentName,
+        name: formData.studentName,
         from_email: formData.parentEmail || 'לא סופק',
+        email: formData.parentEmail || 'לא סופק',
+        reply_to: formData.parentEmail || undefined,
         phone: formData.parentPhone,
         message: formData.inquiryMessage,
-        to_email: 'b0527182273@gmail.com', // כתובת המייל שתקבל את ההודעות
+        to_email: 'b0527182273@gmail.com',
         subject: `פניה חדשה מהאתר - ${formData.studentName}`
       };
 
-      // שליחת המייל דרך EmailJS
       const result = await emailjs.send(
-        EMAILJS_CONFIG.service_xjex7s2,
+        EMAILJS_CONFIG.SERVICE_ID,
         EMAILJS_CONFIG.TEMPLATE_ID,
         emailData,
-        EMAILJS_CONFIG.PUBLIC_KEY
+        { publicKey: EMAILJS_CONFIG.PUBLIC_KEY }
       );
 
       console.log('EmailJS הצליח:', result);
       setEmailSendingStatus('המייל נשלח בהצלחה!');
       return true;
-
     } catch (error) {
       console.error('שגיאה בשליחת EmailJS:', error);
-      setEmailSendingStatus('שגיאה בשליחת המייל - אך הפנייה נשמרה במערכת');
+      setEmailSendingStatus('אירעה שגיאה בשליחת הפנייה. אנא נסי שוב.');
       return false;
     }
   };
@@ -74,28 +73,11 @@ export default function ContactPage() {
     setEmailSendingStatus('');
 
     try {
-      // יצירת אובייקט פנייה למסד הנתונים
-      const newInquiryData = {
-        name: inquiryFormData.studentName,
-        phone: inquiryFormData.parentPhone,
-        email: inquiryFormData.parentEmail,
-        message: inquiryFormData.inquiryMessage
-      };
+      const emailSent = await sendEmailViaEmailJS(inquiryFormData);
 
-      // שמירת הפנייה במסד הנתונים - פעולה קריטית
-
-      console.log('פנייה נשמרה במסד הנתונים בהצלחה');
-
-      // ניסיון שליחת מייל דרך EmailJS (פעולה משנית)
-      await sendEmailViaEmailJS(inquiryFormData);
-
-      // הצגת הודעת הצלחה למשתמש
-      setHasSubmittedSuccessfully(true);
-
-    } catch (databaseError) {
-      // טיפול בשגיאה של שמירה במסד הנתונים
-      console.error("שגיאה בשמירת הפנייה במסד הנתונים:", databaseError);
-      alert("אירעה שגיאה בשמירת הפנייה. אנא נסי שוב או צרי קשר בטלפון.");
+      if (emailSent) {
+        setHasSubmittedSuccessfully(true);
+      }
     } finally {
       setIsSubmittingInquiry(false);
     }
@@ -170,7 +152,6 @@ function InquirySuccessPage({ onBackToForm, emailStatus }) {
             קיבלנו את הפנייה שלך ונחזור אליך בהקדם עם כל הפרטים על הקבוצה המתאימה.
           </p>
 
-          {/* הצגת סטטוס שליחת המייל */}
           {emailStatus && (
             <div className={`mb-4 p-3 rounded-lg text-sm ${emailStatus.includes('בהצלחה')
                 ? 'bg-green-100 text-green-800 border border-green-200'
@@ -194,13 +175,13 @@ function InquiryFormSection({ formData, onInputChange, onSubmit, isSubmitting, e
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* <InquiryForm 
+        <InquiryForm
           formData={formData}
           onInputChange={onInputChange}
           onSubmit={onSubmit}
           isSubmitting={isSubmitting}
           emailStatus={emailStatus}
-        /> */}
+        />
         <ContactInformation />
       </div>
     </div>
@@ -255,7 +236,6 @@ function InquiryForm({ formData, onInputChange, onSubmit, isSubmitting, emailSta
             required
           />
 
-          {/* הצגת סטטוס שליחת מייל בזמן אמת */}
           {emailStatus && (
             <div className={`p-3 rounded-lg text-sm text-center ${emailStatus.includes('בהצלחה')
                 ? 'bg-green-100 text-green-800 border border-green-200'
