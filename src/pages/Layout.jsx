@@ -16,206 +16,303 @@ const navLinks = [
 
 const previewStyles = `
   :root {
-    --gold: #d7b451;
-    --deep-black: #080808;
-    --soft-pink: #d76092;
-    --dark-bg: #0a0a0a;
-    --darker-bg: #0e0e0e;
-    --ax-line: rgba(255,255,255,.13);
-    --ax-muted: #9d9a93;
+    --ax-bg:#0d0d0d;
+    --ax-bg-2:#151515;
+    --ax-cream:#f2eee7;
+    --ax-muted:#999893;
+    --ax-line:rgba(255,255,255,.15);
+    --ax-accent:#d6ff3f;
+    --ax-gold:#d6b34d;
+    --ax-pink:#d86b95;
   }
 
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { margin: 0; background: #080808 !important; color: #f3efe6; }
-  body, button, input, textarea, select { font-family: Arial, Helvetica, sans-serif !important; }
-  h1, h2, h3, h4, h5, h6 { font-family: Arial, Helvetica, sans-serif !important; letter-spacing: -.035em !important; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--ax-bg)!important; }
+  * { box-sizing:border-box; }
 
-  .ax-site { min-height:100vh; background:#080808; color:#f3efe6; direction:rtl; }
-  .ax-container { width:min(1380px, calc(100% - 48px)); margin:0 auto; }
-
-  .ax-header {
-    position:sticky; top:0; z-index:60; border-bottom:1px solid var(--ax-line);
-    background:rgba(8,8,8,.86); backdrop-filter:blur(14px);
-  }
-  .ax-header-inner { height:90px; display:flex; align-items:center; justify-content:space-between; gap:28px; }
-  .ax-brand { display:flex; align-items:center; gap:13px; color:#fff; text-decoration:none; min-width:max-content; }
-  .ax-brand img { width:52px; height:52px; object-fit:contain; filter:grayscale(1) brightness(1.85); }
-  .ax-brand strong { font-size:15px; }
-  .ax-nav { display:flex; align-items:center; gap:23px; }
-  .ax-nav a { color:#cbc7be; text-decoration:none; font-size:14px; transition:.2s; position:relative; }
-  .ax-nav a:hover, .ax-nav a.ax-active { color:var(--gold); }
-  .ax-nav a.ax-active::after { content:""; width:5px; height:5px; border-radius:50%; background:var(--gold); position:absolute; right:50%; transform:translateX(50%); bottom:-12px; }
-  .ax-nav .ax-nav-cta { border:1px solid rgba(215,180,81,.55); border-radius:999px; padding:11px 18px; color:var(--gold); }
-  .ax-menu-btn { display:none; background:none; color:#fff; border:0; padding:8px; }
-  .ax-mobile-nav { display:none; }
-
-  .ax-main { min-height:70vh; background:#080808; }
-
-  /* Global redesign for the existing pages */
-  .dark-bg, .darker-bg, .bg-gray-900, .bg-slate-900 { background:#080808 !important; }
-  .bg-gray-800, .bg-gray-700, .bg-slate-800 { background:#101010 !important; }
-  .border-gray-700, .border-gray-800, .border-gray-600 { border-color:var(--ax-line) !important; }
-  .text-gray-300 { color:#bbb7ae !important; }
-  .text-gray-400, .text-gray-500 { color:#88857f !important; }
-  .gold-text { color:var(--gold) !important; }
-  .pink-text { color:var(--soft-pink) !important; }
-  .white-text { color:#f5f1e9 !important; }
-
-  .ax-main > * { background:#080808 !important; }
-  .ax-main section { border-color:var(--ax-line) !important; }
-  .ax-main h1 {
-    font-size:clamp(54px, 7.2vw, 112px) !important;
-    line-height:.92 !important; letter-spacing:-.055em !important;
-    color:#f4f0e8 !important; margin-bottom:34px !important;
-  }
-  .ax-main h2 { letter-spacing:-.045em !important; }
-
-  .ax-main [class*="max-w-7xl"], .ax-main [class*="max-w-6xl"] { max-width:1380px !important; }
-  .ax-main [class*="rounded-lg"], .ax-main [class*="rounded-xl"] { border-radius:2px !important; }
-
-  .ax-main [class*="shadow"], .ax-main .elegant-shadow {
-    box-shadow:none !important; border:1px solid var(--ax-line) !important;
+  .ax-inner-shell {
+    min-height:100vh;
+    background:var(--ax-bg);
+    color:var(--ax-cream);
+    direction:rtl;
+    font-family:Arial,Helvetica,sans-serif;
   }
 
-  .ax-main button:not([role="combobox"]), .ax-main a.btn-gold, .ax-main .btn-gold {
-    border-radius:999px !important; background:var(--gold) !important; color:#0a0a0a !important;
-    border:1px solid var(--gold) !important; font-weight:700 !important;
-    box-shadow:none !important;
-  }
-  .ax-main button:not([role="combobox"]):hover, .ax-main .btn-gold:hover {
-    transform:translateY(-2px); background:#e2c467 !important;
+  .ax-inner-container {
+    width:min(1440px,calc(100% - 64px));
+    margin:0 auto;
   }
 
-  .ax-main input, .ax-main textarea, .ax-main select, .ax-main [role="combobox"] {
-    background:#0d0d0d !important; color:#f5f1e9 !important; border:1px solid var(--ax-line) !important;
-    border-radius:2px !important; box-shadow:none !important;
-  }
-  .ax-main input:focus, .ax-main textarea:focus { border-color:rgba(215,180,81,.65) !important; }
-
-  .ax-main [class*="Card"], .ax-main .card { background:#0d0d0d !important; }
-
-  /* Give page headers an editorial Axtra feel */
-  .ax-main > div > section:first-child, .ax-main > section:first-child {
-    border-bottom:1px solid var(--ax-line) !important;
+  .ax-inner-header {
+    position:sticky;
+    top:0;
+    z-index:50;
+    min-height:86px;
+    background:rgba(13,13,13,.84);
+    backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--ax-line);
   }
 
-  .ax-footer { border-top:1px solid var(--ax-line); background:#050505; }
-  .ax-footer-top { padding:72px 0 56px; display:grid; grid-template-columns:1.2fr .8fr .8fr; gap:60px; }
-  .ax-footer-title { font-size:clamp(34px,4vw,64px); line-height:1; margin:0 0 20px; letter-spacing:-.05em; }
-  .ax-footer p, .ax-footer a { color:#8d8a84; text-decoration:none; line-height:1.8; }
-  .ax-footer a:hover { color:var(--gold); }
-  .ax-footer h4 { color:var(--gold); font-size:13px; letter-spacing:.13em !important; margin:0 0 22px; }
-  .ax-footer-links { display:flex; flex-direction:column; gap:12px; }
-  .ax-contact-row { display:flex; align-items:center; gap:10px; margin-bottom:13px; color:#9d9992; }
-  .ax-footer-bottom { border-top:1px solid var(--ax-line); min-height:68px; display:flex; align-items:center; justify-content:space-between; gap:20px; color:#666; font-size:12px; }
-  .ax-footer-mark { color:var(--gold); display:flex; align-items:center; gap:9px; }
-
-  @media (max-width: 1000px) {
-    .ax-nav { display:none; }
-    .ax-menu-btn { display:block; }
-    .ax-mobile-nav { display:flex; flex-direction:column; border-top:1px solid var(--ax-line); }
-    .ax-mobile-nav a { color:#f3efe6; text-decoration:none; padding:16px 24px; border-bottom:1px solid var(--ax-line); }
-    .ax-footer-top { grid-template-columns:1fr 1fr; }
+  .ax-inner-nav {
+    min-height:86px;
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    align-items:center;
+    gap:38px;
   }
-  @media (max-width: 700px) {
-    .ax-container { width:min(100% - 28px, 1380px); }
-    .ax-header-inner { height:74px; }
-    .ax-brand img { width:43px; height:43px; }
-    .ax-brand strong { display:none; }
-    .ax-main h1 { font-size:clamp(46px, 14vw, 76px) !important; }
-    .ax-footer-top { grid-template-columns:1fr; gap:38px; padding-top:54px; }
-    .ax-footer-bottom { align-items:flex-start; flex-direction:column; padding:22px 0; }
+
+  .ax-inner-brand {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:var(--ax-cream);
+    text-decoration:none;
+  }
+
+  .ax-inner-brand img {
+    width:46px;
+    height:46px;
+    object-fit:contain;
+    filter:grayscale(1) brightness(2);
+  }
+
+  .ax-inner-brand span { font-size:14px; font-weight:700; }
+  .ax-inner-mark { color:#646464; font-size:11px; letter-spacing:.15em; justify-self:center; }
+
+  .ax-inner-links { display:flex; gap:22px; align-items:center; }
+  .ax-inner-links a { color:#c4c2bc; font-size:13px; text-decoration:none; transition:.2s; white-space:nowrap; }
+  .ax-inner-links a:hover,.ax-inner-links a.active { color:var(--ax-accent); }
+  .ax-inner-links a.cta { border:1px solid var(--ax-line); border-radius:999px; padding:12px 18px; }
+
+  .ax-inner-menu { display:none; border:0; background:none; color:white; cursor:pointer; }
+  .ax-inner-mobile { border-top:1px solid var(--ax-line); background:#101010; }
+  .ax-inner-mobile a { display:block; padding:16px 24px; color:white; text-decoration:none; border-bottom:1px solid var(--ax-line); }
+
+  .ax-preview-main {
+    min-height:70vh;
+    background:var(--ax-bg);
+    color:var(--ax-cream);
+  }
+
+  .ax-preview-main > * { margin-top:0!important; }
+
+  .ax-preview-main .dark-bg,
+  .ax-preview-main .darker-bg,
+  .ax-preview-main .bg-gray-900,
+  .ax-preview-main .bg-slate-900,
+  .ax-preview-main .bg-gray-800,
+  .ax-preview-main .bg-slate-800 {
+    background:var(--ax-bg)!important;
+    background-color:var(--ax-bg)!important;
+  }
+
+  .ax-preview-main section,
+  .ax-preview-main .border-gray-700,
+  .ax-preview-main .border-gray-800,
+  .ax-preview-main .border-slate-700 {
+    border-color:var(--ax-line)!important;
+  }
+
+  .ax-preview-main h1,
+  .ax-preview-main h2,
+  .ax-preview-main h3,
+  .ax-preview-main h4,
+  .ax-preview-main h5,
+  .ax-preview-main h6 {
+    font-family:Arial,Helvetica,sans-serif!important;
+    letter-spacing:-.045em!important;
+    color:var(--ax-cream);
+  }
+
+  .ax-preview-main h1 {
+    font-size:clamp(58px,8vw,126px)!important;
+    line-height:.88!important;
+    font-weight:500!important;
+    margin-bottom:34px!important;
+  }
+
+  .ax-preview-main h2 {
+    font-size:clamp(42px,5.5vw,82px)!important;
+    line-height:.96!important;
+    font-weight:500!important;
+  }
+
+  .ax-preview-main h3 { font-weight:500!important; }
+
+  .ax-preview-main .gold-text { color:var(--ax-accent)!important; }
+  .ax-preview-main .pink-text { color:var(--ax-pink)!important; }
+  .ax-preview-main .white-text,.ax-preview-main .text-white { color:var(--ax-cream)!important; }
+  .ax-preview-main .text-gray-300,.ax-preview-main .text-gray-400,.ax-preview-main .text-gray-500 { color:var(--ax-muted)!important; }
+
+  .ax-preview-main .elegant-shadow,
+  .ax-preview-main [class*="shadow"] { box-shadow:none!important; }
+
+  .ax-preview-main [class*="rounded-xl"],
+  .ax-preview-main [class*="rounded-lg"],
+  .ax-preview-main [class*="rounded-2xl"] { border-radius:0!important; }
+
+  .ax-preview-main [class*="Card"],
+  .ax-preview-main .card,
+  .ax-preview-main [class*="bg-gray-700"],
+  .ax-preview-main [class*="bg-gray-800"] {
+    background:#111!important;
+  }
+
+  .ax-preview-main .btn-gold,
+  .ax-preview-main button.btn-gold,
+  .ax-preview-main a.btn-gold {
+    background:var(--ax-accent)!important;
+    color:#111!important;
+    border:1px solid var(--ax-accent)!important;
+    border-radius:999px!important;
+    padding:14px 24px!important;
+    box-shadow:none!important;
+    transform:none!important;
+  }
+
+  .ax-preview-main .btn-gold:hover { background:transparent!important; color:var(--ax-accent)!important; }
+
+  .ax-preview-main input,
+  .ax-preview-main textarea,
+  .ax-preview-main select {
+    background:#111!important;
+    border:1px solid var(--ax-line)!important;
+    color:var(--ax-cream)!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+  }
+
+  .ax-preview-main input:focus,
+  .ax-preview-main textarea:focus,
+  .ax-preview-main select:focus {
+    border-color:var(--ax-accent)!important;
+    outline:none!important;
+    box-shadow:none!important;
+  }
+
+  .ax-preview-main label { color:#d6d3cc!important; }
+
+  .ax-preview-main .max-w-7xl,
+  .ax-preview-main .max-w-6xl,
+  .ax-preview-main .max-w-5xl {
+    max-width:1440px!important;
+    padding-left:32px!important;
+    padding-right:32px!important;
+  }
+
+  .ax-preview-main .py-20,
+  .ax-preview-main .py-16,
+  .ax-preview-main .py-12 { padding-top:84px!important; padding-bottom:84px!important; }
+
+  .ax-preview-main table { border-color:var(--ax-line)!important; }
+  .ax-preview-main tr,.ax-preview-main td,.ax-preview-main th { border-color:var(--ax-line)!important; }
+
+  .ax-inner-footer {
+    background:#080808;
+    border-top:1px solid var(--ax-line);
+    color:var(--ax-cream);
+  }
+
+  .ax-inner-footer-top {
+    display:grid;
+    grid-template-columns:minmax(0,1.2fr) .8fr;
+    gap:70px;
+    padding:92px 0 72px;
+  }
+
+  .ax-inner-footer h2 {
+    margin:0;
+    font-size:clamp(58px,8vw,126px);
+    line-height:.84;
+    letter-spacing:-.07em;
+    font-weight:500;
+  }
+
+  .ax-inner-footer h2 span { color:transparent; -webkit-text-stroke:1px rgba(242,238,231,.55); }
+
+  .ax-inner-footer-meta { display:flex; flex-direction:column; justify-content:flex-end; gap:18px; color:#8d8b86; font-size:13px; }
+  .ax-inner-contact { display:flex; align-items:center; gap:11px; }
+  .ax-inner-footer-link { margin-top:12px; width:82px; height:82px; border:1px solid var(--ax-line); border-radius:50%; display:grid; place-items:center; color:white; }
+  .ax-inner-footer-link:hover { background:var(--ax-accent); color:#111; border-color:var(--ax-accent); }
+
+  .ax-inner-footer-bottom { border-top:1px solid var(--ax-line); padding:24px 0 34px; display:flex; justify-content:space-between; gap:20px; color:#696969; font-size:11px; }
+
+  @media(max-width:1120px){
+    .ax-inner-links{display:none}.ax-inner-menu{display:block}.ax-inner-mark{justify-self:end}
+  }
+
+  @media(max-width:760px){
+    .ax-inner-container{width:min(100% - 28px,1440px)}
+    .ax-inner-header,.ax-inner-nav{min-height:72px}.ax-inner-brand span,.ax-inner-mark{display:none}
+    .ax-preview-main .max-w-7xl,.ax-preview-main .max-w-6xl,.ax-preview-main .max-w-5xl{padding-left:14px!important;padding-right:14px!important}
+    .ax-inner-footer-top{grid-template-columns:1fr;gap:42px;padding-top:70px}
+    .ax-inner-footer-bottom{flex-direction:column}
   }
 `;
 
-function PreviewHeader() {
-  const location = useLocation();
-  const [open, setOpen] = useState(false);
-
-  const isActive = (page) =>
-    location.pathname === createPageUrl(page) || (page === "Home" && location.pathname === "/");
-
-  return (
-    <header className="ax-header">
-      <div className="ax-container ax-header-inner">
-        <Link to="/" className="ax-brand">
-          <img src="/logo.png" alt="לוגו ריקוד ברוח הטובה" />
-          <strong>ריקוד ברוח הטובה</strong>
-        </Link>
-        <nav className="ax-nav">
-          {navLinks.map((link) => (
-            <Link
-              key={link.page}
-              to={createPageUrl(link.page)}
-              className={`${isActive(link.page) ? "ax-active" : ""} ${link.cta ? "ax-nav-cta" : ""}`}
-            >
-              {link.name}
-            </Link>
-          ))}
-        </nav>
-        <button className="ax-menu-btn" onClick={() => setOpen((v) => !v)} aria-label="תפריט">
-          {open ? <X size={25} /> : <Menu size={25} />}
-        </button>
-      </div>
-      {open && (
-        <nav className="ax-mobile-nav">
-          {navLinks.map((link) => (
-            <Link key={link.page} to={createPageUrl(link.page)} onClick={() => setOpen(false)}>
-              {link.name}
-            </Link>
-          ))}
-        </nav>
-      )}
-    </header>
-  );
-}
-
-function PreviewFooter() {
-  return (
-    <footer className="ax-footer">
-      <div className="ax-container">
-        <div className="ax-footer-top">
-          <div>
-            <h2 className="ax-footer-title">לרקוד. להתקדם.<br />להרגיש בבית.</h2>
-            <p>בית ספר למחול, תנועה ואקרודאנס באווירה מקצועית, איכותית ושמורה.</p>
-          </div>
-          <div>
-            <h4>ניווט</h4>
-            <div className="ax-footer-links">
-              <Link to="/Classes">חוגים</Link>
-              <Link to="/Locations">סניפים</Link>
-              <Link to="/Performances">הופעות</Link>
-              <Link to="/About">אודות</Link>
-              <Link to="/Registration">הרשמה</Link>
-            </div>
-          </div>
-          <div>
-            <h4>יצירת קשר</h4>
-            <div className="ax-contact-row"><Phone size={16} /><span>03-3130565</span></div>
-            <div className="ax-contact-row"><Mail size={16} /><span>b0527182273@gmail.com</span></div>
-          </div>
-        </div>
-        <div className="ax-footer-bottom">
-          <span>© ריקוד ברוח הטובה</span>
-          <Link className="ax-footer-mark" to="/Contact">דברי איתנו <ArrowUpLeft size={16} /></Link>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
 export default function AppLayout({ children }) {
+  const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     document.title = "ריקוד ברוח הטובה — Preview";
   }, []);
 
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
+  const active = (page) => location.pathname === createPageUrl(page) || (page === "Home" && location.pathname === "/");
+
   return (
-    <div className="ax-site">
+    <div className="ax-inner-shell">
       <style>{previewStyles}</style>
-      <PreviewHeader />
-      <main className="ax-main">{children}</main>
-      <PreviewFooter />
+
+      <header className="ax-inner-header">
+        <div className="ax-inner-container ax-inner-nav">
+          <Link to="/" className="ax-inner-brand">
+            <img src="/logo.png" alt="לוגו ריקוד ברוח הטובה" />
+            <span>ריקוד ברוח הטובה</span>
+          </Link>
+          <div className="ax-inner-mark">AXTRA DIRECTION / PREVIEW</div>
+          <nav className="ax-inner-links">
+            {navLinks.map(link => (
+              <Link
+                key={link.page}
+                to={createPageUrl(link.page)}
+                className={`${active(link.page) ? "active" : ""} ${link.cta ? "cta" : ""}`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
+          <button className="ax-inner-menu" onClick={() => setMenuOpen(v => !v)} aria-label="תפריט">
+            {menuOpen ? <X size={25}/> : <Menu size={25}/>} 
+          </button>
+        </div>
+        {menuOpen && (
+          <div className="ax-inner-mobile">
+            {navLinks.map(link => <Link key={link.page} to={createPageUrl(link.page)}>{link.name}</Link>)}
+          </div>
+        )}
+      </header>
+
+      <main className="ax-preview-main">{children}</main>
+
+      <footer className="ax-inner-footer">
+        <div className="ax-inner-container ax-inner-footer-top">
+          <h2>בואי<br/><span>לרקוד.</span></h2>
+          <div className="ax-inner-footer-meta">
+            <div className="ax-inner-contact"><Phone size={17}/> <span>03-3130565</span></div>
+            <div className="ax-inner-contact"><Mail size={17}/> <span>b0527182273@gmail.com</span></div>
+            <Link className="ax-inner-footer-link" to="/Registration"><ArrowUpLeft size={24}/></Link>
+          </div>
+        </div>
+        <div className="ax-inner-container ax-inner-footer-bottom">
+          <span>ריקוד ברוח הטובה — PREVIEW ONLY</span>
+          <span>Axtra React inspired visual direction</span>
+        </div>
+      </footer>
     </div>
   );
 }
