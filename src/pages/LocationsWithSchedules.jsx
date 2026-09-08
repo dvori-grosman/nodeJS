@@ -92,7 +92,6 @@ export default function LocationsWithSchedules() {
         <section className="relative darker-bg py-20">
           <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
             <h1 className="gold-text text-4xl font-bold md:text-6xl">מצאי את הסניף הקרוב אליך</h1>
-            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-gray-300">בחרי סניף וצפי במערכת השעות העדכנית שלו בצורה ברורה ונוחה גם מהטלפון.</p>
             <div className="gold-bg mx-auto mt-8 h-1 w-24" />
           </div>
         </section>
