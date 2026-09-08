@@ -62,7 +62,9 @@ export default function ContactPage() {
       errors.parentPhone = 'יש להזין מספר טלפון ישראלי תקין';
     }
 
-    if (email && !isValidEmail(email)) {
+    if (!email) {
+      errors.parentEmail = 'יש להזין כתובת מייל';
+    } else if (!isValidEmail(email)) {
       errors.parentEmail = 'יש להזין כתובת מייל תקינה';
     }
 
@@ -97,9 +99,9 @@ export default function ContactPage() {
       const emailData = {
         from_name: formData.studentName.trim(),
         name: formData.studentName.trim(),
-        from_email: formData.parentEmail.trim() || 'לא סופק',
-        email: formData.parentEmail.trim() || 'לא סופק',
-        reply_to: formData.parentEmail.trim() || undefined,
+        from_email: formData.parentEmail.trim(),
+        email: formData.parentEmail.trim(),
+        reply_to: formData.parentEmail.trim(),
         phone: normalizeIsraeliPhone(formData.parentPhone),
         message: formData.inquiryMessage.trim(),
         to_email: 'b0527182273@gmail.com',
@@ -281,7 +283,7 @@ function InquiryForm({ formData, formErrors, onInputChange, onSubmit, isSubmitti
 
           <FormInput
             id="parentEmail"
-            label="מייל"
+            label="מייל *"
             type="email"
             inputMode="email"
             value={formData.parentEmail}
@@ -289,6 +291,7 @@ function InquiryForm({ formData, formErrors, onInputChange, onSubmit, isSubmitti
             placeholder="your-email@example.com"
             error={formErrors.parentEmail}
             maxLength={100}
+            required
           />
 
           <FormTextarea
