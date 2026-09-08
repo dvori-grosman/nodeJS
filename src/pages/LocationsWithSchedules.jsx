@@ -5,6 +5,27 @@ import { Button } from '@/components/ui/button';
 import { Helmet } from 'react-helmet-async';
 
 const API_BASE_URL = 'https://dance-studio-server.onrender.com/api';
+const BRANCHES_CACHE_KEY = 'rikud-branches-cache-v1';
+
+function getCachedBranches() {
+  try {
+    const cached = localStorage.getItem(BRANCHES_CACHE_KEY);
+    if (!cached) return [];
+
+    const parsed = JSON.parse(cached);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveBranchesToCache(branches) {
+  try {
+    localStorage.setItem(BRANCHES_CACHE_KEY, JSON.stringify(branches));
+  } catch {
+    // Cache failure should never block the page.
+  }
+}
 
 function ScheduleModal({ branch, onClose }) {
   if (!branch) return null;
@@ -55,9 +76,10 @@ function ScheduleModal({ branch, onClose }) {
 }
 
 export default function LocationsWithSchedules() {
-  const [branches, setBranches] = useState([]);
+  const cachedBranches = getCachedBranches();
+  const [branches, setBranches] = useState(cachedBranches);
   const [selectedBranch, setSelectedBranch] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(cachedBranches.length === 0);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -66,9 +88,17 @@ export default function LocationsWithSchedules() {
         const response = await fetch(`${API_BASE_URL}/branches`);
         const data = await response.json();
         if (!response.ok || !data.success) throw new Error('שגיאה בטעינת הסניפים');
-        setBranches(data.data || []);
+
+        const freshBranches = data.data || [];
+        setBranches(freshBranches);
+        saveBranchesToCache(freshBranches);
+        setError('');
       } catch (err) {
-        setError(err.message || 'שגיאה בחיבור לשרת');
+        // If cached data exists, keep showing it instead of blocking the page
+        // while a sleeping Render instance wakes up.
+        if (cachedBranches.length === 0) {
+          setError(err.message || 'שגיאה בחיבור לשרת');
+        }
       } finally {
         setLoading(false);
       }
