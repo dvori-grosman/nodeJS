@@ -10,6 +10,7 @@ import Registration from "./Registration";
 import Admin from "./Admin";
 import ScheduleAdmin from "./ScheduleAdmin";
 import AxtraPreview from "./AxtraPreview";
+import AxtraClassesPreview from "./AxtraClassesPreview";
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
@@ -53,8 +54,6 @@ function PagesContent() {
         return <Admin />;
     }
 
-    // Preview branch only: open the Axtra-inspired design directly on home.
-    // main is untouched.
     if (location.pathname === '/' || location.pathname === '/Home' || location.pathname === '/PreviewAxtra') {
         return <AxtraPreview />;
     }
@@ -62,7 +61,7 @@ function PagesContent() {
     return (
         <Layout currentPageName={currentPage}>
             <Routes>
-                <Route path="/Classes" element={<Classes />} />
+                <Route path="/Classes" element={<AxtraClassesPreview />} />
                 <Route path="/Contact" element={<Contact />} />
                 <Route path="/Locations" element={<Locations />} />
                 <Route path="/Performances" element={<Performances />} />
