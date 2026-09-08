@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ExternalLink, FileText, MapPin, X, ArrowUpLeft } from 'lucide-react';
+import { ArrowUpLeft, ExternalLink, FileText, MapPin, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Helmet } from 'react-helmet-async';
 
@@ -164,7 +164,7 @@ function BranchPin({ branch, index, active, onActivate, onOpenSchedule }) {
         <span className="absolute inset-0 -z-10 animate-ping rounded-full bg-[#C9F31D]/25" />
       </button>
 
-      <div className={`pin-popover absolute bottom-[34px] right-1/2 w-[260px] translate-x-1/2 border border-white/15 bg-[#0b0b0b]/95 p-4 text-right backdrop-blur-xl transition duration-200 ${active ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none translate-y-2 opacity-0 group-hover:opacity-100'}`}>
+      <div className={`pin-popover absolute bottom-[34px] right-1/2 w-[260px] translate-x-1/2 border border-white/15 bg-[#0b0b0b]/95 p-4 text-right backdrop-blur-xl transition duration-200 ${active ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none translate-y-2 opacity-0'}`}>
         <div className="mb-3 flex items-start justify-between gap-3">
           <div>
             <p className="text-[10px] uppercase tracking-[.22em] text-[#C9F31D]">Branch {String(index + 1).padStart(2, '0')}</p>
@@ -187,6 +187,39 @@ function BranchPin({ branch, index, active, onActivate, onOpenSchedule }) {
         </button>
       </div>
     </div>
+  );
+}
+
+function BranchCard({ branch, index, onOpenSchedule }) {
+  const hasSchedule = Boolean(branch.scheduleFileUrl);
+
+  return (
+    <article className="group flex min-h-[260px] flex-col border border-white/10 bg-[#0d0d0d] p-6 transition duration-300 hover:border-white/25 hover:bg-[#111] sm:p-7">
+      <div className="mb-8 flex items-start justify-between gap-4">
+        <div>
+          <p className="mb-3 text-[10px] uppercase tracking-[.24em] text-[#C9F31D]">Branch {String(index + 1).padStart(2, '0')}</p>
+          <h2 className="text-2xl font-semibold leading-tight tracking-[-.03em] text-white sm:text-3xl">{branch.name}</h2>
+        </div>
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/10 text-white/35 transition group-hover:border-[#C9F31D]/40 group-hover:text-[#C9F31D]">
+          <MapPin className="h-5 w-5" />
+        </span>
+      </div>
+
+      <p className="text-sm leading-7 text-white/45">{branch.address}</p>
+      {branch.scheduleYear && <p className="mt-2 text-xs text-white/25">מערכת {branch.scheduleYear}</p>}
+
+      <div className="mt-auto pt-8">
+        <button
+          type="button"
+          disabled={!hasSchedule}
+          onClick={() => hasSchedule && onOpenSchedule(branch)}
+          className={`flex w-full items-center justify-between border-t border-white/10 pt-4 text-sm font-semibold transition ${hasSchedule ? 'text-white hover:text-[#C9F31D]' : 'cursor-not-allowed text-white/25'}`}
+        >
+          <span>{hasSchedule ? 'פתיחת מערכת השעות' : 'מערכת שעות תתפרסם בקרוב'}</span>
+          <ArrowUpLeft className="h-4 w-4" />
+        </button>
+      </div>
+    </article>
   );
 }
 
@@ -241,20 +274,47 @@ export default function LocationsWithSchedules() {
                 הסניפים<br/><span className="text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,.45)]">שלנו.</span>
               </h1>
               <p className="max-w-md pb-2 text-base leading-8 text-white/50">
-                עברי עם העכבר על נקודה במפה — או לחצי עליה — כדי לראות את פרטי הסניף ולפתוח את מערכת השעות.
+                בחרי סניף, פתחי את מערכת השעות שלו, או מצאי אותו על המפה האינטראקטיבית שבהמשך העמוד.
               </p>
             </div>
           </div>
         </section>
 
-        <section className="px-4 py-8 sm:px-8 lg:px-12 lg:py-14">
+        <section className="px-4 py-10 sm:px-8 lg:px-12 lg:py-16">
           <div className="mx-auto max-w-[1440px]">
             {loading ? (
-              <div className="grid min-h-[620px] place-items-center border border-white/10 bg-[#0d0d0d] text-white/45">טוען סניפים...</div>
+              <div className="grid min-h-[420px] place-items-center border border-white/10 bg-[#0d0d0d] text-white/45">טוען סניפים...</div>
             ) : error ? (
               <div className="grid min-h-[420px] place-items-center border border-red-500/20 bg-red-500/5 p-8 text-center text-red-200">{error}</div>
             ) : (
               <>
+                <div className="mb-10 flex items-end justify-between gap-6 border-b border-white/10 pb-5 lg:mb-12">
+                  <div>
+                    <p className="mb-2 text-[10px] uppercase tracking-[.24em] text-[#C9F31D]">Choose a branch</p>
+                    <h2 className="text-3xl font-semibold tracking-[-.04em] sm:text-4xl">בחרי את הסניף שלך</h2>
+                  </div>
+                  <span className="text-sm text-white/30">{branches.length} סניפים</span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-px bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+                  {branches.map((branch, index) => (
+                    <BranchCard
+                      key={`card-${branch._id || `${branch.name}-${index}`}`}
+                      branch={branch}
+                      index={index}
+                      onOpenSchedule={setSelectedBranch}
+                    />
+                  ))}
+                </div>
+
+                <div className="mb-8 mt-20 flex items-end justify-between gap-6 border-b border-white/10 pb-5 lg:mt-28">
+                  <div>
+                    <p className="mb-2 text-[10px] uppercase tracking-[.24em] text-[#C9F31D]">Interactive map</p>
+                    <h2 className="text-3xl font-semibold tracking-[-.04em] sm:text-4xl">מפת הסניפים</h2>
+                  </div>
+                  <p className="hidden max-w-sm text-left text-sm leading-6 text-white/35 md:block">עברו עם העכבר או לחצו על פין כדי לראות את פרטי הסניף.</p>
+                </div>
+
                 <div className="relative min-h-[620px] overflow-hidden border border-white/10 bg-[#0d0d0d] sm:min-h-[700px] lg:min-h-[760px]">
                   <MapArtwork />
                   <div className="absolute inset-x-0 top-0 z-[2] flex items-center justify-between border-b border-white/10 bg-black/20 px-4 py-3 text-[10px] uppercase tracking-[.22em] text-white/35 backdrop-blur-sm sm:px-6">
@@ -276,24 +336,6 @@ export default function LocationsWithSchedules() {
                   <div className="absolute bottom-4 left-4 z-[3] border border-white/10 bg-black/45 px-3 py-2 text-[10px] text-white/35 backdrop-blur-sm sm:bottom-6 sm:left-6">
                     מפה סכמטית להמחשת פריסת הסניפים
                   </div>
-                </div>
-
-                <div className="mt-8 grid border-t border-white/10 sm:grid-cols-2 lg:grid-cols-3">
-                  {branches.map((branch, index) => (
-                    <button
-                      key={`mobile-${branch._id || index}`}
-                      type="button"
-                      onClick={() => setActiveBranchId(branch._id)}
-                      className="group flex items-center justify-between gap-5 border-b border-white/10 px-1 py-5 text-right transition hover:bg-white/[.025] sm:px-5 sm:[&:nth-child(odd)]:border-l lg:border-l lg:[&:nth-child(3n)]:border-l-0"
-                    >
-                      <div className="min-w-0">
-                        <p className="mb-1 text-[10px] tracking-[.2em] text-[#C9F31D]">{String(index + 1).padStart(2, '0')}</p>
-                        <p className="truncate text-base font-medium text-white">{branch.name}</p>
-                        <p className="mt-1 truncate text-xs text-white/35">{branch.address}</p>
-                      </div>
-                      <MapPin className="h-5 w-5 shrink-0 text-white/25 transition group-hover:text-[#C9F31D]" />
-                    </button>
-                  ))}
                 </div>
               </>
             )}
