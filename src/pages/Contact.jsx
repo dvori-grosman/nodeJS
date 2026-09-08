@@ -1,12 +1,24 @@
 import React, { useState } from "react";
 import emailjs from '@emailjs/browser';
-import { Phone, Mail, MapPin, Clock, Heart, Send, CheckCircle } from "lucide-react";
+import { Phone, Mail, Clock, Heart, Send, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Helmet } from "react-helmet-async";
+
+const normalizeIsraeliPhone = (phone) => {
+  const cleaned = phone.replace(/[\s\-()]/g, '');
+  return cleaned.startsWith('+972') ? `0${cleaned.slice(4)}` : cleaned;
+};
+
+const isValidIsraeliPhone = (phone) => {
+  const normalized = normalizeIsraeliPhone(phone);
+  return /^0(?:5\d{8}|7\d{8}|[2-4,8-9]\d{7})$/.test(normalized);
+};
+
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
 
 export default function ContactPage() {
   const [inquiryFormData, setInquiryFormData] = useState({
@@ -16,6 +28,7 @@ export default function ContactPage() {
     inquiryMessage: ""
   });
 
+  const [formErrors, setFormErrors] = useState({});
   const [isSubmittingInquiry, setIsSubmittingInquiry] = useState(false);
   const [hasSubmittedSuccessfully, setHasSubmittedSuccessfully] = useState(false);
   const [emailSendingStatus, setEmailSendingStatus] = useState('');
@@ -26,27 +39,71 @@ export default function ContactPage() {
     PUBLIC_KEY: 'Ub_6n8kuhlIM5pW1R'
   };
 
-  // פונקציה לעדכון נתוני הטופס
+  const validateForm = () => {
+    const errors = {};
+    const name = inquiryFormData.studentName.trim();
+    const phone = inquiryFormData.parentPhone.trim();
+    const email = inquiryFormData.parentEmail.trim();
+    const message = inquiryFormData.inquiryMessage.trim();
+
+    if (!name) {
+      errors.studentName = 'יש להזין שם מלא';
+    } else if (name.length < 2) {
+      errors.studentName = 'השם קצר מדי';
+    } else if (name.length > 50) {
+      errors.studentName = 'השם יכול להכיל עד 50 תווים';
+    } else if (!/^[\p{L}\s.'-]+$/u.test(name)) {
+      errors.studentName = 'השם יכול להכיל אותיות בלבד';
+    }
+
+    if (!phone) {
+      errors.parentPhone = 'יש להזין מספר טלפון';
+    } else if (!isValidIsraeliPhone(phone)) {
+      errors.parentPhone = 'יש להזין מספר טלפון ישראלי תקין';
+    }
+
+    if (email && !isValidEmail(email)) {
+      errors.parentEmail = 'יש להזין כתובת מייל תקינה';
+    }
+
+    if (!message) {
+      errors.inquiryMessage = 'יש להזין תוכן לפנייה';
+    } else if (message.length < 5) {
+      errors.inquiryMessage = 'תוכן הפנייה קצר מדי';
+    } else if (message.length > 1000) {
+      errors.inquiryMessage = 'תוכן הפנייה יכול להכיל עד 1000 תווים';
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleFormInputChange = (fieldName, fieldValue) => {
     setInquiryFormData(previousFormData => ({
       ...previousFormData,
       [fieldName]: fieldValue
     }));
+
+    if (formErrors[fieldName]) {
+      setFormErrors(previousErrors => ({
+        ...previousErrors,
+        [fieldName]: undefined
+      }));
+    }
   };
 
-  // פונקציה לשליחת מייל דרך EmailJS
   const sendEmailViaEmailJS = async (formData) => {
     try {
       const emailData = {
-        from_name: formData.studentName,
-        name: formData.studentName,
-        from_email: formData.parentEmail || 'לא סופק',
-        email: formData.parentEmail || 'לא סופק',
-        reply_to: formData.parentEmail || undefined,
-        phone: formData.parentPhone,
-        message: formData.inquiryMessage,
+        from_name: formData.studentName.trim(),
+        name: formData.studentName.trim(),
+        from_email: formData.parentEmail.trim() || 'לא סופק',
+        email: formData.parentEmail.trim() || 'לא סופק',
+        reply_to: formData.parentEmail.trim() || undefined,
+        phone: normalizeIsraeliPhone(formData.parentPhone),
+        message: formData.inquiryMessage.trim(),
         to_email: 'b0527182273@gmail.com',
-        subject: `פניה חדשה מהאתר - ${formData.studentName}`
+        subject: `פניה חדשה מהאתר - ${formData.studentName.trim()}`
       };
 
       const result = await emailjs.send(
@@ -66,11 +123,15 @@ export default function ContactPage() {
     }
   };
 
-  // פונקציה לשליחת הטופס
   const handleInquiryFormSubmit = async (formEvent) => {
     formEvent.preventDefault();
-    setIsSubmittingInquiry(true);
     setEmailSendingStatus('');
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmittingInquiry(true);
 
     try {
       const emailSent = await sendEmailViaEmailJS(inquiryFormData);
@@ -83,7 +144,6 @@ export default function ContactPage() {
     }
   };
 
-  // הצגת עמוד הצלחה לאחר שליחה
   if (hasSubmittedSuccessfully) {
     return (
       <InquirySuccessPage
@@ -107,6 +167,7 @@ export default function ContactPage() {
         <InquiryPageHeader />
         <InquiryFormSection
           formData={inquiryFormData}
+          formErrors={formErrors}
           onInputChange={handleFormInputChange}
           onSubmit={handleInquiryFormSubmit}
           isSubmitting={isSubmittingInquiry}
@@ -117,7 +178,6 @@ export default function ContactPage() {
   );
 }
 
-// קומפוננטת כותרת העמוד
 function InquiryPageHeader() {
   return (
     <section className="relative darker-bg py-20">
@@ -127,8 +187,6 @@ function InquiryPageHeader() {
             מוכנה להתחיל?
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            {/* השאירי פרטים ונחזור אליך עם כל המידע על הקבוצה המתאימה לך.
-            <br /> */}
             <strong className="pink-text">שיעור הכרות ללא התחייבות!</strong>
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-pink-500 to-yellow-500 mx-auto mt-8"></div>
@@ -138,7 +196,6 @@ function InquiryPageHeader() {
   );
 }
 
-// קומפוננטת עמוד הצלחה
 function InquirySuccessPage({ onBackToForm, emailStatus }) {
   return (
     <div className="min-h-screen flex items-center justify-center dark-bg p-4">
@@ -170,13 +227,13 @@ function InquirySuccessPage({ onBackToForm, emailStatus }) {
   );
 }
 
-// קומפוננטת חלק הטופס והמידע
-function InquiryFormSection({ formData, onInputChange, onSubmit, isSubmitting, emailStatus }) {
+function InquiryFormSection({ formData, formErrors, onInputChange, onSubmit, isSubmitting, emailStatus }) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <InquiryForm
           formData={formData}
+          formErrors={formErrors}
           onInputChange={onInputChange}
           onSubmit={onSubmit}
           isSubmitting={isSubmitting}
@@ -188,8 +245,7 @@ function InquiryFormSection({ formData, onInputChange, onSubmit, isSubmitting, e
   );
 }
 
-// קומפוננטת הטופס
-function InquiryForm({ formData, onInputChange, onSubmit, isSubmitting, emailStatus }) {
+function InquiryForm({ formData, formErrors, onInputChange, onSubmit, isSubmitting, emailStatus }) {
   return (
     <Card className="darker-bg border-gray-700 elegant-shadow">
       <CardHeader>
@@ -198,13 +254,15 @@ function InquiryForm({ formData, onInputChange, onSubmit, isSubmitting, emailSta
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={onSubmit} className="space-y-6">
+        <form onSubmit={onSubmit} noValidate className="space-y-6">
           <FormInput
             id="studentName"
             label="שם מלא *"
             value={formData.studentName}
             onChange={(value) => onInputChange('studentName', value)}
             placeholder="השם שלך"
+            error={formErrors.studentName}
+            maxLength={50}
             required
           />
 
@@ -212,9 +270,12 @@ function InquiryForm({ formData, onInputChange, onSubmit, isSubmitting, emailSta
             id="parentPhone"
             label="טלפון *"
             type="tel"
+            inputMode="tel"
             value={formData.parentPhone}
             onChange={(value) => onInputChange('parentPhone', value)}
             placeholder="05X-XXXXXXX"
+            error={formErrors.parentPhone}
+            maxLength={18}
             required
           />
 
@@ -222,9 +283,12 @@ function InquiryForm({ formData, onInputChange, onSubmit, isSubmitting, emailSta
             id="parentEmail"
             label="מייל"
             type="email"
+            inputMode="email"
             value={formData.parentEmail}
             onChange={(value) => onInputChange('parentEmail', value)}
             placeholder="your-email@example.com"
+            error={formErrors.parentEmail}
+            maxLength={100}
           />
 
           <FormTextarea
@@ -232,18 +296,13 @@ function InquiryForm({ formData, onInputChange, onSubmit, isSubmitting, emailSta
             label="תוכן הפנייה *"
             value={formData.inquiryMessage}
             onChange={(value) => onInputChange('inquiryMessage', value)}
-            placeholder="ספרי לנו על גיל הבת, סוג השיעור המעניין אותך, הסניף המועדף, ושאלות נוספות..."
+            placeholder="כתבי כאן את תוכן הפנייה..."
+            error={formErrors.inquiryMessage}
+            maxLength={1000}
             required
           />
 
-          {emailStatus && (
-            <div className={`p-3 rounded-lg text-sm text-center ${emailStatus.includes('בהצלחה')
-                ? 'bg-green-100 text-green-800 border border-green-200'
-                : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
-              }`}>
-              {emailStatus}
-            </div>
-          )}
+          {emailSendingStatusBlock(emailStatus)}
 
           <SubmitButton isSubmitting={isSubmitting} />
         </form>
@@ -252,43 +311,90 @@ function InquiryForm({ formData, onInputChange, onSubmit, isSubmitting, emailSta
   );
 }
 
-// קומפוננטת שדה טקסט
-function FormInput({ id, label, type = "text", value, onChange, placeholder, required = false }) {
+function emailSendingStatusBlock(emailStatus) {
+  if (!emailStatus) return null;
+
+  return (
+    <div className={`p-3 rounded-lg text-sm text-center ${emailStatus.includes('בהצלחה')
+        ? 'bg-green-100 text-green-800 border border-green-200'
+        : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
+      }`}>
+      {emailStatus}
+    </div>
+  );
+}
+
+function FormInput({
+  id,
+  label,
+  type = "text",
+  value,
+  onChange,
+  placeholder,
+  error,
+  required = false,
+  maxLength,
+  inputMode
+}) {
   return (
     <div>
       <Label htmlFor={id} className="white-text">{label}</Label>
       <Input
         id={id}
+        name={id}
         type={type}
+        inputMode={inputMode}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         required={required}
-        className="mt-1 bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
+        maxLength={maxLength}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className={`mt-1 bg-gray-700 text-white placeholder:text-gray-400 ${error ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-600'}`}
       />
+      {error && (
+        <p id={`${id}-error`} className="mt-1.5 text-sm text-red-400" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
 
-// קומפוננטת שדה טקסט מרובה שורות
-function FormTextarea({ id, label, value, onChange, placeholder, required = false }) {
+function FormTextarea({ id, label, value, onChange, placeholder, error, required = false, maxLength }) {
   return (
     <div>
       <Label htmlFor={id} className="white-text">{label}</Label>
       <Textarea
         id={id}
+        name={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={5}
         required={required}
-        className="mt-1 bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
+        maxLength={maxLength}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className={`mt-1 bg-gray-700 text-white placeholder:text-gray-400 ${error ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-600'}`}
       />
+      <div className="mt-1 flex items-start justify-between gap-3">
+        {error ? (
+          <p id={`${id}-error`} className="text-sm text-red-400" role="alert">
+            {error}
+          </p>
+        ) : <span />}
+        {maxLength && (
+          <span className="text-xs text-gray-500">
+            {value.length}/{maxLength}
+          </span>
+        )}
+      </div>
     </div>
   );
 }
 
-// קומפוננטת כפתור שליחה
 function SubmitButton({ isSubmitting }) {
   return (
     <Button
@@ -311,7 +417,6 @@ function SubmitButton({ isSubmitting }) {
   );
 }
 
-// קומפוננטת מידע ליצירת קשר
 function ContactInformation() {
   return (
     <div className="space-y-8">
@@ -322,7 +427,6 @@ function ContactInformation() {
   );
 }
 
-// קומפוננטת פרטי יצירת קשר
 function ContactDetailsCard() {
   const contactDetails = [
     {
@@ -359,7 +463,6 @@ function ContactDetailsCard() {
   );
 }
 
-// פריט פרטי קשר
 function ContactDetailItem({ icon, title, main, details }) {
   return (
     <div className="flex items-center gap-4">
@@ -377,7 +480,6 @@ function ContactDetailItem({ icon, title, main, details }) {
   );
 }
 
-// קומפוננטת שאלות נפוצות
 function FrequentlyAskedQuestions() {
   const faqItems = [
     {
@@ -408,7 +510,6 @@ function FrequentlyAskedQuestions() {
   );
 }
 
-// פריט שאלה נפוצה
 function FaqItem({ question, answer, isLast }) {
   return (
     <div className={!isLast ? "border-b border-gray-700 pb-4" : ""}>
@@ -418,7 +519,6 @@ function FaqItem({ question, answer, isLast }) {
   );
 }
 
-// קומפוננטת עידוד
 function EncouragementCard() {
   return (
     <Card className="darker-bg border-gray-700 elegant-shadow">
