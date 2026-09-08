@@ -15,10 +15,42 @@ const normalizeIsraeliPhone = (phone) => {
 
 const isValidIsraeliPhone = (phone) => {
   const normalized = normalizeIsraeliPhone(phone);
-  return /^0(?:5\d{8}|7\d{8}|[2-4,8-9]\d{7})$/.test(normalized);
+  return /^0(?:5\d{8}|7\d{8}|[2-48-9]\d{7})$/.test(normalized);
 };
 
 const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+
+const validateField = (fieldName, rawValue) => {
+  const value = rawValue.trim();
+
+  switch (fieldName) {
+    case 'studentName':
+      if (!value) return 'יש להזין שם מלא';
+      if (value.length < 2) return 'השם קצר מדי';
+      if (value.length > 50) return 'השם יכול להכיל עד 50 תווים';
+      if (!/^[\p{L}\s.'-]+$/u.test(value)) return 'השם יכול להכיל אותיות בלבד';
+      return '';
+
+    case 'parentPhone':
+      if (!value) return 'יש להזין מספר טלפון';
+      if (!isValidIsraeliPhone(value)) return 'יש להזין מספר טלפון ישראלי תקין';
+      return '';
+
+    case 'parentEmail':
+      if (!value) return 'יש להזין כתובת מייל';
+      if (!isValidEmail(value)) return 'יש להזין כתובת מייל תקינה';
+      return '';
+
+    case 'inquiryMessage':
+      if (!value) return 'יש להזין תוכן לפנייה';
+      if (value.length < 5) return 'תוכן הפנייה קצר מדי';
+      if (value.length > 1000) return 'תוכן הפנייה יכול להכיל עד 1000 תווים';
+      return '';
+
+    default:
+      return '';
+  }
+};
 
 export default function ContactPage() {
   const [inquiryFormData, setInquiryFormData] = useState({
@@ -41,40 +73,11 @@ export default function ContactPage() {
 
   const validateForm = () => {
     const errors = {};
-    const name = inquiryFormData.studentName.trim();
-    const phone = inquiryFormData.parentPhone.trim();
-    const email = inquiryFormData.parentEmail.trim();
-    const message = inquiryFormData.inquiryMessage.trim();
 
-    if (!name) {
-      errors.studentName = 'יש להזין שם מלא';
-    } else if (name.length < 2) {
-      errors.studentName = 'השם קצר מדי';
-    } else if (name.length > 50) {
-      errors.studentName = 'השם יכול להכיל עד 50 תווים';
-    } else if (!/^[\p{L}\s.'-]+$/u.test(name)) {
-      errors.studentName = 'השם יכול להכיל אותיות בלבד';
-    }
-
-    if (!phone) {
-      errors.parentPhone = 'יש להזין מספר טלפון';
-    } else if (!isValidIsraeliPhone(phone)) {
-      errors.parentPhone = 'יש להזין מספר טלפון ישראלי תקין';
-    }
-
-    if (!email) {
-      errors.parentEmail = 'יש להזין כתובת מייל';
-    } else if (!isValidEmail(email)) {
-      errors.parentEmail = 'יש להזין כתובת מייל תקינה';
-    }
-
-    if (!message) {
-      errors.inquiryMessage = 'יש להזין תוכן לפנייה';
-    } else if (message.length < 5) {
-      errors.inquiryMessage = 'תוכן הפנייה קצר מדי';
-    } else if (message.length > 1000) {
-      errors.inquiryMessage = 'תוכן הפנייה יכול להכיל עד 1000 תווים';
-    }
+    Object.entries(inquiryFormData).forEach(([fieldName, fieldValue]) => {
+      const error = validateField(fieldName, fieldValue);
+      if (error) errors[fieldName] = error;
+    });
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -86,12 +89,11 @@ export default function ContactPage() {
       [fieldName]: fieldValue
     }));
 
-    if (formErrors[fieldName]) {
-      setFormErrors(previousErrors => ({
-        ...previousErrors,
-        [fieldName]: undefined
-      }));
-    }
+    const error = validateField(fieldName, fieldValue);
+    setFormErrors(previousErrors => ({
+      ...previousErrors,
+      [fieldName]: error || undefined
+    }));
   };
 
   const sendEmailViaEmailJS = async (formData) => {
