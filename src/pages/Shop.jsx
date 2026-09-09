@@ -1,75 +1,55 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Footprints, Shirt, ShoppingBag, Sparkles, Move, ArrowLeft } from 'lucide-react';
-import { Helmet } from "react-helmet-async";
+import { Card, CardContent } from '@/components/ui/card';
+import { Helmet } from 'react-helmet-async';
+import { useApiCollection } from '@/hooks/useApiCollection';
+import { DEFAULT_PURCHASE_URL } from '@/config/site';
 
 export default function ShopPage() {
-  const products = [
-    { name: 'נעלי בלט', icon: <Footprints className="w-12 h-12 text-pink-400" /> },
-    { name: 'חצאית בלט', icon: <Sparkles className="w-12 h-12 text-pink-400" /> },
-    { name: 'גרבי אקרובטיקה', icon: <Move className="w-12 h-12 text-pink-400" /> },
-    { name: 'חולצת ספורט', icon: <Shirt className="w-12 h-12 text-pink-400" /> },
-    { name: 'תיק', icon: <ShoppingBag className="w-12 h-12 text-pink-400" /> },
-  ];
+  const { data: products, loading, error } = useApiCollection('products');
 
   return (
     <>
       <Helmet>
         <title>חנות - ריקוד ברוח הטובה</title>
-            <meta name="description" content="חנות מקוונת עם ציוד ריקוד איכותי, בגדי ריקוד, נעליים וחומרי למידה. הזמינו עכשיו עם משלוח מהיר"/>
-            <meta name="keywords" content="חנות ריקוד, ציוד ריקוד, בגדי מחול, נעלי ריקוד, אביזרים"/>
-            <meta property="og:title" content="סניפים - ריקוד ברוח הטובה" />
-            <meta property="og:description" content="מצאו את הסניף הקרוב אליכם ברחבי הארץ" />
-            <meta property="og:url" content="https://rikud.netlify.app/Shop" />
-          </Helmet>
-
-          <div className="min-h-screen py-12 dark-bg" dir="rtl">
-            {/* Hero Section */}
-            <section className="relative darker-bg py-20">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-16">
-                  <h1 className="text-4xl md:text-6xl font-bold mb-6 gold-text">
-                    חנות הסטודיו
-                  </h1>
-                  <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                    כל הציוד הדרוש לשנת מחול מושלמת במקום אחד
-                  </p>
-                  <div className="w-24 h-1 gold-bg mx-auto mt-8"></div>
-                </div>
-              </div>
-            </section>
-
-            {/* Products Grid */}
-            <section className="py-16">
-              <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                  {products.map((product, index) => (
-                    <Card key={index} className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 darker-bg border-gray-700 elegant-shadow text-center">
-                      <CardContent className="p-8">
-                        <div className="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 transition-all duration-300 group-hover:bg-pink-500/20">
-                          {product.icon}
-                        </div>
-                        <h3 className="text-2xl font-bold white-text mb-6">{product.name}</h3>
-                        <a
-                          href="https://forms.fillout.com/t/5UoM23NsYNus"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-semibold pink-text hover:underline"
-                        >
-                          <Button className="btn-outline-pink w-full">
-                            לרכישה
-                          </Button>
-                        </a>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </section>
+        <meta name="description" content="חנות הסטודיו עם ציוד וביגוד למחול" />
+      </Helmet>
+      <div className="min-h-screen py-12 dark-bg" dir="rtl">
+        <section className="relative darker-bg py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 gold-text">חנות הסטודיו</h1>
+            <p className="text-xl text-gray-300">כל הציוד הדרוש לשנת מחול במקום אחד</p>
           </div>
-        </>
-        );
+        </section>
+
+        <section className="py-16">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            {loading && <p className="text-center text-gray-400">טוען מוצרים...</p>}
+            {error && <p className="text-center text-red-300">{error}</p>}
+            {!loading && !error && products.length === 0 && <p className="text-center text-gray-400">אין מוצרים להצגה כרגע</p>}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+              {products.map(product => (
+                <Card key={product._id} className="group darker-bg border-gray-700 elegant-shadow text-center overflow-hidden">
+                  {product.imageUrl ? (
+                    <div className="h-56 overflow-hidden"><img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover transition group-hover:scale-105" /></div>
+                  ) : (
+                    <div className="h-40 flex items-center justify-center"><ShoppingBag className="w-14 h-14 text-pink-400" /></div>
+                  )}
+                  <CardContent className="p-8">
+                    <h3 className="text-2xl font-bold white-text mb-3">{product.name}</h3>
+                    {product.description && <p className="text-gray-400 mb-4">{product.description}</p>}
+                    {product.price !== null && product.price !== undefined && <p className="gold-text font-semibold mb-5">₪{product.price}</p>}
+                    <a href={product.purchaseUrl || DEFAULT_PURCHASE_URL} target="_blank" rel="noopener noreferrer">
+                      <Button className="btn-outline-pink w-full">לרכישה</Button>
+                    </a>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    </>
+  );
 }
