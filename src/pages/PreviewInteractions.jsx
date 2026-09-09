@@ -14,20 +14,82 @@ const routeToSection = {
   '/Registration': 'registration',
 };
 
-const revealSelector = [
-  '#about .about-head',
-  '#about .about-story-preview',
-  '#about .about-step',
-  '#about .about-value',
-  '#classes .book-slide',
-  '#locations article',
-  '#performances .group',
-  '#shop .group',
-  '#contact .elegant-shadow',
-  '#contact form',
-  '#registration .group',
-  '#registration .elegant-shadow',
-].join(',');
+const animationRules = [
+  {
+    kind: 'title',
+    selector: [
+      '.landing-section h1',
+      '.landing-section h2',
+      '.about-head',
+    ].join(','),
+  },
+  {
+    kind: 'image',
+    selector: [
+      '#performances img',
+      '#shop img',
+      '#about .about-logo-wrap img',
+      '#classes .book-icon',
+    ].join(','),
+  },
+  {
+    kind: 'class-slide',
+    selector: '#classes .book-slide',
+  },
+  {
+    kind: 'card',
+    selector: [
+      '#locations article',
+      '#performances .group',
+      '#shop .group',
+      '#registration .group',
+      '#about .about-value',
+    ].join(','),
+  },
+  {
+    kind: 'step',
+    selector: '#about .about-step',
+  },
+  {
+    kind: 'panel',
+    selector: [
+      '#about .about-story-preview',
+      '#contact .elegant-shadow',
+      '#registration .elegant-shadow',
+    ].join(','),
+  },
+  {
+    kind: 'form',
+    selector: '#contact form',
+  },
+  {
+    kind: 'pin',
+    selector: '#locations .branch-pin, #locations .pin-button',
+  },
+  {
+    kind: 'chip',
+    selector: [
+      '#classes .book-chip',
+      '#classes .book-meta-item',
+      '#performances [class*="Badge"],',
+      '#registration button',
+    ].join(','),
+  },
+  {
+    kind: 'label',
+    selector: '.landing-section-label, .landing-eyebrow, .book-kicker',
+  },
+  {
+    kind: 'cta',
+    selector: [
+      '#about .about-round-link',
+      '#classes .book-bottom a',
+      '#shop a',
+      '#registration a',
+      '#contact button[type="submit"]',
+    ].join(','),
+  },
+];
 
 function goToSection(id) {
   const target = document.getElementById(id);
@@ -80,17 +142,26 @@ export default function PreviewInteractions() {
       });
     }, {
       threshold: 0.12,
-      rootMargin: '0px 0px -8% 0px',
+      rootMargin: '0px 0px -7% 0px',
     });
 
     const registerRevealItems = () => {
-      document.querySelectorAll(revealSelector).forEach((element, index) => {
-        if (element.dataset.previewRevealRegistered === 'true') return;
-        element.dataset.previewRevealRegistered = 'true';
-        element.classList.add('preview-reveal');
-        element.style.setProperty('--preview-reveal-delay', `${(index % 4) * 85}ms`);
-        if (index % 2) element.classList.add('preview-reveal-alt');
-        observer.observe(element);
+      animationRules.forEach(rule => {
+        document.querySelectorAll(rule.selector).forEach((element, index) => {
+          if (element.dataset.previewRevealRegistered === 'true') return;
+
+          element.dataset.previewRevealRegistered = 'true';
+          element.dataset.previewRevealKind = rule.kind;
+          element.classList.add('preview-reveal', `preview-reveal-${rule.kind}`);
+          element.style.setProperty('--preview-reveal-delay', `${(index % 5) * 90}ms`);
+          element.style.setProperty('--preview-reveal-index', index);
+
+          if (rule.kind === 'card') {
+            element.classList.add(index % 2 === 0 ? 'preview-from-right' : 'preview-from-left');
+          }
+
+          observer.observe(element);
+        });
       });
     };
 
@@ -131,25 +202,175 @@ export default function PreviewInteractions() {
     <>
       <style>{`
         .preview-reveal {
+          transition-delay: var(--preview-reveal-delay, 0ms) !important;
+          will-change: transform, opacity, filter, clip-path;
+        }
+
+        /* Titles: masked vertical reveal with a slight skew. */
+        .preview-reveal-title {
           opacity: 0;
-          transform: translate3d(0, 52px, 0) scale(.985);
-          filter: blur(8px);
+          transform: translate3d(0, 58px, 0) skewY(2.2deg);
+          clip-path: inset(0 0 100% 0);
           transition:
-            opacity .82s cubic-bezier(.2,.75,.2,1),
-            transform .9s cubic-bezier(.2,.75,.2,1),
-            filter .8s ease;
-          transition-delay: var(--preview-reveal-delay, 0ms);
-          will-change: transform, opacity, filter;
+            opacity .7s ease,
+            transform .95s cubic-bezier(.16,1,.3,1),
+            clip-path 1s cubic-bezier(.16,1,.3,1) !important;
         }
-
-        .preview-reveal.preview-reveal-alt {
-          transform: translate3d(-34px, 48px, 0) scale(.985);
-        }
-
-        .preview-reveal.preview-reveal-visible {
+        .preview-reveal-title.preview-reveal-visible {
           opacity: 1;
-          transform: translate3d(0, 0, 0) scale(1);
+          transform: none;
+          clip-path: inset(0 0 0 0);
+        }
+
+        /* Images: start close, then breathe outward into place. */
+        .preview-reveal-image {
+          opacity: 0;
+          transform: scale(1.14);
+          filter: grayscale(.5) contrast(1.08) brightness(.72);
+          transition:
+            opacity .9s ease,
+            transform 1.35s cubic-bezier(.16,1,.3,1),
+            filter 1.15s ease !important;
+        }
+        .preview-reveal-image.preview-reveal-visible {
+          opacity: 1;
+          transform: scale(1);
+          filter: grayscale(0) contrast(1) brightness(1);
+        }
+
+        /* Class sections: soft cinematic scale-up. */
+        .preview-reveal-class-slide {
+          opacity: 0;
+          transform: translate3d(0, 38px, 0) scale(.94);
+          filter: blur(10px);
+          transition:
+            opacity .85s ease,
+            transform 1.05s cubic-bezier(.16,1,.3,1),
+            filter .9s ease !important;
+        }
+        .preview-reveal-class-slide.preview-reveal-visible {
+          opacity: 1;
+          transform: translate3d(0,0,0) scale(1);
           filter: blur(0);
+        }
+
+        /* Cards: alternate sides, with a very small rotation. */
+        .preview-reveal-card {
+          opacity: 0;
+          filter: blur(5px);
+          transition:
+            opacity .72s ease,
+            transform .9s cubic-bezier(.2,.82,.2,1),
+            filter .75s ease !important;
+        }
+        .preview-reveal-card.preview-from-right { transform: translate3d(64px, 22px, 0) rotate(1.4deg); }
+        .preview-reveal-card.preview-from-left { transform: translate3d(-64px, 22px, 0) rotate(-1.4deg); }
+        .preview-reveal-card.preview-reveal-visible {
+          opacity: 1;
+          transform: none;
+          filter: blur(0);
+        }
+
+        /* About accordion rows: horizontal wipe. */
+        .preview-reveal-step {
+          opacity: 0;
+          transform: translateX(72px);
+          clip-path: inset(0 100% 0 0);
+          transition:
+            opacity .65s ease,
+            transform .85s cubic-bezier(.16,1,.3,1),
+            clip-path .95s cubic-bezier(.16,1,.3,1) !important;
+        }
+        .preview-reveal-step.preview-reveal-visible {
+          opacity: 1;
+          transform: none;
+          clip-path: inset(0 0 0 0);
+        }
+
+        /* Large panels: rise gently and sharpen. */
+        .preview-reveal-panel {
+          opacity: 0;
+          transform: translateY(76px);
+          filter: blur(12px);
+          transition:
+            opacity .82s ease,
+            transform 1.05s cubic-bezier(.16,1,.3,1),
+            filter .9s ease !important;
+        }
+        .preview-reveal-panel.preview-reveal-visible {
+          opacity: 1;
+          transform: none;
+          filter: blur(0);
+        }
+
+        /* Forms: subtle perspective opening, like a sheet unfolding. */
+        .preview-reveal-form {
+          opacity: 0;
+          transform-origin: top center;
+          transform: perspective(1000px) rotateX(9deg) translateY(34px) scale(.97);
+          transition:
+            opacity .75s ease,
+            transform 1s cubic-bezier(.16,1,.3,1) !important;
+        }
+        .preview-reveal-form.preview-reveal-visible {
+          opacity: 1;
+          transform: perspective(1000px) rotateX(0deg) translateY(0) scale(1);
+        }
+
+        /* Map pins: elastic pop. */
+        .preview-reveal-pin {
+          opacity: 0;
+          transform: scale(.15) rotate(-18deg);
+          transform-origin: center;
+          transition:
+            opacity .25s ease,
+            transform .72s cubic-bezier(.34,1.56,.64,1) !important;
+        }
+        .preview-reveal-pin.preview-reveal-visible {
+          opacity: 1;
+          transform: scale(1) rotate(0deg);
+        }
+
+        /* Small chips/meta: quick staggered rise. */
+        .preview-reveal-chip {
+          opacity: 0;
+          transform: translateY(20px) scale(.82);
+          transition:
+            opacity .4s ease,
+            transform .58s cubic-bezier(.34,1.56,.64,1) !important;
+        }
+        .preview-reveal-chip.preview-reveal-visible {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+
+        /* Eyebrows and section labels: tracking + lateral reveal. */
+        .preview-reveal-label {
+          opacity: 0;
+          transform: translateX(34px);
+          letter-spacing: .5em !important;
+          transition:
+            opacity .65s ease,
+            transform .8s cubic-bezier(.16,1,.3,1),
+            letter-spacing .9s cubic-bezier(.16,1,.3,1) !important;
+        }
+        .preview-reveal-label.preview-reveal-visible {
+          opacity: 1;
+          transform: none;
+          letter-spacing: .18em !important;
+        }
+
+        /* CTA elements: compact pop with rotation. */
+        .preview-reveal-cta {
+          opacity: 0;
+          transform: translateY(22px) scale(.72) rotate(-5deg);
+          transition:
+            opacity .45s ease,
+            transform .72s cubic-bezier(.34,1.56,.64,1) !important;
+        }
+        .preview-reveal-cta.preview-reveal-visible {
+          opacity: 1;
+          transform: translateY(0) scale(1) rotate(0deg);
         }
 
         .preview-progress {
@@ -241,11 +462,11 @@ export default function PreviewInteractions() {
         .preview-back-top:hover { color: #D4AF37; border-color: rgba(212,175,55,.55); }
 
         @media (prefers-reduced-motion: reduce) {
-          .preview-reveal,
-          .preview-reveal.preview-reveal-alt {
+          .preview-reveal {
             opacity: 1 !important;
             transform: none !important;
             filter: none !important;
+            clip-path: none !important;
             transition: none !important;
           }
         }
