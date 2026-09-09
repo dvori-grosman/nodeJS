@@ -1,55 +1,80 @@
 import React from 'react';
-import { ShoppingBag } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { ShoppingBag, ArrowUpLeft } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
-import { useApiCollection } from '@/hooks/useApiCollection';
-import { DEFAULT_PURCHASE_URL } from '@/config/site';
+
+const products = [
+  { id: 'leotard', name: 'בגד גוף קלאסי', category: 'ביגוד', description: 'פריט בסיס נקי לשיעורי בלט וטכניקה.', price: '129', imageUrl: '/01.png' },
+  { id: 'skirt', name: 'חצאית מעטפת', category: 'ביגוד', description: 'שכבה קלה ונוחה לשיעורי בלט והופעות.', price: '69', imageUrl: '/02.png' },
+  { id: 'tights', name: 'גרביון מחול', category: 'ציוד', description: 'גרביון אחיד ונוח לעבודה שוטפת בסטודיו.', price: '45', imageUrl: '/03.png' },
+  { id: 'shoes', name: 'נעלי בלט', category: 'נעליים', description: 'נעליים רכות לאימון, תרגול ודיוק בכף הרגל.', price: '89', imageUrl: '/04.png' },
+  { id: 'bag', name: 'תיק סטודיו', category: 'אביזרים', description: 'תיק מרווח לציוד, בקבוק, נעליים וביגוד.', price: '99', imageUrl: '/logo.png' },
+  { id: 'kit', name: 'ערכת התחלה', category: 'סט', description: 'סט בסיסי לתלמידות חדשות עם הפריטים המרכזיים לשנה.', price: '249', imageUrl: '/karaka.png' }
+];
 
 export default function ShopPage() {
-  const { data: products, loading, error } = useApiCollection('products');
-
   return (
     <>
       <Helmet>
         <title>חנות - ריקוד ברוח הטובה</title>
-        <meta name="description" content="חנות הסטודיו עם ציוד וביגוד למחול" />
+        <meta name="description" content="תצוגת חנות סטטית לפרוויו העיצובי" />
       </Helmet>
-      <div className="min-h-screen py-12 dark-bg" dir="rtl">
-        <section className="relative darker-bg py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 gold-text">חנות הסטודיו</h1>
-            <p className="text-xl text-gray-300">כל הציוד הדרוש לשנת מחול במקום אחד</p>
-          </div>
-        </section>
-
-        <section className="py-16">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            {loading && <p className="text-center text-gray-400">טוען מוצרים...</p>}
-            {error && <p className="text-center text-red-300">{error}</p>}
-            {!loading && !error && products.length === 0 && <p className="text-center text-gray-400">אין מוצרים להצגה כרגע</p>}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-              {products.map(product => (
-                <Card key={product._id} className="group darker-bg border-gray-700 elegant-shadow text-center overflow-hidden">
-                  {product.imageUrl ? (
-                    <div className="h-56 overflow-hidden"><img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover transition group-hover:scale-105" /></div>
-                  ) : (
-                    <div className="h-40 flex items-center justify-center"><ShoppingBag className="w-14 h-14 text-pink-400" /></div>
-                  )}
-                  <CardContent className="p-8">
-                    <h3 className="text-2xl font-bold white-text mb-3">{product.name}</h3>
-                    {product.description && <p className="text-gray-400 mb-4">{product.description}</p>}
-                    {product.price !== null && product.price !== undefined && <p className="gold-text font-semibold mb-5">₪{product.price}</p>}
-                    <a href={product.purchaseUrl || DEFAULT_PURCHASE_URL} target="_blank" rel="noopener noreferrer">
-                      <Button className="btn-outline-pink w-full">לרכישה</Button>
-                    </a>
-                  </CardContent>
-                </Card>
-              ))}
+      <main className="min-h-screen bg-[#090909] text-white" dir="rtl">
+        <section className="border-y border-white/10 px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+          <div className="mx-auto max-w-[1440px]">
+            <div className="grid gap-10 lg:grid-cols-[1fr_.42fr] lg:items-end">
+              <div>
+                <p className="mb-5 text-[11px] uppercase tracking-[.28em] text-[#D4AF37]">Studio shop / Preview</p>
+                <h1 className="text-[clamp(64px,10vw,150px)] font-semibold leading-[.82] tracking-[-.075em]">החנות<br/><span className="text-transparent [-webkit-text-stroke:1px_rgba(232,180,203,.65)]">של הסטודיו.</span></h1>
+              </div>
+              <p className="max-w-md text-base leading-8 text-white/45">אזור תצוגה עשיר למוצרים, ציוד וביגוד. כרגע הכול סטטי כדי שאפשר יהיה להתמקד בפריסה, טיפוגרפיה והיררכיה.</p>
             </div>
           </div>
         </section>
-      </div>
+
+        <section className="px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
+          <div className="mx-auto max-w-[1440px]">
+            <div className="mb-10 flex items-end justify-between border-b border-white/10 pb-5">
+              <div>
+                <p className="mb-2 text-[10px] uppercase tracking-[.24em] text-[#D4AF37]">Essentials</p>
+                <h2 className="text-3xl font-semibold tracking-[-.04em] sm:text-4xl">ציוד לשנת מחול</h2>
+              </div>
+              <span className="text-sm text-white/30">{products.length} פריטים</span>
+            </div>
+
+            <div className="grid gap-px bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+              {products.map((product, index) => (
+                <article key={product.id} className="group relative min-h-[470px] overflow-hidden bg-[#0d0d0d] p-6 sm:p-7">
+                  <div className="absolute inset-x-0 top-0 h-[58%] overflow-hidden bg-[#111]">
+                    <img src={product.imageUrl} alt="" className="h-full w-full object-contain p-10 opacity-70 grayscale transition duration-700 group-hover:scale-105 group-hover:opacity-100 group-hover:grayscale-0" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent" />
+                  </div>
+
+                  <div className="relative z-10 flex h-full flex-col justify-end pt-[250px]">
+                    <div className="mb-5 flex items-center justify-between gap-4">
+                      <span className="text-[10px] uppercase tracking-[.24em] text-[#E8B4CB]">{product.category}</span>
+                      <span className="text-[10px] tracking-[.2em] text-white/25">{String(index + 1).padStart(2, '0')}</span>
+                    </div>
+                    <h3 className="text-3xl font-semibold tracking-[-.04em]">{product.name}</h3>
+                    <p className="mt-3 min-h-[56px] text-sm leading-7 text-white/42">{product.description}</p>
+                    <div className="mt-7 flex items-center justify-between border-t border-white/10 pt-4">
+                      <span className="text-lg font-semibold text-[#D4AF37]">₪{product.price}</span>
+                      <button type="button" className="grid h-11 w-11 place-items-center rounded-full border border-white/15 text-white/65 transition hover:border-[#D4AF37] hover:text-[#D4AF37]" aria-label={`תצוגת ${product.name}`}>
+                        <ArrowUpLeft className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-16 grid gap-6 border border-white/10 bg-[#0d0d0d] p-8 md:grid-cols-[100px_1fr_auto] md:items-center md:p-10">
+              <div className="grid h-16 w-16 place-items-center rounded-full border border-[#E8B4CB]/30 text-[#E8B4CB]"><ShoppingBag className="h-6 w-6" /></div>
+              <div><p className="text-[10px] uppercase tracking-[.24em] text-white/30">Preview note</p><h3 className="mt-2 text-2xl font-semibold">הכפתורים כאן הם חלק מהעיצוב בלבד.</h3><p className="mt-2 text-sm leading-7 text-white/40">לא מתבצעת רכישה ולא נשלחים נתונים — זה אזור תצוגה סטטי לצורך עיצוב.</p></div>
+              <span className="text-sm font-semibold text-[#D4AF37]">STATIC CONTENT</span>
+            </div>
+          </div>
+        </section>
+      </main>
     </>
   );
 }
