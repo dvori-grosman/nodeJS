@@ -64,14 +64,13 @@ const animationRules = [
   },
   {
     kind: 'pin',
-    selector: '#locations .branch-pin, #locations .pin-button',
+    selector: '#locations .branch-pin',
   },
   {
     kind: 'chip',
     selector: [
       '#classes .book-chip',
       '#classes .book-meta-item',
-      '#performances [class*="Badge"],',
       '#registration button',
     ].join(','),
   },
@@ -154,7 +153,6 @@ export default function PreviewInteractions() {
           element.dataset.previewRevealKind = rule.kind;
           element.classList.add('preview-reveal', `preview-reveal-${rule.kind}`);
           element.style.setProperty('--preview-reveal-delay', `${(index % 5) * 90}ms`);
-          element.style.setProperty('--preview-reveal-index', index);
 
           if (rule.kind === 'card') {
             element.classList.add(index % 2 === 0 ? 'preview-from-right' : 'preview-from-left');
@@ -206,7 +204,6 @@ export default function PreviewInteractions() {
           will-change: transform, opacity, filter, clip-path;
         }
 
-        /* Titles: masked vertical reveal with a slight skew. */
         .preview-reveal-title {
           opacity: 0;
           transform: translate3d(0, 58px, 0) skewY(2.2deg);
@@ -222,23 +219,18 @@ export default function PreviewInteractions() {
           clip-path: inset(0 0 0 0);
         }
 
-        /* Images: start close, then breathe outward into place. */
         .preview-reveal-image {
           opacity: 0;
           transform: scale(1.14);
-          filter: grayscale(.5) contrast(1.08) brightness(.72);
           transition:
             opacity .9s ease,
-            transform 1.35s cubic-bezier(.16,1,.3,1),
-            filter 1.15s ease !important;
+            transform 1.35s cubic-bezier(.16,1,.3,1) !important;
         }
         .preview-reveal-image.preview-reveal-visible {
           opacity: 1;
           transform: scale(1);
-          filter: grayscale(0) contrast(1) brightness(1);
         }
 
-        /* Class sections: soft cinematic scale-up. */
         .preview-reveal-class-slide {
           opacity: 0;
           transform: translate3d(0, 38px, 0) scale(.94);
@@ -254,7 +246,6 @@ export default function PreviewInteractions() {
           filter: blur(0);
         }
 
-        /* Cards: alternate sides, with a very small rotation. */
         .preview-reveal-card {
           opacity: 0;
           filter: blur(5px);
@@ -271,7 +262,6 @@ export default function PreviewInteractions() {
           filter: blur(0);
         }
 
-        /* About accordion rows: horizontal wipe. */
         .preview-reveal-step {
           opacity: 0;
           transform: translateX(72px);
@@ -287,7 +277,6 @@ export default function PreviewInteractions() {
           clip-path: inset(0 0 0 0);
         }
 
-        /* Large panels: rise gently and sharpen. */
         .preview-reveal-panel {
           opacity: 0;
           transform: translateY(76px);
@@ -303,7 +292,6 @@ export default function PreviewInteractions() {
           filter: blur(0);
         }
 
-        /* Forms: subtle perspective opening, like a sheet unfolding. */
         .preview-reveal-form {
           opacity: 0;
           transform-origin: top center;
@@ -317,7 +305,6 @@ export default function PreviewInteractions() {
           transform: perspective(1000px) rotateX(0deg) translateY(0) scale(1);
         }
 
-        /* Map pins: elastic pop. */
         .preview-reveal-pin {
           opacity: 0;
           transform: scale(.15) rotate(-18deg);
@@ -331,7 +318,6 @@ export default function PreviewInteractions() {
           transform: scale(1) rotate(0deg);
         }
 
-        /* Small chips/meta: quick staggered rise. */
         .preview-reveal-chip {
           opacity: 0;
           transform: translateY(20px) scale(.82);
@@ -344,7 +330,6 @@ export default function PreviewInteractions() {
           transform: translateY(0) scale(1);
         }
 
-        /* Eyebrows and section labels: tracking + lateral reveal. */
         .preview-reveal-label {
           opacity: 0;
           transform: translateX(34px);
@@ -360,7 +345,6 @@ export default function PreviewInteractions() {
           letter-spacing: .18em !important;
         }
 
-        /* CTA elements: compact pop with rotation. */
         .preview-reveal-cta {
           opacity: 0;
           transform: translateY(22px) scale(.72) rotate(-5deg);
