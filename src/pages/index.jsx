@@ -23,11 +23,12 @@ const previewPalette = `
     --book-accent: #D4AF37 !important;
     --preview-ink: #2B2327;
     --preview-muted: #6E6066;
-    --preview-cream: #FFF8F2;
-    --preview-pink: #F3D3E0;
+    --preview-cream: #FFF9F4;
+    --preview-white: #FFFFFF;
+    --preview-pink: #F3D9E4;
     --preview-pink-strong: #E8B4CB;
     --preview-gold: #D4AF37;
-    --preview-gold-soft: #E9D28C;
+    --preview-gold-soft: #F0E2B8;
   }
 
   body,
@@ -36,16 +37,14 @@ const previewPalette = `
     color: var(--preview-ink) !important;
   }
 
-  /* Navigation: light, airy and readable. */
   .landing-nav {
-    background: rgba(255, 248, 242, .9) !important;
-    border-bottom-color: rgba(43,35,39,.12) !important;
+    background: rgba(255,249,244,.93) !important;
+    border-bottom-color: rgba(43,35,39,.1) !important;
   }
   .landing-brand,
   .landing-link,
   .landing-menu-button { color: var(--preview-ink) !important; }
   .landing-brand img { filter: none !important; }
-  .landing-mark { color: #8b777f !important; }
   .landing-link:hover,
   .landing-link.active { color: #9A7420 !important; }
   .landing-link.cta {
@@ -54,79 +53,95 @@ const previewPalette = `
     color: #241d16 !important;
   }
   .landing-mobile-menu { background: var(--preview-cream) !important; }
-  .landing-mobile-link {
-    color: var(--preview-ink) !important;
-    border-bottom-color: rgba(43,35,39,.1) !important;
-  }
+  .landing-mobile-link { color: var(--preview-ink) !important; }
 
-  /* Hero: full light pink instead of black. */
+  /* Hero remains the main pink statement. */
   #home.landing-hero {
     background:
-      radial-gradient(circle at 82% 22%, rgba(212,175,55,.32), transparent 25%),
-      radial-gradient(circle at 18% 70%, rgba(255,255,255,.7), transparent 30%),
-      var(--preview-pink) !important;
+      radial-gradient(circle at 78% 22%, rgba(212,175,55,.2), transparent 24%),
+      linear-gradient(180deg, #F3D9E4 0%, #F8E8EF 100%) !important;
   }
   #home .landing-title,
   #home .landing-hero-description,
   #home .landing-scroll-button { color: var(--preview-ink) !important; }
-  #home .landing-title .outline {
-    -webkit-text-stroke: 1px rgba(43,35,39,.62) !important;
-  }
+  #home .landing-title .outline { -webkit-text-stroke: 1px rgba(43,35,39,.56) !important; }
   #home .landing-eyebrow { color: #7D5C68 !important; }
-  #home .landing-hero-copy { border-left-color: rgba(43,35,39,.12) !important; }
-  #home .landing-scroll-circle { border-color: rgba(43,35,39,.25) !important; }
+  #home .landing-hero-copy { border-left-color: rgba(43,35,39,.1) !important; }
+  #home .landing-scroll-circle { border-color: rgba(43,35,39,.18) !important; }
   #home .landing-hero-art::before,
-  #home .landing-hero-art::after { border-color: rgba(154,116,32,.35) !important; }
-  #home .landing-hero-word { color: rgba(43,35,39,.06) !important; }
+  #home .landing-hero-art::after { border-color: rgba(154,116,32,.28) !important; }
+  #home .landing-hero-word { color: rgba(43,35,39,.05) !important; }
 
-  /* ABOUT: cream base, pink values, gold CTA. */
+  /* Most sections go back to cream/white. */
   #about,
   #about .aboutx,
   #about .about-section,
   #about .about-story,
-  #about .about-accordion { background: var(--preview-cream) !important; color: var(--preview-ink) !important; }
-  #about .about-hero { background: var(--preview-cream) !important; }
-  #about .about-hero-copy { background: var(--preview-pink) !important; border-color: rgba(43,35,39,.12) !important; }
+  #about .about-accordion,
+  #locations,
+  #locations main,
+  #locations section,
+  #performances,
+  #performances .dark-bg,
+  #performances .darker-bg,
+  #performances section,
+  #shop,
+  #shop .dark-bg,
+  #shop .darker-bg,
+  #shop section,
+  #contact,
+  #contact .dark-bg,
+  #contact .darker-bg,
+  #contact section,
+  #registration,
+  #registration .dark-bg,
+  #registration .darker-bg,
+  #registration section {
+    background: var(--preview-cream) !important;
+    color: var(--preview-ink) !important;
+  }
+
+  /* ABOUT: subtle pink hero and alternating soft cards. */
+  #about .about-hero { background: var(--preview-white) !important; }
+  #about .about-hero-copy { background: #F9E8EF !important; border-color: rgba(43,35,39,.1) !important; }
   #about .about-hero-art {
     background:
-      radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(212,175,55,.35), transparent 24%),
-      linear-gradient(145deg,#f7e7ee,#ead09a) !important;
+      radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(212,175,55,.24), transparent 23%),
+      linear-gradient(145deg,#FFF9F4,#F5E7C8) !important;
+  }
+  #about .about-story-preview,
+  #about .about-value { background: var(--preview-white) !important; }
+  #about .about-value:nth-child(2),
+  #about .about-value:nth-child(4) { background: #FAEDF2 !important; }
+  #about .about-cta {
+    background: linear-gradient(110deg, #E8B4CB, #F0D8E3 52%, #E8D9A5) !important;
   }
   #about .about-title,
   #about .about-head h2,
   #about .about-value h3,
   #about .about-step-title { color: var(--preview-ink) !important; }
-  #about .about-title span { -webkit-text-stroke: 1px rgba(43,35,39,.55) !important; }
   #about .about-lead,
   #about .about-story-preview p,
   #about .about-value p,
   #about .about-step-body { color: var(--preview-muted) !important; }
-  #about .about-story-preview { background: #FCECF3 !important; border-color: rgba(43,35,39,.12) !important; }
+  #about .about-step:hover,
+  #about .about-step.active { background: #FBEEF3 !important; }
   #about .about-step,
   #about .about-values,
   #about .about-value,
   #about .about-section,
-  #about .about-hero { border-color: rgba(43,35,39,.12) !important; }
-  #about .about-value { background: var(--preview-pink) !important; }
-  #about .about-value:nth-child(even) { background: var(--preview-gold-soft) !important; }
-  #about .about-step:hover,
-  #about .about-step.active { background: #F8E4EC !important; }
-  #about .about-cta {
-    background: linear-gradient(110deg, #D4AF37, #E9D28C 52%, #E8B4CB) !important;
-  }
+  #about .about-hero { border-color: rgba(43,35,39,.1) !important; }
 
-  /* CLASSES: alternating full colour panels. */
+  /* CLASSES: calm cream base, only every second copy block gets colour. */
   #classes .book-shell,
   #classes .book-scroller { background: var(--preview-cream) !important; color: var(--preview-ink) !important; }
-  #classes .book-slide { border-color: rgba(43,35,39,.12) !important; }
-  #classes .book-slide:nth-child(3n+1) .book-copy { background: var(--preview-pink) !important; }
-  #classes .book-slide:nth-child(3n+2) .book-copy { background: var(--preview-gold-soft) !important; }
-  #classes .book-slide:nth-child(3n) .book-copy { background: var(--preview-cream) !important; }
-  #classes .book-slide:nth-child(3n+1) .book-visual { background: #F9E8EF !important; }
-  #classes .book-slide:nth-child(3n+2) .book-visual { background: #F4E5B8 !important; }
-  #classes .book-slide:nth-child(3n) .book-visual { background: #FFF2E7 !important; }
+  #classes .book-slide { border-color: rgba(43,35,39,.1) !important; }
+  #classes .book-copy { background: var(--preview-white) !important; }
+  #classes .book-slide:nth-child(2n) .book-copy { background: #F9E8EF !important; }
+  #classes .book-visual { background: #F5EFEA !important; }
+  #classes .book-slide:nth-child(3n) .book-visual { background: #F5E9C7 !important; }
   #classes .book-copy,
-  #classes .book-meta { border-color: rgba(43,35,39,.14) !important; }
+  #classes .book-meta { border-color: rgba(43,35,39,.12) !important; }
   #classes .book-title,
   #classes .book-subtitle,
   #classes .book-meta-item { color: var(--preview-ink) !important; }
@@ -134,102 +149,77 @@ const previewPalette = `
   #classes .book-levels { color: var(--preview-muted) !important; }
   #classes .book-chip {
     color: var(--preview-ink) !important;
-    border-color: rgba(43,35,39,.18) !important;
-    background: rgba(255,255,255,.42) !important;
+    border-color: rgba(43,35,39,.14) !important;
+    background: rgba(255,255,255,.58) !important;
   }
-  #classes .book-word { color: rgba(43,35,39,.055) !important; }
-  #classes .book-bottom {
-    background: var(--preview-pink-strong) !important;
-    color: var(--preview-ink) !important;
-  }
+  #classes .book-word { color: rgba(43,35,39,.045) !important; }
+  #classes .book-bottom { background: var(--preview-gold-soft) !important; color: var(--preview-ink) !important; }
 
-  /* LOCATIONS: cream section, pink cards, map stays as one intentional dark accent. */
-  #locations,
-  #locations main,
-  #locations section { background: var(--preview-cream) !important; color: var(--preview-ink) !important; }
+  /* LOCATIONS: neutral cards, with soft pink accents only. */
   #locations article {
-    background: var(--preview-pink) !important;
-    border-color: rgba(43,35,39,.12) !important;
+    background: var(--preview-white) !important;
+    border-color: rgba(43,35,39,.1) !important;
   }
-  #locations article:nth-child(3n+2) { background: var(--preview-gold-soft) !important; }
-  #locations article:nth-child(3n) { background: #FFF1E7 !important; }
+  #locations article:nth-child(3n+2) { background: #FAEDF2 !important; }
   #locations [class*="text-white"] { color: var(--preview-ink) !important; }
   #locations [class*="text-white/"] { color: var(--preview-muted) !important; }
-  #locations [class*="border-white/"] { border-color: rgba(43,35,39,.12) !important; }
-  #locations .pin-popover {
-    background: rgba(255,248,242,.96) !important;
-    color: var(--preview-ink) !important;
-  }
-  #locations .relative.min-h-\[620px\],
-  #locations .relative.min-h-\[700px\],
-  #locations .relative.min-h-\[760px\] {
-    background: #171214 !important;
-  }
+  #locations [class*="border-white/"] { border-color: rgba(43,35,39,.1) !important; }
+  #locations .pin-popover { background: rgba(255,249,244,.96) !important; color: var(--preview-ink) !important; }
 
-  /* PERFORMANCES: a bold full gold section with pale cards. */
-  #performances,
-  #performances .dark-bg,
-  #performances .darker-bg,
-  #performances section { background: var(--preview-gold-soft) !important; color: var(--preview-ink) !important; }
+  /* PERFORMANCES: mostly white cards, one gold-accent strip through the section heading. */
+  #performances .relative.darker-bg.py-20,
+  #performances .border-y { background: var(--preview-gold-soft) !important; }
   #performances .group {
-    background: var(--preview-cream) !important;
-    border-color: rgba(43,35,39,.13) !important;
+    background: var(--preview-white) !important;
+    border-color: rgba(43,35,39,.1) !important;
   }
-  #performances .group:nth-child(even) { background: var(--preview-pink) !important; }
+  #performances .group:nth-child(even) { background: #FAEDF2 !important; }
   #performances .white-text,
   #performances [class*="text-white"] { color: var(--preview-ink) !important; }
   #performances [class*="text-gray-"] { color: var(--preview-muted) !important; }
-  #performances [class*="border-white/"] { border-color: rgba(43,35,39,.13) !important; }
 
-  /* SHOP: full pink section with cream/gold cards. */
-  #shop,
-  #shop .dark-bg,
-  #shop .darker-bg,
-  #shop section { background: var(--preview-pink) !important; color: var(--preview-ink) !important; }
+  /* SHOP: neutral base with a pink section header. */
+  #shop section:first-of-type { background: #F9E8EF !important; }
   #shop .group {
-    background: var(--preview-cream) !important;
-    border-color: rgba(43,35,39,.13) !important;
+    background: var(--preview-white) !important;
+    border-color: rgba(43,35,39,.1) !important;
   }
-  #shop .group:nth-child(3n+2) { background: var(--preview-gold-soft) !important; }
+  #shop .group:nth-child(3n+2) { background: #F8F1E1 !important; }
   #shop .white-text,
   #shop [class*="text-white"] { color: var(--preview-ink) !important; }
   #shop [class*="text-gray-"] { color: var(--preview-muted) !important; }
 
-  /* CONTACT: light cream background, pink form and gold contact panel. */
-  #contact,
-  #contact .dark-bg,
-  #contact .darker-bg,
-  #contact section { background: var(--preview-cream) !important; color: var(--preview-ink) !important; }
-  #contact .elegant-shadow { background: var(--preview-pink) !important; border-color: rgba(43,35,39,.13) !important; }
-  #contact .space-y-8 .elegant-shadow { background: var(--preview-gold-soft) !important; }
+  /* CONTACT: white page, only form card pink. */
+  #contact .elegant-shadow {
+    background: var(--preview-white) !important;
+    border-color: rgba(43,35,39,.1) !important;
+  }
+  #contact form { background: transparent !important; }
+  #contact .max-w-7xl > .elegant-shadow:first-child { background: #FAEDF2 !important; }
   #contact .white-text,
   #contact [class*="text-white"] { color: var(--preview-ink) !important; }
   #contact [class*="text-gray-"] { color: var(--preview-muted) !important; }
   #contact input,
   #contact textarea {
-    background: rgba(255,255,255,.6) !important;
+    background: var(--preview-white) !important;
     color: var(--preview-ink) !important;
-    border-color: rgba(43,35,39,.16) !important;
+    border-color: rgba(43,35,39,.14) !important;
   }
   #contact .bg-pink-600 { background: var(--preview-pink-strong) !important; color: var(--preview-ink) !important; }
 
-  /* REGISTRATION: gold foundation, pink cards, cream pricing areas. */
-  #registration,
-  #registration .dark-bg,
-  #registration .darker-bg,
-  #registration section { background: var(--preview-gold-soft) !important; color: var(--preview-ink) !important; }
+  /* REGISTRATION: only intro and selected cards carry colour. */
+  #registration section:first-of-type { background: var(--preview-gold-soft) !important; }
   #registration .group,
   #registration .elegant-shadow {
-    background: var(--preview-cream) !important;
-    border-color: rgba(43,35,39,.13) !important;
+    background: var(--preview-white) !important;
+    border-color: rgba(43,35,39,.1) !important;
   }
-  #registration .group:nth-child(even) { background: var(--preview-pink) !important; }
+  #registration .group:nth-child(2) { background: #FAEDF2 !important; }
   #registration .white-text,
   #registration [class*="text-white"] { color: var(--preview-ink) !important; }
   #registration [class*="text-gray-"] { color: var(--preview-muted) !important; }
-  #registration [class*="bg-gray-"] { background: rgba(255,255,255,.45) !important; }
+  #registration [class*="bg-gray-"] { background: #F6F1ED !important; }
 
-  /* General colour utilities. */
   .gold-text { color: #9A7420 !important; }
   .pink-text { color: #B76C8B !important; }
   .btn-gold,
@@ -247,12 +237,9 @@ const previewPalette = `
   .btn-outline-pink {
     border-color: #B76C8B !important;
     color: #7E435A !important;
-    background: rgba(255,255,255,.42) !important;
+    background: rgba(255,255,255,.54) !important;
   }
-  .btn-outline-pink:hover {
-    background: var(--preview-pink-strong) !important;
-    color: var(--preview-ink) !important;
-  }
+  .btn-outline-pink:hover { background: var(--preview-pink-strong) !important; color: var(--preview-ink) !important; }
 
   [class*="text-[#C9F31D]"] { color: #9A7420 !important; }
   [class*="hover:text-[#C9F31D]"]:hover { color: #B76C8B !important; }
@@ -261,22 +248,20 @@ const previewPalette = `
   [class*="ring-[#C9F31D]"] { --tw-ring-color: var(--preview-gold) !important; }
   [fill="#C9F31D"] { fill: var(--preview-gold) !important; }
   [stroke="#C9F31D"] { stroke: var(--preview-gold) !important; }
-  .branch-pin:nth-of-type(even) .pin-button { background: var(--preview-pink-strong) !important; }
 
-  .landing-section { border-bottom-color: rgba(43,35,39,.12) !important; }
+  .landing-section { border-bottom-color: rgba(43,35,39,.1) !important; }
   .landing-section-label { color: #8D6817 !important; }
+  .landing-footer { background: #F3D9E4 !important; color: var(--preview-ink) !important; }
 
-  .landing-footer {
-    background: var(--preview-pink-strong) !important;
-    color: var(--preview-ink) !important;
-  }
-
-  /* Keep only intentional dark accents: image overlays and the interactive map. */
+  /* Keep dark only where it helps photos/map contrast. */
   #performances .relative.h-80,
-  #shop .relative.h-56 { background: #171214 !important; }
+  #shop .relative.h-56,
+  #locations .relative.min-h-\[620px\],
+  #locations .relative.min-h-\[700px\],
+  #locations .relative.min-h-\[760px\] { background: #171214 !important; }
 
   @media (max-width: 760px) {
-    .landing-nav { background: rgba(255,248,242,.96) !important; }
+    .landing-nav { background: rgba(255,249,244,.97) !important; }
   }
 `;
 
