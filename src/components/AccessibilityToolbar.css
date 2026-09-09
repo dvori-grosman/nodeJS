@@ -1,0 +1,168 @@
+.accessibility-toolbar {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 99999;
+  font-family: Arial, sans-serif;
+}
+
+.accessibility-trigger {
+  width: 52px;
+  height: 52px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: #111111;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+}
+
+.accessibility-trigger:hover,
+.accessibility-trigger:focus-visible {
+  transform: translateY(-1px);
+}
+
+.accessibility-menu {
+  position: absolute;
+  left: 0;
+  bottom: 64px;
+  width: min(290px, calc(100vw - 28px));
+  background: #ffffff;
+  color: #111111;
+  border: 1px solid #d7d7d7;
+  border-radius: 16px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.accessibility-menu__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #111111;
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.accessibility-close {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #ffffff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.accessibility-actions {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+}
+
+.accessibility-actions button {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid #d7d7d7;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #111111;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: right;
+}
+
+.accessibility-actions button:hover,
+.accessibility-actions button:focus-visible,
+.accessibility-actions button.is-active {
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+}
+
+.accessibility-actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+html.a11y-font-large {
+  font-size: 112.5%;
+}
+
+html.a11y-font-larger {
+  font-size: 125%;
+}
+
+html.a11y-grayscale body {
+  filter: grayscale(1);
+}
+
+html.a11y-underline-links a {
+  text-decoration: underline !important;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 2px !important;
+}
+
+html.a11y-high-contrast body,
+html.a11y-high-contrast main,
+html.a11y-high-contrast section,
+html.a11y-high-contrast article,
+html.a11y-high-contrast header,
+html.a11y-high-contrast footer,
+html.a11y-high-contrast nav {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+html.a11y-high-contrast h1,
+html.a11y-high-contrast h2,
+html.a11y-high-contrast h3,
+html.a11y-high-contrast h4,
+html.a11y-high-contrast h5,
+html.a11y-high-contrast h6,
+html.a11y-high-contrast p,
+html.a11y-high-contrast span,
+html.a11y-high-contrast label,
+html.a11y-high-contrast li {
+  color: #ffffff !important;
+}
+
+html.a11y-high-contrast a {
+  color: #ffff00 !important;
+}
+
+html.a11y-high-contrast button,
+html.a11y-high-contrast input,
+html.a11y-high-contrast textarea,
+html.a11y-high-contrast select {
+  border-color: #ffffff !important;
+}
+
+:focus-visible {
+  outline: 3px solid #f5c542 !important;
+  outline-offset: 3px !important;
+}
+
+@media (max-width: 640px) {
+  .accessibility-toolbar {
+    left: 12px;
+    bottom: 12px;
+  }
+
+  .accessibility-trigger {
+    width: 48px;
+    height: 48px;
+  }
+}
