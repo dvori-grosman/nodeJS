@@ -16,6 +16,17 @@ const routeToSection = {
 
 const animationRules = [
   {
+    kind: 'section',
+    selector: [
+      '#about .about-hero-copy',
+      '#locations section:first-of-type > div',
+      '#performances section:first-of-type > div',
+      '#shop section:first-of-type > div',
+      '#contact section:first-of-type > div',
+      '#registration section:first-of-type > div',
+    ].join(','),
+  },
+  {
     kind: 'title',
     selector: [
       '.landing-section h1',
@@ -113,7 +124,6 @@ export default function PreviewInteractions() {
       if (!rawHref || rawHref.startsWith('mailto:') || rawHref.startsWith('tel:')) return;
 
       let sectionId = null;
-
       if (rawHref.startsWith('#')) {
         sectionId = rawHref.slice(1);
       } else {
@@ -123,7 +133,6 @@ export default function PreviewInteractions() {
       }
 
       if (!sectionId || !document.getElementById(sectionId)) return;
-
       event.preventDefault();
       goToSection(sectionId);
     };
@@ -133,6 +142,8 @@ export default function PreviewInteractions() {
   }, []);
 
   useEffect(() => {
+    const pendingFrames = new Set();
+
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
@@ -140,36 +151,63 @@ export default function PreviewInteractions() {
         observer.unobserve(entry.target);
       });
     }, {
-      threshold: 0.12,
-      rootMargin: '0px 0px -7% 0px',
+      threshold: 0.01,
+      rootMargin: '0px 0px -12% 0px',
     });
+
+    const prepareElement = (element, rule, index) => {
+      if (element.dataset.previewRevealRegistered === 'true') return;
+
+      element.dataset.previewRevealRegistered = 'true';
+      element.dataset.previewRevealKind = rule.kind;
+      element.classList.add('preview-reveal', `preview-reveal-${rule.kind}`);
+      element.style.setProperty('--preview-reveal-delay', `${(index % 5) * 90}ms`);
+
+      if (rule.kind === 'card') {
+        element.classList.add(index % 2 === 0 ? 'preview-from-right' : 'preview-from-left');
+      }
+
+      // Frame 1: apply the hidden starting pose and let the browser paint it.
+      const frame1 = window.requestAnimationFrame(() => {
+        pendingFrames.delete(frame1);
+        element.classList.add('preview-reveal-ready');
+
+        // Frame 2: only now start observing. This guarantees a visible transition.
+        const frame2 = window.requestAnimationFrame(() => {
+          pendingFrames.delete(frame2);
+          if (!element.isConnected) return;
+          observer.observe(element);
+        });
+        pendingFrames.add(frame2);
+      });
+      pendingFrames.add(frame1);
+    };
 
     const registerRevealItems = () => {
       animationRules.forEach(rule => {
         document.querySelectorAll(rule.selector).forEach((element, index) => {
-          if (element.dataset.previewRevealRegistered === 'true') return;
-
-          element.dataset.previewRevealRegistered = 'true';
-          element.dataset.previewRevealKind = rule.kind;
-          element.classList.add('preview-reveal', `preview-reveal-${rule.kind}`);
-          element.style.setProperty('--preview-reveal-delay', `${(index % 5) * 90}ms`);
-
-          if (rule.kind === 'card') {
-            element.classList.add(index % 2 === 0 ? 'preview-from-right' : 'preview-from-left');
-          }
-
-          observer.observe(element);
+          prepareElement(element, rule, index);
         });
       });
     };
 
     registerRevealItems();
-    const mutationObserver = new MutationObserver(registerRevealItems);
-    mutationObserver.observe(document.querySelector('.landing-preview') || document.body, { childList: true, subtree: true });
+
+    const mutationObserver = new MutationObserver(mutations => {
+      if (!mutations.some(mutation => mutation.addedNodes.length)) return;
+      registerRevealItems();
+    });
+
+    mutationObserver.observe(document.querySelector('.landing-preview') || document.body, {
+      childList: true,
+      subtree: true,
+    });
 
     return () => {
       observer.disconnect();
       mutationObserver.disconnect();
+      pendingFrames.forEach(frame => window.cancelAnimationFrame(frame));
+      pendingFrames.clear();
     };
   }, []);
 
@@ -200,11 +238,24 @@ export default function PreviewInteractions() {
     <>
       <style>{`
         .preview-reveal {
-          transition-delay: var(--preview-reveal-delay, 0ms) !important;
           will-change: transform, opacity, filter, clip-path;
         }
 
-        .preview-reveal-title {
+        .preview-reveal-ready {
+          transition-delay: var(--preview-reveal-delay, 0ms) !important;
+        }
+
+        .preview-reveal-section.preview-reveal-ready {
+          opacity: 0;
+          transform: translateY(34px);
+          transition: opacity .7s ease, transform .9s cubic-bezier(.16,1,.3,1) !important;
+        }
+        .preview-reveal-section.preview-reveal-visible {
+          opacity: 1;
+          transform: none;
+        }
+
+        .preview-reveal-title.preview-reveal-ready {
           opacity: 0;
           transform: translate3d(0, 58px, 0) skewY(2.2deg);
           clip-path: inset(0 0 100% 0);
@@ -219,19 +270,17 @@ export default function PreviewInteractions() {
           clip-path: inset(0 0 0 0);
         }
 
-        .preview-reveal-image {
+        .preview-reveal-image.preview-reveal-ready {
           opacity: 0;
           transform: scale(1.14);
-          transition:
-            opacity .9s ease,
-            transform 1.35s cubic-bezier(.16,1,.3,1) !important;
+          transition: opacity .9s ease, transform 1.35s cubic-bezier(.16,1,.3,1) !important;
         }
         .preview-reveal-image.preview-reveal-visible {
           opacity: 1;
           transform: scale(1);
         }
 
-        .preview-reveal-class-slide {
+        .preview-reveal-class-slide.preview-reveal-ready {
           opacity: 0;
           transform: translate3d(0, 38px, 0) scale(.94);
           filter: blur(10px);
@@ -246,7 +295,7 @@ export default function PreviewInteractions() {
           filter: blur(0);
         }
 
-        .preview-reveal-card {
+        .preview-reveal-card.preview-reveal-ready {
           opacity: 0;
           filter: blur(5px);
           transition:
@@ -254,15 +303,15 @@ export default function PreviewInteractions() {
             transform .9s cubic-bezier(.2,.82,.2,1),
             filter .75s ease !important;
         }
-        .preview-reveal-card.preview-from-right { transform: translate3d(64px, 22px, 0) rotate(1.4deg); }
-        .preview-reveal-card.preview-from-left { transform: translate3d(-64px, 22px, 0) rotate(-1.4deg); }
+        .preview-reveal-card.preview-reveal-ready.preview-from-right { transform: translate3d(64px, 22px, 0) rotate(1.4deg); }
+        .preview-reveal-card.preview-reveal-ready.preview-from-left { transform: translate3d(-64px, 22px, 0) rotate(-1.4deg); }
         .preview-reveal-card.preview-reveal-visible {
           opacity: 1;
           transform: none;
           filter: blur(0);
         }
 
-        .preview-reveal-step {
+        .preview-reveal-step.preview-reveal-ready {
           opacity: 0;
           transform: translateX(72px);
           clip-path: inset(0 100% 0 0);
@@ -277,7 +326,7 @@ export default function PreviewInteractions() {
           clip-path: inset(0 0 0 0);
         }
 
-        .preview-reveal-panel {
+        .preview-reveal-panel.preview-reveal-ready {
           opacity: 0;
           transform: translateY(76px);
           filter: blur(12px);
@@ -292,45 +341,39 @@ export default function PreviewInteractions() {
           filter: blur(0);
         }
 
-        .preview-reveal-form {
+        .preview-reveal-form.preview-reveal-ready {
           opacity: 0;
           transform-origin: top center;
           transform: perspective(1000px) rotateX(9deg) translateY(34px) scale(.97);
-          transition:
-            opacity .75s ease,
-            transform 1s cubic-bezier(.16,1,.3,1) !important;
+          transition: opacity .75s ease, transform 1s cubic-bezier(.16,1,.3,1) !important;
         }
         .preview-reveal-form.preview-reveal-visible {
           opacity: 1;
           transform: perspective(1000px) rotateX(0deg) translateY(0) scale(1);
         }
 
-        .preview-reveal-pin {
+        .preview-reveal-pin.preview-reveal-ready {
           opacity: 0;
           transform: scale(.15) rotate(-18deg);
           transform-origin: center;
-          transition:
-            opacity .25s ease,
-            transform .72s cubic-bezier(.34,1.56,.64,1) !important;
+          transition: opacity .25s ease, transform .72s cubic-bezier(.34,1.56,.64,1) !important;
         }
         .preview-reveal-pin.preview-reveal-visible {
           opacity: 1;
           transform: scale(1) rotate(0deg);
         }
 
-        .preview-reveal-chip {
+        .preview-reveal-chip.preview-reveal-ready {
           opacity: 0;
           transform: translateY(20px) scale(.82);
-          transition:
-            opacity .4s ease,
-            transform .58s cubic-bezier(.34,1.56,.64,1) !important;
+          transition: opacity .4s ease, transform .58s cubic-bezier(.34,1.56,.64,1) !important;
         }
         .preview-reveal-chip.preview-reveal-visible {
           opacity: 1;
           transform: translateY(0) scale(1);
         }
 
-        .preview-reveal-label {
+        .preview-reveal-label.preview-reveal-ready {
           opacity: 0;
           transform: translateX(34px);
           letter-spacing: .5em !important;
@@ -345,12 +388,10 @@ export default function PreviewInteractions() {
           letter-spacing: .18em !important;
         }
 
-        .preview-reveal-cta {
+        .preview-reveal-cta.preview-reveal-ready {
           opacity: 0;
           transform: translateY(22px) scale(.72) rotate(-5deg);
-          transition:
-            opacity .45s ease,
-            transform .72s cubic-bezier(.34,1.56,.64,1) !important;
+          transition: opacity .45s ease, transform .72s cubic-bezier(.34,1.56,.64,1) !important;
         }
         .preview-reveal-cta.preview-reveal-visible {
           opacity: 1;
@@ -364,7 +405,7 @@ export default function PreviewInteractions() {
           left: 0;
           width: 3px;
           height: calc(100vh - 82px);
-          background: rgba(255,255,255,.06);
+          background: rgba(43,35,39,.07);
           pointer-events: none;
         }
 
@@ -372,7 +413,7 @@ export default function PreviewInteractions() {
           width: 100%;
           background: linear-gradient(to bottom, #E8B4CB, #D4AF37);
           transform-origin: top;
-          box-shadow: 0 0 18px rgba(212,175,55,.45);
+          box-shadow: 0 0 18px rgba(212,175,55,.35);
         }
 
         .preview-action-dock {
@@ -386,7 +427,7 @@ export default function PreviewInteractions() {
         }
 
         .preview-action-button {
-          border: 1px solid rgba(255,255,255,.16);
+          border: 1px solid rgba(43,35,39,.15);
           min-height: 48px;
           padding: 0 17px;
           display: inline-flex;
@@ -394,10 +435,10 @@ export default function PreviewInteractions() {
           justify-content: center;
           gap: 9px;
           border-radius: 999px;
-          background: rgba(12,12,12,.84);
-          color: #f2eee7;
+          background: rgba(255,250,246,.9);
+          color: #2b2327;
           backdrop-filter: blur(16px);
-          box-shadow: 0 12px 34px rgba(0,0,0,.28);
+          box-shadow: 0 12px 34px rgba(43,35,39,.12);
           font-size: 13px;
           font-weight: 700;
           cursor: pointer;
@@ -406,20 +447,20 @@ export default function PreviewInteractions() {
 
         .preview-action-button:hover {
           transform: translateY(-3px);
-          border-color: rgba(232,180,203,.65);
-          color: #E8B4CB;
+          border-color: rgba(183,108,139,.55);
+          color: #8b4d67;
         }
 
         .preview-action-button.primary {
           background: #D4AF37;
           border-color: #D4AF37;
-          color: #111;
+          color: #241d16;
         }
 
         .preview-action-button.primary:hover {
           background: #E8B4CB;
           border-color: #E8B4CB;
-          color: #111;
+          color: #2b2327;
         }
 
         .preview-back-top {
@@ -432,9 +473,9 @@ export default function PreviewInteractions() {
           display: grid;
           place-items: center;
           border-radius: 50%;
-          border: 1px solid rgba(255,255,255,.14);
-          background: rgba(12,12,12,.78);
-          color: #aaa;
+          border: 1px solid rgba(43,35,39,.14);
+          background: rgba(255,250,246,.88);
+          color: #6d5b62;
           backdrop-filter: blur(14px);
           cursor: pointer;
           opacity: ${progress > 0.08 ? 1 : 0};
@@ -443,10 +484,11 @@ export default function PreviewInteractions() {
           transition: .25s ease;
         }
 
-        .preview-back-top:hover { color: #D4AF37; border-color: rgba(212,175,55,.55); }
+        .preview-back-top:hover { color: #9a7420; border-color: rgba(212,175,55,.55); }
 
         @media (prefers-reduced-motion: reduce) {
-          .preview-reveal {
+          .preview-reveal,
+          .preview-reveal-ready {
             opacity: 1 !important;
             transform: none !important;
             filter: none !important;
