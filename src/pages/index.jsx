@@ -9,6 +9,7 @@ import Shop from "./Shop";
 import Registration from "./Registration";
 import Admin from "./Admin";
 import ScheduleAdmin from "./ScheduleAdmin";
+import ContentAdmin from "./ContentAdmin";
 import AxtraPreview from "./AxtraPreview";
 import AxtraClassesPreview from "./AxtraClassesPreview";
 import InteractivePreviewEnhancer from "./InteractivePreviewEnhancer";
@@ -36,20 +37,14 @@ const previewPalette = `
 
   .ax2-links a:hover,
   .ax-inner-links a:hover,
-  .ax-inner-links a.active {
-    color: #E8B4CB !important;
-  }
+  .ax-inner-links a.active { color: #E8B4CB !important; }
 
   .ax2-title .accent-dot,
   .ax2-marquee b,
   .ax2-big-copy em,
-  .book-kicker {
-    color: #D4AF37 !important;
-  }
+  .book-kicker { color: #D4AF37 !important; }
 
-  .ax2-hero-side::after {
-    border-color: rgba(212,175,55,.30) !important;
-  }
+  .ax2-hero-side::after { border-color: rgba(212,175,55,.30) !important; }
 
   .ax2-side-shape::before {
     background:
@@ -89,9 +84,7 @@ const previewPalette = `
       radial-gradient(circle at 55% 38%, rgba(232,180,203,.14), transparent 25%),
       linear-gradient(145deg,#151515,#090909 64%) !important;
   }
-  .book-visual::after {
-    border-color: rgba(212,175,55,.34) !important;
-  }
+  .book-visual::after { border-color: rgba(212,175,55,.34) !important; }
 
   [class*="text-[#C9F31D]"] { color: #D4AF37 !important; }
   [class*="hover:text-[#C9F31D]"]:hover { color: #E8B4CB !important; }
@@ -100,21 +93,13 @@ const previewPalette = `
   [class*="ring-[#C9F31D]"] { --tw-ring-color: #D4AF37 !important; }
   [fill="#C9F31D"] { fill: #D4AF37 !important; }
   [stroke="#C9F31D"] { stroke: #D4AF37 !important; }
-
-  .branch-pin:nth-of-type(even) .pin-button {
-    background: #E8B4CB !important;
-  }
+  .branch-pin:nth-of-type(even) .pin-button { background: #E8B4CB !important; }
 `;
 
 function _getCurrentPage(url) {
-    if (url.endsWith('/')) {
-        url = url.slice(0, -1);
-    }
+    if (url.endsWith('/')) url = url.slice(0, -1);
     let urlLastPart = url.split('/').pop();
-    if (urlLastPart.includes('?')) {
-        urlLastPart = urlLastPart.split('?')[0];
-    }
-
+    if (urlLastPart.includes('?')) urlLastPart = urlLastPart.split('?')[0];
     const pageName = Object.keys(PAGES).find(page => page.toLowerCase() === urlLastPart.toLowerCase());
     return pageName || Object.keys(PAGES)[0];
 }
@@ -127,25 +112,14 @@ function PagesContent() {
     const location = useLocation();
     const currentPage = _getCurrentPage(location.pathname);
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [location]);
+    useEffect(() => { window.scrollTo(0, 0); }, [location]);
 
-    if (location.pathname === '/admin') {
-        return <ScheduleAdmin />;
-    }
-
-    if (location.pathname === '/admin/legacy') {
-        return <Admin />;
-    }
+    if (location.pathname === '/admin') return <ScheduleAdmin />;
+    if (location.pathname === '/admin/content') return <ContentAdmin />;
+    if (location.pathname === '/admin/legacy') return <Admin />;
 
     if (location.pathname === '/' || location.pathname === '/Home' || location.pathname === '/PreviewAxtra') {
-        return (
-            <>
-                <AxtraPreview />
-                <PreviewPalette />
-            </>
-        );
+        return <><AxtraPreview /><PreviewPalette /></>;
     }
 
     return (
@@ -167,9 +141,5 @@ function PagesContent() {
 }
 
 export default function Pages() {
-    return (
-        <Router>
-            <PagesContent />
-        </Router>
-    );
+    return <Router><PagesContent /></Router>;
 }
