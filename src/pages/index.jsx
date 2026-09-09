@@ -1,5 +1,6 @@
 import OnePagePreview from "./OnePagePreview";
 import PreviewInteractions from "./PreviewInteractions";
+import PreviewMotionGuard from "./PreviewMotionGuard";
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 
 const legacySectionMap = {
@@ -66,6 +67,7 @@ function PagesContent() {
     <>
       <OnePagePreview initialSection={initialSection} />
       <PreviewInteractions />
+      <PreviewMotionGuard />
       <style>{previewPalette}</style>
     </>
   );
