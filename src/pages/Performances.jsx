@@ -1,167 +1,115 @@
+import React from 'react';
+import { Sparkles, Star } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Helmet } from 'react-helmet-async';
 
-import React from "react";
-import { Helmet } from "react-helmet-async";
-import { Calendar, Download, Play, Star, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+const performances = [
+  {
+    _id: 'olam-5784',
+    title: 'אהבת עולם',
+    subtitle: 'תשפ״ד',
+    description: 'מופע שנתי רחב עם קבוצות בגילים וברמות שונות, קטעים קבוצתיים, רצפים מדויקים ואווירת במה חגיגית.',
+    imageUrl: '/אהבת עולם תשפד.png'
+  },
+  {
+    _id: 'olam-5785',
+    title: 'אהבת עולם',
+    subtitle: 'תשפ״ה',
+    description: 'הפקת סוף שנה עם שפה חזותית עשירה, עבודה קבוצתית ותהליך ארוך שמתחבר לערב אחד של תנועה ובמה.',
+    imageUrl: '/אהבת עולם תשפה.png'
+  },
+  {
+    _id: 'tears',
+    title: 'לרקוד את הדמעות',
+    subtitle: 'מופע קונספט',
+    description: 'מופע עם קו אמנותי אחיד, מעברים בין קבוצות ויצירת רצף בימתי שמרגיש כמו סיפור אחד שלם.',
+    imageUrl: '/לרקוד את הדמעות.png'
+  },
+  {
+    _id: 'team',
+    title: 'הנבחרת',
+    subtitle: 'פרויקט במה',
+    description: 'קטעים שנבנו במיוחד לקבוצה המתקדמת, עם דגש על סנכרון, רפרטואר ונוכחות קבוצתית חזקה.',
+    imageUrl: '/הנבחרת.png'
+  },
+  {
+    _id: 'studio-night',
+    title: 'ערב סטודיו',
+    subtitle: 'מאחורי הקלעים',
+    description: 'ערב אינטימי יותר שמציג תהליכי עבודה, קטעים בתהליך ורגעים מהשגרה המקצועית של הקבוצות.',
+    imageUrl: '/01.png'
+  },
+  {
+    _id: 'young-stage',
+    title: 'במה צעירה',
+    subtitle: 'הופעת אמצע שנה',
+    description: 'הזדמנות לקבוצות הצעירות לעלות לבמה, להציג מה למדו ולהכיר את חוויית ההופעה כחלק מהתהליך.',
+    imageUrl: '/02.png'
+  }
+];
 
 export default function PerformancesPage() {
-  const performances = [
-    {
-      title: "הנבחרת - מסע אמנותי מסביב לעולם",
-      year: "מופע שנתי",
-      description: "קבוצות המחול בביצועים וכירולוגרפיות מדהימות: להקת פוינט, בלט קלאסי, מחול מודרני ואקרובטיקה.",
-      price: "25",
-      status: "available",
-      image: "הנבחרת.png",
-      alt: "הנבחרת - הופעה של ריקוד ברוח הטובה, חוג מחול בירושלים, מקצועי, איכותי, באוירה שמורה, חוג מחול לילדות , חוג מחול לבנים, חוג מחול לנערות חרדיות, חוג אקרובטיקה"
-    },
-    {
-      title: "לרקוד את הדמעות",
-      year: "מופע זמר",
-      description: "מופע זמר ייחודי בליווי הרכבי זמר 'שיר אומן' ובשילוב להקת הרקדניות 'ריקוד ברוח טובה'.",
-      price: "25",
-      status: "available",
-      image: "לרקוד את הדמעות.png",
-      alt: "הנבחרת - הופעה של ריקוד ברוח הטובה, חוג מחול בירושלים, מקצועי, איכותי, באוירה שמורה, חוג מחול לילדות , חוג מחול לבנים, חוג מחול לנערות חרדיות, חוג אקרובטיקה"
-    },
-    {
-      title: "אהבת עולם",
-      year: "הפקה שנתית",
-      description: "הפקת מחול אומנותית מטלטלת עם מאות מופיעות בביצוע חי על הבמה.",
-      price: "25",
-      status: "available",
-      image: "אהבת עולם תשפד.png",
-      alt: "הנבחרת - הופעה של ריקוד ברוח הטובה, חוג מחול בירושלים, מקצועי, איכותי, באוירה שמורה, חוג מחול לילדות , חוג מחול לבנים, חוג מחול לנערות חרדיות, חוג אקרובטיקה"
-    },
-    {
-      title: "אהבת עולם",
-      year: "הפקה שנתית",
-      description: "הפקת מחול אומנותית מטלטלת עם מאות מופיעות בביצוע חי על הבמה.",
-      price: "25",
-      status: "available",
-      image: "אהבת עולם תשפה.png",
-      alt: "הנבחרת - הופעה של ריקוד ברוח הטובה, חוג מחול בירושלים, מקצועי, איכותי, באוירה שמורה, חוג מחול לילדות , חוג מחול לבנים, חוג מחול לנערות חרדיות, חוג אקרובטיקה"
-    }
-  ];
-
   return (
     <>
-    <Helmet>
-       <title>מופעים - ריקוד ברוח הטובה</title>
-      <meta name="description" content="צפו במופעי ריקוד מרגשים ומעוררי השראה. לוח מופעים עתידיים וגלריית מופעים קודמים"/>
-      <meta name="keywords" content="מופעי ריקוד, הופעות, במה, מופעים, תיאטרון מחול"/> 
-      <meta property="og:title" content="מופעים - ריקוד ברוח הטובה"/>
-      <meta property="og:description" content="מופעי ריקוד מרגשים ומעוררי השראה"/>
-      <meta property="og:url" content="https://rikud.netlify.app/Performances"/>     
-    </Helmet>
-    <div className="min-h-screen py-12 dark-bg">
-      {/* Hero Section */}
-      <section className="relative darker-bg py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 gold-text">
-              רגעים קסומים על הבמה
-            </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-              כל שנה אנו מציגות מופע סיום עוצר נשימה המטעים מההישגים המדהימים
-              שנרכשו במהלך השנה והחוויה האדירה של התלמידות
-            </p>
-            <div className="w-24 h-1 gold-bg mx-auto"></div>
-          </div>
-        </div>
-      </section>
-
-
-      {/* Past Performances */}
-      <section className="py-16 darker-bg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold gold-text mb-4">מופעים קודמים</h2>
-
-
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {performances.map((performance, index) => (
-              <Card key={index} className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden darker-bg border-gray-700 elegant-shadow">
-                {/* Performance Image */}
-                <div className="h-96 w-full overflow-hidden">
-                  <img src={performance.image} alt={performance.alt} className="h-full w-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
-                </div>
-
-                <CardHeader>
-                  <CardTitle className="text-2xl font-bold white-text group-hover:text-pink-400 transition-colors">
-                    {performance.title}
-                  </CardTitle>
-                  <Badge className="bg-black/20 text-white border-white/30 w-fit">
-                    {performance.year}
-                  </Badge>
-                </CardHeader>
-
-                <CardContent>
-                  <p className="text-gray-300 mb-6 leading-relaxed h-24">
-                    {performance.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Performance Info */}
-      <section className="py-16 dark-bg">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Card className="darker-bg border-gray-700 elegant-shadow">
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold gold-text">
-                אודות המופעים שלנו
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <h4 className="font-semibold white-text flex items-center gap-2">
-                    <Star className="w-5 h-5 pink-text" />
-                    מה מיוחד במופעים שלנו?
-                  </h4>
-                  <ul className="space-y-2 text-gray-300">
-                    <li className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 gold-bg rounded-full mt-2 flex-shrink-0"></div>
-                      <span>הצגת כל סוגי השיעורים - בלט, מודרני, אקרודאנס ועוד</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 gold-bg rounded-full mt-2 flex-shrink-0"></div>
-                      <span>תלמידות מכל הגילאים והרמות עולות לבמה</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 gold-bg rounded-full mt-2 flex-shrink-0"></div>
-                      <span>כוראוגרפיות מקוריות ומרהיבות</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 gold-bg rounded-full mt-2 flex-shrink-0"></div>
-                      <span>אווירה חמה ומרגשת לכל המשפחה</span>
-                    </li>
-                  </ul>
-                </div>
-
-
+      <Helmet>
+        <title>מופעים - ריקוד ברוח הטובה</title>
+        <meta name="description" content="מופעי הסטודיו והפקות קודמות" />
+      </Helmet>
+      <div className="min-h-screen py-12 dark-bg" dir="rtl">
+        <section className="relative darker-bg py-20 border-y border-white/10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-8 lg:grid-cols-[1fr_.4fr] lg:items-end">
+              <div>
+                <p className="mb-5 text-[11px] uppercase tracking-[.28em] text-[#D4AF37]">Performances / Archive</p>
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-semibold leading-[.9] tracking-[-.06em] white-text">רגעים שנשארים<br/><span className="text-transparent [-webkit-text-stroke:1px_rgba(232,180,203,.65)]">אחרי שהמסך יורד.</span></h1>
               </div>
+              <p className="text-lg leading-8 text-gray-400">אוסף סטטי של מופעים, פרויקטים ורגעי במה שמאפשר להמשיך לפתח את השפה החזותית של האתר בלי תלות בשרת.</p>
+            </div>
+          </div>
+        </section>
 
-              <div className="text-center dark-bg p-6 rounded-xl border border-gray-700">
-                <p className="pink-text font-medium italic">
-                  "המופעים שלנו הם הרגע הקסום שבו רואים את כל העבודה הקשה והמסירות מגיעות לפריחה מלאה.
-                  כל בת עולה לבמה עם גאווה ושמחה, והקהל חווה רגעים בלתי נשכחים."
-                </p>
-                <p className="gold-text mt-2">- צוות ברוח הטובה</p>
+        <section className="py-16 darker-bg">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {performances.map((performance, index) => (
+                <Card key={performance._id} className="group overflow-hidden darker-bg border-gray-800 elegant-shadow rounded-none">
+                  <div className="relative h-80 w-full overflow-hidden bg-black">
+                    <img src={performance.imageUrl} alt={performance.title} className="h-full w-full object-cover object-top opacity-80 transition duration-700 group-hover:scale-105 group-hover:opacity-100" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
+                    <span className="absolute top-4 left-4 text-[10px] tracking-[.22em] text-white/45">{String(index + 1).padStart(2, '0')}</span>
+                  </div>
+                  <CardHeader className="border-t border-white/10">
+                    <div className="mb-3 flex items-center justify-between gap-3">
+                      <Badge className="bg-transparent border-white/20 text-[#E8B4CB] rounded-none">{performance.subtitle}</Badge>
+                      <Sparkles className="h-4 w-4 text-[#D4AF37]" />
+                    </div>
+                    <CardTitle className="text-3xl font-semibold white-text">{performance.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-400 leading-7">{performance.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-20 dark-bg border-y border-white/10">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-8 md:grid-cols-[120px_1fr] md:items-start">
+              <div className="text-[#D4AF37] text-sm tracking-[.18em]">WHY STAGE</div>
+              <div>
+                <h2 className="mb-7 text-4xl md:text-6xl font-semibold tracking-[-.05em] white-text">הבמה היא חלק מהדרך.</h2>
+                <div className="grid gap-5 md:grid-cols-2 text-gray-400 leading-8">
+                  <p className="flex gap-3"><Star className="w-5 h-5 text-[#E8B4CB] shrink-0 mt-1" /> המופעים מרכזים תהליך של חודשים ומחברים בין טכניקה, התמדה ועבודה קבוצתית.</p>
+                  <p className="flex gap-3"><Star className="w-5 h-5 text-[#E8B4CB] shrink-0 mt-1" /> כל הפקה מקבלת שפה, קצב ואופי משלה — כך שגם הארכיון באתר יכול להרגיש עשיר ומגוון.</p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-    </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </>
   );
 }
