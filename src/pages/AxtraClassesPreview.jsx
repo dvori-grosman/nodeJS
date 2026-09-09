@@ -2,10 +2,88 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ChevronDown, Clock, Users } from 'lucide-react';
 import { createPageUrl } from '@/utils';
-import { useApiCollection } from '@/hooks/useApiCollection';
+
+const lessons = [
+  {
+    _id: 'ballet',
+    title: 'בלט קלאסי',
+    subtitle: 'בסיס מדויק לתנועה נקייה, יציבה ושליטה',
+    description: 'שיעור מובנה שמפתח טכניקה, קואורדינציה, דיוק ויכולת עבודה הדרגתית. מתאים לקבוצות מתחילות ומתקדמות במסלולים נפרדים.',
+    duration: '60–75 דקות',
+    ages: 'מגיל 6 ומעלה',
+    levels: ['מתחילות', 'ממשיכות', 'מתקדמות'],
+    features: ['טכניקה', 'יציבה', 'קואורדינציה', 'מוזיקליות'],
+    imageUrl: '/01.png'
+  },
+  {
+    _id: 'modern',
+    title: 'מחול מודרני',
+    subtitle: 'תנועה חופשית עם בסיס מקצועי ועבודה על נוכחות',
+    description: 'שילוב של רצפים תנועתיים, עבודת רצפה, קצב ויצירתיות. השיעורים נבנים כך שכל קבוצה מתקדמת בהדרגה לאורך השנה.',
+    duration: '60–75 דקות',
+    ages: 'מגיל 8 ומעלה',
+    levels: ['מתחילות', 'ממשיכות', 'נבחרת'],
+    features: ['זרימה', 'קצב', 'יצירתיות', 'עבודת צוות'],
+    imageUrl: '/02.png'
+  },
+  {
+    _id: 'acrodance',
+    title: 'אקרודאנס',
+    subtitle: 'כוח, גמישות ותנועה בשילוב אלמנטים אקרובטיים',
+    description: 'מסלול שמחבר בין טכניקת מחול לבין אלמנטים של אקרובטיקה, תוך דגש על תהליך הדרגתי, שליטה ועבודה נכונה בקבוצה.',
+    duration: '75 דקות',
+    ages: 'מגיל 7 ומעלה',
+    levels: ['בסיס', 'ממשיכות', 'מתקדמות'],
+    features: ['גמישות', 'כוח', 'שליטה', 'רצפים'],
+    imageUrl: '/03.png'
+  },
+  {
+    _id: 'floor',
+    title: 'התעמלות קרקע',
+    subtitle: 'בניית בסיס חזק והתקדמות שלב אחר שלב',
+    description: 'שיעורים המשלבים עבודת כוח, גמישות, קואורדינציה ורצפי תנועה. כל קבוצה עובדת לפי הרמה והקצב שלה.',
+    duration: '60–90 דקות',
+    ages: 'מגיל 6 ומעלה',
+    levels: ['מתחילות', 'ממשיכות', 'מתקדמות', 'נבחרת'],
+    features: ['כוח', 'גמישות', 'קואורדינציה', 'התמדה'],
+    imageUrl: '/04.png'
+  },
+  {
+    _id: 'young',
+    title: 'תנועה לגיל הרך',
+    subtitle: 'היכרות נעימה עם קצב, מרחב ותנועה',
+    description: 'שיעור צבעוני ומובנה שמפתח הקשבה, קואורדינציה, תחושת קצב והיכרות עם יסודות התנועה באווירה נעימה.',
+    duration: '45 דקות',
+    ages: 'גילאי 4–6',
+    levels: ['קבוצות גיל'],
+    features: ['קצב', 'מרחב', 'משחקי תנועה', 'קואורדינציה'],
+    imageUrl: '/01.png'
+  },
+  {
+    _id: 'team',
+    title: 'נבחרת הסטודיו',
+    subtitle: 'מסגרת מתקדמת לעבודה רציפה לאורך השנה',
+    description: 'קבוצה מצומצמת לעבודה ברמה גבוהה יותר, עם בניית רפרטואר, חזרות, דיוק קבוצתי והכנה לפרויקטים והופעות.',
+    duration: '90 דקות',
+    ages: 'לפי התאמה ורמה',
+    levels: ['מתקדמות'],
+    features: ['רפרטואר', 'דיוק קבוצתי', 'חזרות', 'במה'],
+    imageUrl: '/הנבחרת.png'
+  },
+  {
+    _id: 'technique',
+    title: 'טכניקה וגמישות',
+    subtitle: 'שיעור משלים לחיזוק היסודות והתקדמות אישית',
+    description: 'עבודה ממוקדת על טווחי תנועה, חיזוק, קואורדינציה ודיוק. מתאים כתוספת למסלול קיים ולמי שרוצה להתקדם בצורה עקבית.',
+    duration: '60 דקות',
+    ages: 'מגיל 9 ומעלה',
+    levels: ['ממשיכות', 'מתקדמות'],
+    features: ['חיזוק', 'גמישות', 'דיוק', 'התקדמות אישית'],
+    imageUrl: '/02.png'
+  }
+];
 
 export default function AxtraClassesPreview() {
-  const { data: lessons, loading, error } = useApiCollection('lessons');
   const scrollerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -20,14 +98,11 @@ export default function AxtraClassesPreview() {
     }, { root, threshold: 0.58 });
     slides.forEach(slide => observer.observe(slide));
     return () => observer.disconnect();
-  }, [lessons]);
+  }, []);
 
   const goTo = index => {
     scrollerRef.current?.querySelector(`[data-index="${index}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
-
-  if (loading) return <div className="min-h-[70vh] grid place-items-center bg-[#090909] text-white">טוען שיעורים...</div>;
-  if (error) return <div className="min-h-[70vh] grid place-items-center bg-[#090909] text-red-300">{error}</div>;
 
   return (
     <div className="book-shell">
@@ -58,22 +133,22 @@ export default function AxtraClassesPreview() {
               <div className="book-index">{String(index + 1).padStart(2, '0')} / {String(lessons.length).padStart(2, '0')}</div>
               <div className="book-kicker">Dance class</div>
               <h1 className="book-title">{item.title}</h1>
-              {item.subtitle && <p className="book-subtitle">{item.subtitle}</p>}
-              {item.description && <p className="book-description">{item.description}</p>}
+              <p className="book-subtitle">{item.subtitle}</p>
+              <p className="book-description">{item.description}</p>
               <div className="book-meta">
-                <div className="book-meta-item"><Clock size={17} /> {item.duration || 'משך משתנה'}</div>
-                <div className="book-meta-item"><Users size={17} /> {item.ages || 'מגוון גילאים'}</div>
+                <div className="book-meta-item"><Clock size={17} /> {item.duration}</div>
+                <div className="book-meta-item"><Users size={17} /> {item.ages}</div>
               </div>
-              <div className="book-levels">{(item.levels || []).join(' · ')}</div>
+              <div className="book-levels">{item.levels.join(' · ')}</div>
             </div>
             <div className="book-visual">
-              {item.imageUrl && <img className="book-icon" src={item.imageUrl} alt={item.title} />}
+              <img className="book-icon" src={item.imageUrl} alt="" />
               <div className="book-word">MOVE</div>
-              <div className="book-features">{(item.features || []).map(feature => <span key={feature} className="book-chip">{feature}</span>)}</div>
+              <div className="book-features">{item.features.map(feature => <span key={feature} className="book-chip">{feature}</span>)}</div>
             </div>
           </section>
         ))}
-        <section className="book-bottom"><div><h2>מצאת את השיעור שלך?</h2><p>אפשר להמשיך להרשמה או לדבר איתנו כדי לבחור את הקבוצה והרמה המתאימות.</p><Link to={createPageUrl('Contact')}>דברי איתנו <ArrowLeft size={18} /></Link></div></section>
+        <section className="book-bottom"><div><h2>מצאת את השיעור שלך?</h2><p>בפרוויו הזה כל התוכן סטטי, כך שאפשר להמשיך ללטש את העיצוב בלי תלות בשרת או במסד נתונים.</p><Link to={createPageUrl('Contact')}>דברי איתנו <ArrowLeft size={18} /></Link></div></section>
       </div>
     </div>
   );
