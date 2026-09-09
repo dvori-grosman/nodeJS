@@ -16,22 +16,18 @@ const routeToSection = {
 
 const animationRules = [
   {
-    kind: 'section',
-    selector: [
-      '#about .about-hero-copy',
-      '#locations section:first-of-type > div',
-      '#performances section:first-of-type > div',
-      '#shop section:first-of-type > div',
-      '#contact section:first-of-type > div',
-      '#registration section:first-of-type > div',
-    ].join(','),
-  },
-  {
     kind: 'title',
     selector: [
-      '.landing-section h1',
-      '.landing-section h2',
-      '.about-head',
+      '#about .about-title',
+      '#about .about-head h2',
+      '#classes .book-title',
+      '#locations section:first-of-type h1',
+      '#locations h2',
+      '#performances section:first-of-type h1',
+      '#performances section:last-of-type h2',
+      '#shop section:first-of-type h1',
+      '#contact section:first-of-type h1',
+      '#registration section:first-of-type h1',
     ].join(','),
   },
   {
@@ -51,10 +47,10 @@ const animationRules = [
     kind: 'card',
     selector: [
       '#locations article',
-      '#performances .group',
-      '#shop .group',
-      '#registration .group',
+      '#performances article',
+      '#shop article',
       '#about .about-value',
+      '#registration .group',
     ].join(','),
   },
   {
@@ -75,19 +71,15 @@ const animationRules = [
   },
   {
     kind: 'pin',
-    selector: '#locations .branch-pin',
+    selector: '#locations .pin-button',
   },
   {
     kind: 'chip',
-    selector: [
-      '#classes .book-chip',
-      '#classes .book-meta-item',
-      '#registration button',
-    ].join(','),
+    selector: '#classes .book-chip, #classes .book-meta-item',
   },
   {
     kind: 'label',
-    selector: '.landing-section-label, .landing-eyebrow, .book-kicker',
+    selector: '.landing-section-label, .book-kicker',
   },
   {
     kind: 'cta',
@@ -104,10 +96,8 @@ const animationRules = [
 function goToSection(id) {
   const target = document.getElementById(id);
   if (!target) return;
-
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  const nextUrl = id === 'home' ? '/' : `/#${id}`;
-  window.history.replaceState({}, '', nextUrl);
+  window.history.replaceState({}, '', id === 'home' ? '/' : `/#${id}`);
 }
 
 export default function PreviewInteractions() {
@@ -116,7 +106,6 @@ export default function PreviewInteractions() {
   useEffect(() => {
     const handleInternalLinks = event => {
       if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-
       const anchor = event.target.closest?.('a[href]');
       if (!anchor || anchor.hasAttribute('download')) return;
 
@@ -142,8 +131,6 @@ export default function PreviewInteractions() {
   }, []);
 
   useEffect(() => {
-    const pendingFrames = new Set();
-
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
@@ -151,63 +138,34 @@ export default function PreviewInteractions() {
         observer.unobserve(entry.target);
       });
     }, {
-      threshold: 0.01,
-      rootMargin: '0px 0px -12% 0px',
+      threshold: 0.03,
+      rootMargin: '0px 0px -10% 0px',
     });
 
-    const prepareElement = (element, rule, index) => {
+    const registerElement = (element, kind, index) => {
       if (element.dataset.previewRevealRegistered === 'true') return;
-
       element.dataset.previewRevealRegistered = 'true';
-      element.dataset.previewRevealKind = rule.kind;
-      element.classList.add('preview-reveal', `preview-reveal-${rule.kind}`);
-      element.style.setProperty('--preview-reveal-delay', `${(index % 5) * 90}ms`);
+      element.classList.add('preview-reveal', `preview-reveal-${kind}`);
+      element.style.setProperty('--preview-reveal-delay', `${Math.min(index, 4) * 75}ms`);
 
-      if (rule.kind === 'card') {
-        element.classList.add(index % 2 === 0 ? 'preview-from-right' : 'preview-from-left');
-      }
-
-      // Frame 1: apply the hidden starting pose and let the browser paint it.
-      const frame1 = window.requestAnimationFrame(() => {
-        pendingFrames.delete(frame1);
-        element.classList.add('preview-reveal-ready');
-
-        // Frame 2: only now start observing. This guarantees a visible transition.
-        const frame2 = window.requestAnimationFrame(() => {
-          pendingFrames.delete(frame2);
-          if (!element.isConnected) return;
-          observer.observe(element);
-        });
-        pendingFrames.add(frame2);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => observer.observe(element));
       });
-      pendingFrames.add(frame1);
     };
 
     const registerRevealItems = () => {
       animationRules.forEach(rule => {
-        document.querySelectorAll(rule.selector).forEach((element, index) => {
-          prepareElement(element, rule, index);
-        });
+        document.querySelectorAll(rule.selector).forEach((element, index) => registerElement(element, rule.kind, index));
       });
     };
 
     registerRevealItems();
-
-    const mutationObserver = new MutationObserver(mutations => {
-      if (!mutations.some(mutation => mutation.addedNodes.length)) return;
-      registerRevealItems();
-    });
-
-    mutationObserver.observe(document.querySelector('.landing-preview') || document.body, {
-      childList: true,
-      subtree: true,
-    });
+    const mutationObserver = new MutationObserver(registerRevealItems);
+    mutationObserver.observe(document.querySelector('.landing-preview') || document.body, { childList: true, subtree: true });
 
     return () => {
       observer.disconnect();
       mutationObserver.disconnect();
-      pendingFrames.forEach(frame => window.cancelAnimationFrame(frame));
-      pendingFrames.clear();
     };
   }, []);
 
@@ -216,13 +174,9 @@ export default function PreviewInteractions() {
     const updateProgress = () => {
       raf = 0;
       const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-      const next = scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0;
-      setProgress(next);
+      setProgress(scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0);
     };
-
-    const onScroll = () => {
-      if (!raf) raf = window.requestAnimationFrame(updateProgress);
-    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(updateProgress); };
 
     updateProgress();
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -230,7 +184,7 @@ export default function PreviewInteractions() {
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
-      if (raf) window.cancelAnimationFrame(raf);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, []);
 
@@ -238,165 +192,99 @@ export default function PreviewInteractions() {
     <>
       <style>{`
         .preview-reveal {
+          transition-delay: var(--preview-reveal-delay, 0ms) !important;
           will-change: transform, opacity, filter, clip-path;
         }
 
-        .preview-reveal-ready {
-          transition-delay: var(--preview-reveal-delay, 0ms) !important;
-        }
-
-        .preview-reveal-section.preview-reveal-ready {
+        /* Headlines: clean masked rise. No parent/child nesting. */
+        .preview-reveal-title {
           opacity: 0;
-          transform: translateY(34px);
-          transition: opacity .7s ease, transform .9s cubic-bezier(.16,1,.3,1) !important;
-        }
-        .preview-reveal-section.preview-reveal-visible {
-          opacity: 1;
-          transform: none;
-        }
-
-        .preview-reveal-title.preview-reveal-ready {
-          opacity: 0;
-          transform: translate3d(0, 58px, 0) skewY(2.2deg);
-          clip-path: inset(0 0 100% 0);
-          transition:
-            opacity .7s ease,
-            transform .95s cubic-bezier(.16,1,.3,1),
-            clip-path 1s cubic-bezier(.16,1,.3,1) !important;
+          transform: translateY(42px);
+          clip-path: inset(0 0 32% 0);
+          transition: opacity .65s ease, transform .9s cubic-bezier(.16,1,.3,1), clip-path .9s cubic-bezier(.16,1,.3,1) !important;
         }
         .preview-reveal-title.preview-reveal-visible {
           opacity: 1;
-          transform: none;
+          transform: translateY(0);
           clip-path: inset(0 0 0 0);
         }
 
-        .preview-reveal-image.preview-reveal-ready {
+        /* Images gently zoom back into position. */
+        .preview-reveal-image {
           opacity: 0;
-          transform: scale(1.14);
-          transition: opacity .9s ease, transform 1.35s cubic-bezier(.16,1,.3,1) !important;
+          transform: scale(1.06);
+          transition: opacity .8s ease, transform 1.05s cubic-bezier(.16,1,.3,1) !important;
         }
-        .preview-reveal-image.preview-reveal-visible {
-          opacity: 1;
-          transform: scale(1);
-        }
+        .preview-reveal-image.preview-reveal-visible { opacity: 1; transform: scale(1); }
 
-        .preview-reveal-class-slide.preview-reveal-ready {
+        /* Lesson blocks rise as complete editorial panels. */
+        .preview-reveal-class-slide {
           opacity: 0;
-          transform: translate3d(0, 38px, 0) scale(.94);
-          filter: blur(10px);
-          transition:
-            opacity .85s ease,
-            transform 1.05s cubic-bezier(.16,1,.3,1),
-            filter .9s ease !important;
+          transform: translateY(54px);
+          transition: opacity .72s ease, transform .95s cubic-bezier(.16,1,.3,1) !important;
         }
-        .preview-reveal-class-slide.preview-reveal-visible {
-          opacity: 1;
-          transform: translate3d(0,0,0) scale(1);
-          filter: blur(0);
-        }
+        .preview-reveal-class-slide.preview-reveal-visible { opacity: 1; transform: translateY(0); }
 
-        .preview-reveal-card.preview-reveal-ready {
+        /* Cards always stay straight. */
+        .preview-reveal-card {
           opacity: 0;
-          filter: blur(5px);
-          transition:
-            opacity .72s ease,
-            transform .9s cubic-bezier(.2,.82,.2,1),
-            filter .75s ease !important;
+          transform: translateY(36px);
+          transition: opacity .62s ease, transform .78s cubic-bezier(.16,1,.3,1), box-shadow .3s ease !important;
         }
-        .preview-reveal-card.preview-reveal-ready.preview-from-right { transform: translate3d(64px, 22px, 0) rotate(1.4deg); }
-        .preview-reveal-card.preview-reveal-ready.preview-from-left { transform: translate3d(-64px, 22px, 0) rotate(-1.4deg); }
-        .preview-reveal-card.preview-reveal-visible {
-          opacity: 1;
-          transform: none;
-          filter: blur(0);
-        }
+        .preview-reveal-card.preview-reveal-visible { opacity: 1; transform: translateY(0); }
 
-        .preview-reveal-step.preview-reveal-ready {
+        /* Accordion rows slide softly from RTL direction. */
+        .preview-reveal-step {
           opacity: 0;
-          transform: translateX(72px);
-          clip-path: inset(0 100% 0 0);
-          transition:
-            opacity .65s ease,
-            transform .85s cubic-bezier(.16,1,.3,1),
-            clip-path .95s cubic-bezier(.16,1,.3,1) !important;
+          transform: translateX(38px);
+          transition: opacity .55s ease, transform .75s cubic-bezier(.16,1,.3,1) !important;
         }
-        .preview-reveal-step.preview-reveal-visible {
-          opacity: 1;
-          transform: none;
-          clip-path: inset(0 0 0 0);
-        }
+        .preview-reveal-step.preview-reveal-visible { opacity: 1; transform: translateX(0); }
 
-        .preview-reveal-panel.preview-reveal-ready {
+        /* Panels fade and rise. */
+        .preview-reveal-panel {
           opacity: 0;
-          transform: translateY(76px);
-          filter: blur(12px);
-          transition:
-            opacity .82s ease,
-            transform 1.05s cubic-bezier(.16,1,.3,1),
-            filter .9s ease !important;
+          transform: translateY(46px);
+          transition: opacity .7s ease, transform .9s cubic-bezier(.16,1,.3,1) !important;
         }
-        .preview-reveal-panel.preview-reveal-visible {
-          opacity: 1;
-          transform: none;
-          filter: blur(0);
-        }
+        .preview-reveal-panel.preview-reveal-visible { opacity: 1; transform: translateY(0); }
 
-        .preview-reveal-form.preview-reveal-ready {
+        /* Form opens subtly without perspective distortion. */
+        .preview-reveal-form {
           opacity: 0;
-          transform-origin: top center;
-          transform: perspective(1000px) rotateX(9deg) translateY(34px) scale(.97);
-          transition: opacity .75s ease, transform 1s cubic-bezier(.16,1,.3,1) !important;
+          transform: translateY(30px) scale(.985);
+          transition: opacity .7s ease, transform .85s cubic-bezier(.16,1,.3,1) !important;
         }
-        .preview-reveal-form.preview-reveal-visible {
-          opacity: 1;
-          transform: perspective(1000px) rotateX(0deg) translateY(0) scale(1);
-        }
+        .preview-reveal-form.preview-reveal-visible { opacity: 1; transform: translateY(0) scale(1); }
 
-        .preview-reveal-pin.preview-reveal-ready {
+        /* Map pins get a small pop, never move their positioning wrapper. */
+        .preview-reveal-pin {
           opacity: 0;
-          transform: scale(.15) rotate(-18deg);
-          transform-origin: center;
-          transition: opacity .25s ease, transform .72s cubic-bezier(.34,1.56,.64,1) !important;
+          transform: scale(.55);
+          transition: opacity .35s ease, transform .58s cubic-bezier(.34,1.56,.64,1) !important;
         }
-        .preview-reveal-pin.preview-reveal-visible {
-          opacity: 1;
-          transform: scale(1) rotate(0deg);
-        }
+        .preview-reveal-pin.preview-reveal-visible { opacity: 1; transform: scale(1); }
 
-        .preview-reveal-chip.preview-reveal-ready {
+        .preview-reveal-chip {
           opacity: 0;
-          transform: translateY(20px) scale(.82);
-          transition: opacity .4s ease, transform .58s cubic-bezier(.34,1.56,.64,1) !important;
+          transform: translateY(14px);
+          transition: opacity .4s ease, transform .55s cubic-bezier(.16,1,.3,1) !important;
         }
-        .preview-reveal-chip.preview-reveal-visible {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
+        .preview-reveal-chip.preview-reveal-visible { opacity: 1; transform: translateY(0); }
 
-        .preview-reveal-label.preview-reveal-ready {
+        .preview-reveal-label {
           opacity: 0;
-          transform: translateX(34px);
-          letter-spacing: .5em !important;
-          transition:
-            opacity .65s ease,
-            transform .8s cubic-bezier(.16,1,.3,1),
-            letter-spacing .9s cubic-bezier(.16,1,.3,1) !important;
+          transform: translateX(22px);
+          transition: opacity .5s ease, transform .65s cubic-bezier(.16,1,.3,1) !important;
         }
-        .preview-reveal-label.preview-reveal-visible {
-          opacity: 1;
-          transform: none;
-          letter-spacing: .18em !important;
-        }
+        .preview-reveal-label.preview-reveal-visible { opacity: 1; transform: translateX(0); }
 
-        .preview-reveal-cta.preview-reveal-ready {
+        .preview-reveal-cta {
           opacity: 0;
-          transform: translateY(22px) scale(.72) rotate(-5deg);
-          transition: opacity .45s ease, transform .72s cubic-bezier(.34,1.56,.64,1) !important;
+          transform: translateY(18px) scale(.94);
+          transition: opacity .45s ease, transform .6s cubic-bezier(.34,1.3,.64,1) !important;
         }
-        .preview-reveal-cta.preview-reveal-visible {
-          opacity: 1;
-          transform: translateY(0) scale(1) rotate(0deg);
-        }
+        .preview-reveal-cta.preview-reveal-visible { opacity: 1; transform: translateY(0) scale(1); }
 
         .preview-progress {
           position: fixed;
@@ -408,12 +296,10 @@ export default function PreviewInteractions() {
           background: rgba(43,35,39,.07);
           pointer-events: none;
         }
-
         .preview-progress-fill {
           width: 100%;
           background: linear-gradient(to bottom, #E8B4CB, #D4AF37);
           transform-origin: top;
-          box-shadow: 0 0 18px rgba(212,175,55,.35);
         }
 
         .preview-action-dock {
@@ -425,9 +311,8 @@ export default function PreviewInteractions() {
           gap: 10px;
           direction: rtl;
         }
-
         .preview-action-button {
-          border: 1px solid rgba(43,35,39,.15);
+          border: 1px solid rgba(43,35,39,.14);
           min-height: 48px;
           padding: 0 17px;
           display: inline-flex;
@@ -435,33 +320,18 @@ export default function PreviewInteractions() {
           justify-content: center;
           gap: 9px;
           border-radius: 999px;
-          background: rgba(255,250,246,.9);
-          color: #2b2327;
+          background: rgba(255,249,244,.9);
+          color: #2B2327;
           backdrop-filter: blur(16px);
-          box-shadow: 0 12px 34px rgba(43,35,39,.12);
+          box-shadow: 0 10px 30px rgba(43,35,39,.08);
           font-size: 13px;
           font-weight: 700;
           cursor: pointer;
-          transition: transform .25s ease, border-color .25s ease, background .25s ease, color .25s ease;
+          transition: transform .25s ease, border-color .25s ease, background .25s ease;
         }
-
-        .preview-action-button:hover {
-          transform: translateY(-3px);
-          border-color: rgba(183,108,139,.55);
-          color: #8b4d67;
-        }
-
-        .preview-action-button.primary {
-          background: #D4AF37;
-          border-color: #D4AF37;
-          color: #241d16;
-        }
-
-        .preview-action-button.primary:hover {
-          background: #E8B4CB;
-          border-color: #E8B4CB;
-          color: #2b2327;
-        }
+        .preview-action-button:hover { transform: translateY(-2px); border-color: rgba(183,108,139,.5); }
+        .preview-action-button.primary { background: #D4AF37; border-color: #D4AF37; color: #251d12; }
+        .preview-action-button.primary:hover { background: #E8B4CB; border-color: #E8B4CB; }
 
         .preview-back-top {
           position: fixed;
@@ -473,9 +343,9 @@ export default function PreviewInteractions() {
           display: grid;
           place-items: center;
           border-radius: 50%;
-          border: 1px solid rgba(43,35,39,.14);
-          background: rgba(255,250,246,.88);
-          color: #6d5b62;
+          border: 1px solid rgba(43,35,39,.12);
+          background: rgba(255,249,244,.88);
+          color: #6E6066;
           backdrop-filter: blur(14px);
           cursor: pointer;
           opacity: ${progress > 0.08 ? 1 : 0};
@@ -483,29 +353,15 @@ export default function PreviewInteractions() {
           pointer-events: ${progress > 0.08 ? 'auto' : 'none'};
           transition: .25s ease;
         }
-
-        .preview-back-top:hover { color: #9a7420; border-color: rgba(212,175,55,.55); }
+        .preview-back-top:hover { color: #9A7420; border-color: rgba(212,175,55,.55); }
 
         @media (prefers-reduced-motion: reduce) {
-          .preview-reveal,
-          .preview-reveal-ready {
-            opacity: 1 !important;
-            transform: none !important;
-            filter: none !important;
-            clip-path: none !important;
-            transition: none !important;
-          }
+          .preview-reveal { opacity: 1 !important; transform: none !important; clip-path: none !important; transition: none !important; }
         }
 
         @media (max-width: 760px) {
           .preview-progress { top: 72px; height: calc(100vh - 72px); }
-          .preview-action-dock {
-            left: 12px;
-            right: 12px;
-            bottom: 12px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-          }
+          .preview-action-dock { left: 12px; right: 12px; bottom: 12px; display: grid; grid-template-columns: 1fr 1fr; }
           .preview-action-button { padding: 0 12px; min-height: 46px; font-size: 12px; }
           .preview-back-top { right: 14px; bottom: 70px; width: 42px; height: 42px; }
         }
@@ -517,12 +373,10 @@ export default function PreviewInteractions() {
 
       <div className="preview-action-dock" aria-label="פעולות מהירות">
         <button type="button" className="preview-action-button" onClick={() => goToSection('contact')}>
-          <MessageCircle size={17} />
-          יצירת קשר
+          <MessageCircle size={17} /> יצירת קשר
         </button>
         <button type="button" className="preview-action-button primary" onClick={() => goToSection('registration')}>
-          <ClipboardCheck size={17} />
-          להרשמה
+          <ClipboardCheck size={17} /> להרשמה
         </button>
       </div>
 
