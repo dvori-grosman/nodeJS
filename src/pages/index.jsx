@@ -1,6 +1,3 @@
-import Admin from "./Admin";
-import ScheduleAdmin from "./ScheduleAdmin";
-import ContentAdmin from "./ContentAdmin";
 import OnePagePreview from "./OnePagePreview";
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 
@@ -62,11 +59,6 @@ const previewPalette = `
 
 function PagesContent() {
   const location = useLocation();
-
-  if (location.pathname === '/admin') return <ScheduleAdmin />;
-  if (location.pathname === '/admin/content') return <ContentAdmin />;
-  if (location.pathname === '/admin/legacy') return <Admin />;
-
   const initialSection = legacySectionMap[location.pathname] || 'home';
 
   return (
