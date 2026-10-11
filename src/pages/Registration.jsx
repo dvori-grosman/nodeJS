@@ -120,45 +120,12 @@ const getRegistrationYear = () => {
 };
 
   const handleDownloadRegulations = () => {
-    // יצירת תוכן תקנון לדוגמה
-    const regulationsContent = `
-תקנון סטודיו ריקוד ברוח הטובה
-=====================================
-
-1. כללי הרשמה
-- ההרשמה מתבצעת באמצעות מילוי טופס רשמי
-- התשלום מתבצע בתחילת כל חודש
-- שיעור ניסיון ראשון ללא תשלום
-
-2. נוכחות ופיצויים
-- במידה ולא ניתן להגיע לשיעור, יש להודיע מראש
-- פיצוי שיעורים בכפוף לזמינות
-
-3. ציוד נדרש
-- לבוש ספורט נוח ומתאים
-- נעליים מתאימות לסוג השיעור
-- בקבוק מים
-
-4. התנהגות
-- כבוד הדדי בין התלמידות והמדריכות
-- שמירה על סביבה נעימה ובטוחה לכולם
-
-5. בטיחות
-- השתתפות בשיעורים על אחריות המשתתפת
-- חובה להודיע על בעיות רפואיות רלוונטיות
-
-לפרטים נוספים: 03-3130565
-    `;
-
-    const blob = new Blob([regulationsContent], { type: 'text/plain;charset=utf-8' });
-    const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = url;
-    link.download = 'תקנון-ריקוד-ברוח-הטובה.txt';
+    link.href = '/regulations-5787.pdf';
+    link.download = 'תקנון-ברוח-הטובה-תשפז.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
   };
 
   
