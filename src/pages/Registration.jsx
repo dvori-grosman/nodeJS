@@ -119,14 +119,7 @@ const getRegistrationYear = () => {
   return toHebrewYear(year + (["אב", "אלול"].includes(month) ? 1 : 0));
 };
 
-  const handleDownloadRegulations = () => {
-    const link = document.createElement('a');
-    link.href = '/regulations-5787.pdf';
-    link.download = 'תקנון-ברוח-הטובה-תשפז.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+
 
   
   return (
@@ -236,11 +229,13 @@ const getRegistrationYear = () => {
                     להורדת תקנון הסטודיו המלא עם כל הכללים וההנחיות
                   </p>
                   <Button
-                    onClick={handleDownloadRegulations}
+                    asChild
                     className="btn-outline-gold"
                   >
-                    <Download className="w-4 h-4 mr-2" />
-                    הורד תקנון
+                    <a href="/regulations-5787.pdf" target="_blank" rel="noopener noreferrer">
+                      <Download className="w-4 h-4 mr-2" />
+                      פתיחת תקנון והורדה
+                    </a>
                   </Button>
                 </CardContent>
               </Card>
