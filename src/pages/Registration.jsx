@@ -9,7 +9,6 @@ import {
   GraduationCap,
   Users,
   RefreshCw,
-  Download,
   Star,
   Heart,
   Clock,
@@ -233,8 +232,8 @@ const getRegistrationYear = () => {
                     className="btn-outline-gold"
                   >
                     <a href="/regulations-5787.pdf" target="_blank" rel="noopener noreferrer">
-                      <Download className="w-4 h-4 mr-2" />
-                      פתיחת תקנון והורדה
+                      <span>לתקנון</span>
+                      <span aria-hidden="true">→</span>
                     </a>
                   </Button>
                 </CardContent>
