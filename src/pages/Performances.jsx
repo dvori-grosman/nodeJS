@@ -5,48 +5,12 @@ import { Badge } from '@/components/ui/badge';
 import { Helmet } from 'react-helmet-async';
 
 const performances = [
-  {
-    _id: 'olam-5784',
-    title: 'אהבת עולם',
-    subtitle: 'תשפ״ד',
-    description: 'מופע שנתי רחב עם קבוצות בגילים וברמות שונות, קטעים קבוצתיים, רצפים מדויקים ואווירת במה חגיגית.',
-    imageUrl: '/אהבת עולם תשפד.png'
-  },
-  {
-    _id: 'olam-5785',
-    title: 'אהבת עולם',
-    subtitle: 'תשפ״ה',
-    description: 'הפקת סוף שנה עם שפה חזותית עשירה, עבודה קבוצתית ותהליך ארוך שמתחבר לערב אחד של תנועה ובמה.',
-    imageUrl: '/אהבת עולם תשפה.png'
-  },
-  {
-    _id: 'tears',
-    title: 'לרקוד את הדמעות',
-    subtitle: 'מופע קונספט',
-    description: 'מופע עם קו אמנותי אחיד, מעברים בין קבוצות ויצירת רצף בימתי שמרגיש כמו סיפור אחד שלם.',
-    imageUrl: '/לרקוד את הדמעות.png'
-  },
-  {
-    _id: 'team',
-    title: 'הנבחרת',
-    subtitle: 'פרויקט במה',
-    description: 'קטעים שנבנו במיוחד לקבוצה המתקדמת, עם דגש על סנכרון, רפרטואר ונוכחות קבוצתית חזקה.',
-    imageUrl: '/הנבחרת.png'
-  },
-  {
-    _id: 'studio-night',
-    title: 'ערב סטודיו',
-    subtitle: 'מאחורי הקלעים',
-    description: 'ערב אינטימי יותר שמציג תהליכי עבודה, קטעים בתהליך ורגעים מהשגרה המקצועית של הקבוצות.',
-    imageUrl: '/01.png'
-  },
-  {
-    _id: 'young-stage',
-    title: 'במה צעירה',
-    subtitle: 'הופעת אמצע שנה',
-    description: 'הזדמנות לקבוצות הצעירות לעלות לבמה, להציג מה למדו ולהכיר את חוויית ההופעה כחלק מהתהליך.',
-    imageUrl: '/02.png'
-  }
+  { _id: 'team-2023', title: 'הנבחרת', subtitle: '2023', description: 'מופע להקה.', },
+  { _id: 'tears-2025', title: 'לרקוד את הדמעות', subtitle: '2025', description: 'מופע מחול.', },
+  { _id: 'olam-2024', title: 'אהבת עולם', subtitle: '2024', description: 'המופע הראשון.', },
+  { _id: 'olam-2025', title: 'אהבת עולם', subtitle: '2025', description: 'המופע השני.', },
+  { _id: 'mishkan-2026', title: 'משכן', subtitle: 'מופע להקה ונשים · 2026', description: '', },
+  { _id: 'part-picture-2026', title: 'חלק מן התמונה', subtitle: 'מופע ילדות · 2026', description: 'מופע ייחודי לשכבת הצעירות.', }
 ];
 
 export default function PerformancesPage() {
@@ -64,7 +28,7 @@ export default function PerformancesPage() {
                 <p className="mb-5 text-[11px] uppercase tracking-[.28em] text-[#D4AF37]">Performances / Archive</p>
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-semibold leading-[.9] tracking-[-.06em] white-text">רגעים שנשארים<br/><span className="text-transparent [-webkit-text-stroke:1px_rgba(232,180,203,.65)]">אחרי שהמסך יורד.</span></h1>
               </div>
-              <p className="text-lg leading-8 text-gray-400">אוסף סטטי של מופעים, פרויקטים ורגעי במה שמאפשר להמשיך לפתח את השפה החזותית של האתר בלי תלות בשרת.</p>
+              <p className="text-lg leading-8 text-gray-400">מופעי ברוח הטובה הם חוויה של תנועה, רגש והשראה. מופעי להקות, מופעי נשים, נערות ומופעי ילדות.</p>
             </div>
           </div>
         </section>
@@ -74,10 +38,11 @@ export default function PerformancesPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {performances.map((performance, index) => (
                 <Card key={performance._id} className="group overflow-hidden darker-bg border-gray-800 elegant-shadow rounded-none">
-                  <div className="relative h-80 w-full overflow-hidden bg-black">
-                    <img src={performance.imageUrl} alt={performance.title} className="h-full w-full object-cover object-top opacity-80 transition duration-700 group-hover:scale-105 group-hover:opacity-100" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
-                    <span className="absolute top-4 left-4 text-[10px] tracking-[.22em] text-white/45">{String(index + 1).padStart(2, '0')}</span>
+                  <div className="relative h-64 w-full overflow-hidden bg-[radial-gradient(circle_at_50%_35%,rgba(212,175,55,.18),transparent_40%),linear-gradient(145deg,#202020,#090909)]">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-7xl font-semibold tracking-[-.08em] text-white/10">{String(index + 1).padStart(2, '0')}</span>
+                    </div>
+                    <span className="absolute top-4 left-4 text-[10px] tracking-[.22em] text-white/45">ARCHIVE</span>
                   </div>
                   <CardHeader className="border-t border-white/10">
                     <div className="mb-3 flex items-center justify-between gap-3">
@@ -86,9 +51,7 @@ export default function PerformancesPage() {
                     </div>
                     <CardTitle className="text-3xl font-semibold white-text">{performance.title}</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-400 leading-7">{performance.description}</p>
-                  </CardContent>
+                  {performance.description && <CardContent><p className="text-gray-400 leading-7">{performance.description}</p></CardContent>}
                 </Card>
               ))}
             </div>
@@ -100,11 +63,9 @@ export default function PerformancesPage() {
             <div className="grid gap-8 md:grid-cols-[120px_1fr] md:items-start">
               <div className="text-[#D4AF37] text-sm tracking-[.18em]">WHY STAGE</div>
               <div>
-                <h2 className="mb-7 text-4xl md:text-6xl font-semibold tracking-[-.05em] white-text">הבמה היא חלק מהדרך.</h2>
-                <div className="grid gap-5 md:grid-cols-2 text-gray-400 leading-8">
-                  <p className="flex gap-3"><Star className="w-5 h-5 text-[#E8B4CB] shrink-0 mt-1" /> המופעים מרכזים תהליך של חודשים ומחברים בין טכניקה, התמדה ועבודה קבוצתית.</p>
-                  <p className="flex gap-3"><Star className="w-5 h-5 text-[#E8B4CB] shrink-0 mt-1" /> כל הפקה מקבלת שפה, קצב ואופי משלה — כך שגם הארכיון באתר יכול להרגיש עשיר ומגוון.</p>
-                </div>
+                <h2 className="mb-7 text-4xl md:text-6xl font-semibold tracking-[-.05em] white-text">מה מיוחד במופעים שלנו?</h2>
+                <p className="mb-8 text-gray-400 leading-8">במופעי המחול הרבה מעבר לתנועה ומוזיקה – זו דרך לבטא רגשות, לבנות ביטחון עצמי, להתמיד, להשקיע ולגלות את הכוחות הפנימיים שיש בכל אחת. שפת התנועה היא שפה שבה אנו מביעות משהו ללא מילים, ולכן היא נוגעת יותר, עמוק יותר ומחברת יותר. ביצועים מדהימים, כוריאוגרפיות עוצרות נשימה וחוויה בלתי נשכחת.</p>
+                <p className="text-gray-400 leading-8">מופע המחול מעניק הן לרקדניות והן לצופות חוויה בלתי נשכחת, חיבור לגוף ולנפש.</p>
               </div>
             </div>
           </div>
