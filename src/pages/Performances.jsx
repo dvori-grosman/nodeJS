@@ -8,42 +8,12 @@ import { Badge } from "@/components/ui/badge";
 
 export default function PerformancesPage() {
   const performances = [
-    {
-      title: "הנבחרת - מסע אמנותי מסביב לעולם",
-      year: "מופע שנתי",
-      description: "קבוצות המחול בביצועים וכירולוגרפיות מדהימות: להקת פוינט, בלט קלאסי, מחול מודרני ואקרובטיקה.",
-      price: "25",
-      status: "available",
-      image: "הנבחרת.png",
-      alt: "הנבחרת - הופעה של ריקוד ברוח הטובה, חוג מחול בירושלים, מקצועי, איכותי, באוירה שמורה, חוג מחול לילדות , חוג מחול לבנים, חוג מחול לנערות חרדיות, חוג אקרובטיקה"
-    },
-    {
-      title: "לרקוד את הדמעות",
-      year: "מופע זמר",
-      description: "מופע זמר ייחודי בליווי הרכבי זמר 'שיר אומן' ובשילוב להקת הרקדניות 'ריקוד ברוח טובה'.",
-      price: "25",
-      status: "available",
-      image: "לרקוד את הדמעות.png",
-      alt: "הנבחרת - הופעה של ריקוד ברוח הטובה, חוג מחול בירושלים, מקצועי, איכותי, באוירה שמורה, חוג מחול לילדות , חוג מחול לבנים, חוג מחול לנערות חרדיות, חוג אקרובטיקה"
-    },
-    {
-      title: "אהבת עולם",
-      year: "הפקה שנתית",
-      description: "הפקת מחול אומנותית מטלטלת עם מאות מופיעות בביצוע חי על הבמה.",
-      price: "25",
-      status: "available",
-      image: "אהבת עולם תשפד.png",
-      alt: "הנבחרת - הופעה של ריקוד ברוח הטובה, חוג מחול בירושלים, מקצועי, איכותי, באוירה שמורה, חוג מחול לילדות , חוג מחול לבנים, חוג מחול לנערות חרדיות, חוג אקרובטיקה"
-    },
-    {
-      title: "אהבת עולם",
-      year: "הפקה שנתית",
-      description: "הפקת מחול אומנותית מטלטלת עם מאות מופיעות בביצוע חי על הבמה.",
-      price: "25",
-      status: "available",
-      image: "אהבת עולם תשפה.png",
-      alt: "הנבחרת - הופעה של ריקוד ברוח הטובה, חוג מחול בירושלים, מקצועי, איכותי, באוירה שמורה, חוג מחול לילדות , חוג מחול לבנים, חוג מחול לנערות חרדיות, חוג אקרובטיקה"
-    }
+    { title: "הנבחרת", year: "2023", description: "מופע להקה.", image: "הנבחרת.png", alt: "הנבחרת - מופע מחול" },
+    { title: "לרקוד את הדמעות", year: "2025", description: "מופע מחול.", image: "לרקוד את הדמעות.png", alt: "לרקוד את הדמעות - מופע מחול" },
+    { title: "אהבת עולם", year: "2024", description: "המופע הראשון.", image: "אהבת עולם תשפד.png", alt: "אהבת עולם - 2024" },
+    { title: "אהבת עולם", year: "2025", description: "המופע השני.", image: "אהבת עולם תשפה.png", alt: "אהבת עולם - 2025" },
+    { title: "משכן", year: "מופע להקה ונשים · 2026", description: "" },
+    { title: "חלק מן התמונה", year: "מופע ילדות · 2026", description: "מופע ייחודי לשכבת הצעירות." }
   ];
 
   return (
@@ -65,8 +35,7 @@ export default function PerformancesPage() {
               רגעים קסומים על הבמה
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-              כל שנה אנו מציגות מופע סיום עוצר נשימה המטעים מההישגים המדהימים
-              שנרכשו במהלך השנה והחוויה האדירה של התלמידות
+              מופעי ברוח הטובה הם חוויה של תנועה, רגש והשראה. מופעי להקות, מופעי נשים, נערות ומופעי ילדות.
             </p>
             <div className="w-24 h-1 gold-bg mx-auto"></div>
           </div>
@@ -86,10 +55,7 @@ export default function PerformancesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {performances.map((performance, index) => (
               <Card key={index} className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden darker-bg border-gray-700 elegant-shadow">
-                {/* Performance Image */}
-                <div className="h-96 w-full overflow-hidden">
-                  <img src={performance.image} alt={performance.alt} className="h-full w-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
-                </div>
+                {performance.image && <div className="h-96 w-full overflow-hidden"><img src={performance.image} alt={performance.alt} className="h-full w-full object-cover object-top group-hover:scale-105 transition-transform duration-500" /></div>}
 
                 <CardHeader>
                   <CardTitle className="text-2xl font-bold white-text group-hover:text-pink-400 transition-colors">
@@ -127,24 +93,7 @@ export default function PerformancesPage() {
                     <Star className="w-5 h-5 pink-text" />
                     מה מיוחד במופעים שלנו?
                   </h4>
-                  <ul className="space-y-2 text-gray-300">
-                    <li className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 gold-bg rounded-full mt-2 flex-shrink-0"></div>
-                      <span>הצגת כל סוגי השיעורים - בלט, מודרני, אקרודאנס ועוד</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 gold-bg rounded-full mt-2 flex-shrink-0"></div>
-                      <span>תלמידות מכל הגילאים והרמות עולות לבמה</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 gold-bg rounded-full mt-2 flex-shrink-0"></div>
-                      <span>כוראוגרפיות מקוריות ומרהיבות</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 gold-bg rounded-full mt-2 flex-shrink-0"></div>
-                      <span>אווירה חמה ומרגשת לכל המשפחה</span>
-                    </li>
-                  </ul>
+                  <p className="text-gray-300 leading-8">במופעי המחול הרבה מעבר לתנועה ומוזיקה – זו דרך לבטא רגשות, לבנות ביטחון עצמי, להתמיד, להשקיע ולגלות את הכוחות הפנימיים שיש בכל אחת. שפת התנועה היא שפה שבה אנו מביעות משהו ללא מילים, ולכן היא נוגעת יותר, עמוק יותר ומחברת יותר. ביצועים מדהימים, כוריאוגרפיות עוצרות נשימה וחוויה בלתי נשכחת.</p>
                 </div>
 
 
@@ -152,10 +101,9 @@ export default function PerformancesPage() {
 
               <div className="text-center dark-bg p-6 rounded-xl border border-gray-700">
                 <p className="pink-text font-medium italic">
-                  "המופעים שלנו הם הרגע הקסום שבו רואים את כל העבודה הקשה והמסירות מגיעות לפריחה מלאה.
-                  כל בת עולה לבמה עם גאווה ושמחה, והקהל חווה רגעים בלתי נשכחים."
+                  מופע המחול מעניק הן לרקדניות והן לצופות חוויה בלתי נשכחת, חיבור לגוף ולנפש.
                 </p>
-                <p className="gold-text mt-2">- צוות ברוח הטובה</p>
+                
               </div>
             </CardContent>
           </Card>
