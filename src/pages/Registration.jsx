@@ -23,75 +23,35 @@ export default function RegistrationPage() {
 
   const registrationForms = [
     {
-      title: "להרשמה לשיעור ניסיון",
-      description: "שיעור הכרות חינם ללא התחייבות - הזדמנות מושלמת להכיר את האווירה!",
+      title: "קישור להרשמה לשיעור ניסיון",
+      description: "רישום לשבוע פתוח תשפ״ז",
       icon: <Star className="w-8 h-8 text-yellow-500" />,
-      buttonText: "שיעור ניסיון חינם",
+      buttonText: "רישום שבוע פתוח תשפ״ז",
       highlight: true,
-      url: "https://forms.fillout.com/t/hgAzieMyA7us",
+      url: "https://docs.google.com/forms/d/e/1FAIpQLSd6CcqbmGh6l2vCyY2Vv7KiwdnFBScMt0C2PCABP92A7mzn3g/viewform?usp=header",
       external: true
     },
     {
-      title: "להרשמה לחוג",
-      description: "הרשמה רגילה לשנת הלימודים החדשה - לתלמידות חדשות",
+      title: "להרשמה לחוג – לתלמידות מתחילות וממשיכות",
+      description: "למילוי טופס הרשמה לחוג",
       icon: <GraduationCap className="w-8 h-8 text-pink-400" />,
-      buttonText: "הרשמה לחוג חדש",
+      buttonText: "למילוי טופס הרשמה לחצי כאן:)",
       highlight: false,
       url: "https://forms.fillout.com/t/gaZ1SxLWjMus",
-      external: true
-    },
-    {
-      title: "תלמידה קיימת - רישום לשנה הבאה",
-      description: "התלמידות הקיימות שלנו יכולות להירשם כאן להמשך השנה הבאה",
-      icon: <RefreshCw className="w-8 h-8 text-green-500" />,
-      buttonText: "חידוש הרשמה",
-      highlight: false,
-      url: "https://forms.fillout.com/t/pE7j5Ymn8xus",
       external: true
     }
   ];
 
-  const priceData = [
-    {
-      category: "בלט קלאסי",
-      levels: [
-        { level: "מתחילות", sessions: "שיעור שבועי", price: "180", duration: "45 דק'" },
-        { level: "ממשיכות", sessions: "שיעור שבועי", price: "200", duration: "60 דק'" },
-        { level: "מתקדמות + פוינט", sessions: "שיעור שבועי", price: "220", duration: "75 דק'" }
-      ]
-    },
-    {
-      category: "מחול מודרני",
-      levels: [
-        { level: "מתחילות", sessions: "שיעור שבועי", price: "180", duration: "45 דק'" },
-        { level: "ממשיכות", sessions: "שיעור שבועי", price: "200", duration: "60 דק'" },
-        { level: "מתקדמות", sessions: "שיעור שבועי", price: "200", duration: "60 דק'" }
-      ]
-    },
-    {
-      category: "מחול לגיל הרך",
-      levels: [
-        { level: "גילאי 3-4", sessions: "שיעור שבועי", price: "160", duration: "30 דק'" },
-        { level: "גילאי 5-6", sessions: "שיעור שבועי", price: "170", duration: "40 דק'" }
-      ]
-    },
-    {
-      category: "אקרודאנס",
-      levels: [
-        { level: "בסיס", sessions: "שיעור שבועי", price: "190", duration: "60 דק'" },
-        { level: "מתקדמות", sessions: "שיעור שבועי", price: "210", duration: "60 דק'" }
-      ]
-    },
-    {
-      category: "התעמלות קרקע",
-      levels: [
-        { level: "מתחילות", sessions: "שיעור שבועי", price: "200", duration: "60 דק'" },
-        { level: "ממשיכות", sessions: "שיעור שבועי", price: "220", duration: "60 דק'" },
-        { level: "מתקדמות", sessions: "שיעור שבועי", price: "240", duration: "75 דק'" },
-        { level: "נבחרת", sessions: "שיעור שבועי", price: "260", duration: "90 דק'" }
-      ]
-    }
-  ];
+  const priceData = [{
+    category: "מחירון חודשי",
+    levels: [
+      { level: "45 דקות", sessions: "שיעור שבועי", duration: "45 דקות", price: "190" },
+      { level: "60 דקות", sessions: "שיעור שבועי", duration: "60 דקות", price: "210" },
+      { level: "75 דקות", sessions: "שיעור שבועי", duration: "75 דקות", price: "230" },
+      { level: "90 דקות", sessions: "שיעור שבועי", duration: "90 דקות", price: "240" },
+      { level: "105 דקות", sessions: "שיעור שבועי", duration: "105 דקות", price: "260" }
+    ]
+  }];
 
 
   const toHebrewYear = year => {
@@ -247,7 +207,7 @@ const getRegistrationYear = () => {
           <section className="py-16 animate-in slide-in-from-bottom-4 duration-500">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold gold-text mb-4">מחירון שנת תשפ"ו</h2>
+                <h2 className="text-3xl md:text-4xl font-bold gold-text mb-4">מחירון תשפ״ז</h2>
                 <p className="text-gray-400">מחירים חודשיים לשיעורים</p>
               </div>
 
@@ -304,15 +264,15 @@ const getRegistrationYear = () => {
                     <ul className="space-y-2 text-gray-300">
                       <li className="flex items-start gap-2">
                         <div className="w-2 h-2 gold-bg rounded-full mt-2 flex-shrink-0"></div>
-                        <span>שיעור ניסיון ראשון חינם</span>
+                        <span>שיעור ניסיון בתשלום – 40 ש״ח</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <div className="w-2 h-2 gold-bg rounded-full mt-2 flex-shrink-0"></div>
-                        <span>הנחה לאחיות - 10% החל מהשנייה</span>
+                        <span>הנחה לאחיות או בהרשמה לשני שיעורים – 5%</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <div className="w-2 h-2 gold-bg rounded-full mt-2 flex-shrink-0"></div>
-                        <span>הנחה לשילוב שיעורים - 15%</span>
+                        <span>הסדרים עם קופות החולים לאומית, מאוחדת ומכבי למבוטחי ביטוח משלים</span>
                       </li>
                     </ul>
                   </CardContent>
