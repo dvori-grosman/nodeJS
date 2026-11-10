@@ -1,104 +1,82 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import emailjs from '@emailjs/browser';
-import { Phone, Mail, Clock, Heart, Send, CheckCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Helmet } from "react-helmet-async";
+import { Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Helmet } from 'react-helmet-async';
+import { SITE_CONTACT } from '@/config/site';
 
-const normalizeIsraeliPhone = (phone) => {
+const EMAILJS_CONFIG = {
+  SERVICE_ID: 'service_twe1obj',
+  TEMPLATE_ID: 'template_t30hd19',
+  PUBLIC_KEY: 'Ub_6n8kuhlIM5pW1R'
+};
+
+const normalizeIsraeliPhone = phone => {
   const cleaned = phone.replace(/[\s\-()]/g, '');
   return cleaned.startsWith('+972') ? `0${cleaned.slice(4)}` : cleaned;
 };
 
-const isValidIsraeliPhone = (phone) => {
-  const normalized = normalizeIsraeliPhone(phone);
-  return /^0(?:5\d{8}|7\d{8}|[2-48-9]\d{7})$/.test(normalized);
-};
-
-const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+const isValidIsraeliPhone = phone => /^0(?:5\d{8}|7\d{8}|[2-48-9]\d{7})$/.test(normalizeIsraeliPhone(phone));
+const isValidEmail = email => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
 
 const validateField = (fieldName, rawValue) => {
   const value = rawValue.trim();
-
-  switch (fieldName) {
-    case 'studentName':
-      if (!value) return 'יש להזין שם מלא';
-      if (value.length < 2) return 'השם קצר מדי';
-      if (value.length > 50) return 'השם יכול להכיל עד 50 תווים';
-      if (!/^[\p{L}\s.'-]+$/u.test(value)) return 'השם יכול להכיל אותיות בלבד';
-      return '';
-
-    case 'parentPhone':
-      if (!value) return 'יש להזין מספר טלפון';
-      if (!isValidIsraeliPhone(value)) return 'יש להזין מספר טלפון ישראלי תקין';
-      return '';
-
-    case 'parentEmail':
-      if (!value) return 'יש להזין כתובת מייל';
-      if (!isValidEmail(value)) return 'יש להזין כתובת מייל תקינה';
-      return '';
-
-    case 'inquiryMessage':
-      if (!value) return 'יש להזין תוכן לפנייה';
-      if (value.length < 5) return 'תוכן הפנייה קצר מדי';
-      if (value.length > 1000) return 'תוכן הפנייה יכול להכיל עד 1000 תווים';
-      return '';
-
-    default:
-      return '';
+  if (fieldName === 'studentName') {
+    if (!value) return 'יש להזין שם מלא';
+    if (value.length < 2) return 'השם קצר מדי';
+    if (value.length > 50) return 'השם יכול להכיל עד 50 תווים';
+    if (!/^[\p{L}\s.'-]+$/u.test(value)) return 'השם יכול להכיל אותיות בלבד';
   }
+  if (fieldName === 'parentPhone') {
+    if (!value) return 'יש להזין מספר טלפון';
+    if (!isValidIsraeliPhone(value)) return 'יש להזין מספר טלפון ישראלי תקין';
+  }
+  if (fieldName === 'parentEmail') {
+    if (!value) return 'יש להזין כתובת מייל';
+    if (!isValidEmail(value)) return 'יש להזין כתובת מייל תקינה';
+  }
+  if (fieldName === 'inquiryMessage') {
+    if (!value) return 'יש להזין תוכן לפנייה';
+    if (value.length < 5) return 'תוכן הפנייה קצר מדי';
+    if (value.length > 1000) return 'תוכן הפנייה יכול להכיל עד 1000 תווים';
+  }
+  return '';
 };
 
 export default function ContactPage() {
-  const [inquiryFormData, setInquiryFormData] = useState({
-    studentName: "",
-    parentPhone: "",
-    parentEmail: "",
-    inquiryMessage: ""
-  });
+  const [formData, setFormData] = useState({ studentName: '', parentPhone: '', parentEmail: '', inquiryMessage: '' });
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState('');
 
-  const [formErrors, setFormErrors] = useState({});
-  const [isSubmittingInquiry, setIsSubmittingInquiry] = useState(false);
-  const [hasSubmittedSuccessfully, setHasSubmittedSuccessfully] = useState(false);
-  const [emailSendingStatus, setEmailSendingStatus] = useState('');
-
-  const EMAILJS_CONFIG = {
-    SERVICE_ID: 'service_twe1obj',
-    TEMPLATE_ID: 'template_t30hd19',
-    PUBLIC_KEY: 'Ub_6n8kuhlIM5pW1R'
+  const updateField = (name, value) => {
+    setFormData(current => ({ ...current, [name]: value }));
+    const error = validateField(name, value);
+    setErrors(current => ({ ...current, [name]: error || undefined }));
   };
 
   const validateForm = () => {
-    const errors = {};
-
-    Object.entries(inquiryFormData).forEach(([fieldName, fieldValue]) => {
-      const error = validateField(fieldName, fieldValue);
-      if (error) errors[fieldName] = error;
+    const next = {};
+    Object.entries(formData).forEach(([name, value]) => {
+      const error = validateField(name, value);
+      if (error) next[name] = error;
     });
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
+    setErrors(next);
+    return Object.keys(next).length === 0;
   };
 
-  const handleFormInputChange = (fieldName, fieldValue) => {
-    setInquiryFormData(previousFormData => ({
-      ...previousFormData,
-      [fieldName]: fieldValue
-    }));
-
-    const error = validateField(fieldName, fieldValue);
-    setFormErrors(previousErrors => ({
-      ...previousErrors,
-      [fieldName]: error || undefined
-    }));
-  };
-
-  const sendEmailViaEmailJS = async (formData) => {
+  const submit = async e => {
+    e.preventDefault();
+    setStatus('');
+    if (!validateForm()) return;
+    setSubmitting(true);
     try {
-      const emailData = {
+      await emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, {
         from_name: formData.studentName.trim(),
         name: formData.studentName.trim(),
         from_email: formData.parentEmail.trim(),
@@ -106,434 +84,95 @@ export default function ContactPage() {
         reply_to: formData.parentEmail.trim(),
         phone: normalizeIsraeliPhone(formData.parentPhone),
         message: formData.inquiryMessage.trim(),
-        to_email: 'b0527182273@gmail.com',
+        to_email: SITE_CONTACT.email,
         subject: `פניה חדשה מהאתר - ${formData.studentName.trim()}`
-      };
-
-      const result = await emailjs.send(
-        EMAILJS_CONFIG.SERVICE_ID,
-        EMAILJS_CONFIG.TEMPLATE_ID,
-        emailData,
-        { publicKey: EMAILJS_CONFIG.PUBLIC_KEY }
-      );
-
-      console.log('EmailJS הצליח:', result);
-      setEmailSendingStatus('המייל נשלח בהצלחה!');
-      return true;
+      }, { publicKey: EMAILJS_CONFIG.PUBLIC_KEY });
+      setStatus('המייל נשלח בהצלחה!');
+      setSent(true);
     } catch (error) {
       console.error('שגיאה בשליחת EmailJS:', error);
-      setEmailSendingStatus('אירעה שגיאה בשליחת הפנייה. אנא נסי שוב.');
-      return false;
-    }
-  };
-
-  const handleInquiryFormSubmit = async (formEvent) => {
-    formEvent.preventDefault();
-    setEmailSendingStatus('');
-
-    if (!validateForm()) {
-      return;
-    }
-
-    setIsSubmittingInquiry(true);
-
-    try {
-      const emailSent = await sendEmailViaEmailJS(inquiryFormData);
-
-      if (emailSent) {
-        setHasSubmittedSuccessfully(true);
-      }
+      setStatus('אירעה שגיאה בשליחת הפנייה. אנא נסי שוב.');
     } finally {
-      setIsSubmittingInquiry(false);
+      setSubmitting(false);
     }
   };
 
-  if (hasSubmittedSuccessfully) {
+  if (sent) {
     return (
-      <InquirySuccessPage
-        onBackToForm={() => window.location.reload()}
-        emailStatus={emailSendingStatus}
-      />
+      <div className="min-h-screen flex items-center justify-center dark-bg p-4">
+        <Card className="max-w-md w-full text-center darker-bg border-gray-700 elegant-shadow">
+          <CardContent className="p-8">
+            <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4"><CheckCircle className="w-8 h-8 text-white" /></div>
+            <h2 className="text-2xl font-bold white-text mb-4">תודה רבה!</h2>
+            <p className="text-gray-300 mb-6">קיבלנו את הפנייה שלך ונחזור אליך בהקדם.</p>
+            <Button onClick={() => window.location.reload()} className="btn-gold">חזרה לטופס</Button>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
     <>
-      <Helmet>
-        <title>יצירת קשר - ריקוד ברוח הטובה</title>
-        <meta name="description" content="צרו קשר איתנו! מידע ליצירת קשר, כתובת, טלפון, אימייל וטופס פנייה לשאלות והצעות" />
-        <meta name="keywords" content="יצירת קשר, טלפון, אימייל, כתובת, פנייה, שאלות" />
-        <meta property="og:title" content="יצירת קשר - ריקוד ברוח הטובה" />
-        <meta property="og:description" content="צרו קשר איתנו עבור שאלות, הצעות ומידע נוסף" />
-        <meta property="og:url" content="https://rikud.netlify.app/Contact" />
-      </Helmet>
-      <div className="min-h-screen py-12 dark-bg">
-        <InquiryPageHeader />
-        <InquiryFormSection
-          formData={inquiryFormData}
-          formErrors={formErrors}
-          onInputChange={handleFormInputChange}
-          onSubmit={handleInquiryFormSubmit}
-          isSubmitting={isSubmittingInquiry}
-          emailStatus={emailSendingStatus}
-        />
+      <Helmet><title>יצירת קשר - ריקוד ברוח הטובה</title><meta name="description" content="צרו קשר איתנו בטלפון, במייל או דרך טופס הפנייה" /></Helmet>
+      <div className="min-h-screen py-12 dark-bg" dir="rtl">
+        <section className="relative darker-bg py-20">
+          <div className="max-w-7xl mx-auto px-4 text-center">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 gold-text">מוכנה להתחיל?</h1>
+            <p className="text-xl text-gray-300"><strong className="pink-text">שיעור הכרות ללא התחייבות!</strong></p>
+          </div>
+        </section>
+
+        <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <Card className="darker-bg border-gray-700 elegant-shadow">
+            <CardHeader><CardTitle className="text-2xl font-bold white-text text-center">שליחת פניה</CardTitle></CardHeader>
+            <CardContent>
+              <form onSubmit={submit} noValidate className="space-y-6">
+                <ValidatedInput id="studentName" label="שם מלא *" value={formData.studentName} onChange={value => updateField('studentName', value)} error={errors.studentName} maxLength={50} />
+                <ValidatedInput id="parentPhone" label="טלפון *" type="tel" value={formData.parentPhone} onChange={value => updateField('parentPhone', value)} error={errors.parentPhone} maxLength={18} />
+                <ValidatedInput id="parentEmail" label="מייל *" type="email" value={formData.parentEmail} onChange={value => updateField('parentEmail', value)} error={errors.parentEmail} maxLength={100} />
+                <div>
+                  <Label htmlFor="inquiryMessage" className="white-text">תוכן הפנייה *</Label>
+                  <Textarea id="inquiryMessage" rows={5} maxLength={1000} value={formData.inquiryMessage} onChange={e => updateField('inquiryMessage', e.target.value)} className={`mt-1 bg-gray-700 text-white ${errors.inquiryMessage ? 'border-red-500' : 'border-gray-600'}`} />
+                  <div className="mt-1 flex justify-between text-xs"><span className="text-red-400">{errors.inquiryMessage || ''}</span><span className="text-gray-500">{formData.inquiryMessage.length}/1000</span></div>
+                </div>
+                {status && <p className="text-center text-sm text-yellow-300">{status}</p>}
+                <Button type="submit" disabled={submitting} className="w-full btn-gold text-lg py-6"><Send className="w-5 h-5 ml-2" />{submitting ? 'שולח הודעה...' : 'שלח פנייה'}</Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          <div className="space-y-8">
+            <Card className="darker-bg border-gray-700 elegant-shadow">
+              <CardHeader><CardTitle className="text-xl font-bold white-text">פרטי יצירת קשר</CardTitle></CardHeader>
+              <CardContent className="space-y-6">
+                <ContactRow icon={<Phone className="w-6 h-6" />} title="מזכירות" main={SITE_CONTACT.phone} details={[`מענה אנושי: ${SITE_CONTACT.humanSupportHours}`, 'אפשר להשאיר הודעה מחוץ לשעות הפעילות']} />
+                <ContactRow icon={<Mail className="w-6 h-6" />} title="מייל" main={SITE_CONTACT.email} details={['נחזור אליך בהקדם']} />
+                <ContactRow icon={<Clock className="w-6 h-6" />} title="שעות פעילות" main={SITE_CONTACT.officeHours} details={['מחוץ לשעות: השארת הודעות']} />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </>
   );
 }
 
-function InquiryPageHeader() {
-  return (
-    <section className="relative darker-bg py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 gold-text">
-            מוכנה להתחיל?
-          </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            <strong className="pink-text">שיעור הכרות ללא התחייבות!</strong>
-          </p>
-          <div className="w-24 h-1 bg-gradient-to-r from-pink-500 to-yellow-500 mx-auto mt-8"></div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function InquirySuccessPage({ onBackToForm, emailStatus }) {
-  return (
-    <div className="min-h-screen flex items-center justify-center dark-bg p-4">
-      <Card className="max-w-md w-full text-center darker-bg border-gray-700 elegant-shadow">
-        <CardContent className="p-8">
-          <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-2xl font-bold white-text mb-4">תודה רבה!</h2>
-          <p className="text-gray-300 mb-6">
-            קיבלנו את הפנייה שלך ונחזור אליך בהקדם עם כל הפרטים על הקבוצה המתאימה.
-          </p>
-
-          {emailStatus && (
-            <div className={`mb-4 p-3 rounded-lg text-sm ${emailStatus.includes('בהצלחה')
-                ? 'bg-green-100 text-green-800 border border-green-200'
-                : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
-              }`}>
-              {emailStatus}
-            </div>
-          )}
-
-          <Button onClick={onBackToForm} className="btn-gold">
-            חזור לטופס
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
-function InquiryFormSection({ formData, formErrors, onInputChange, onSubmit, isSubmitting, emailStatus }) {
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <InquiryForm
-          formData={formData}
-          formErrors={formErrors}
-          onInputChange={onInputChange}
-          onSubmit={onSubmit}
-          isSubmitting={isSubmitting}
-          emailStatus={emailStatus}
-        />
-        <ContactInformation />
-      </div>
-    </div>
-  );
-}
-
-function InquiryForm({ formData, formErrors, onInputChange, onSubmit, isSubmitting, emailStatus }) {
-  return (
-    <Card className="darker-bg border-gray-700 elegant-shadow">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold white-text text-center">
-          שליחת פניה
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={onSubmit} noValidate className="space-y-6">
-          <FormInput
-            id="studentName"
-            label="שם מלא *"
-            value={formData.studentName}
-            onChange={(value) => onInputChange('studentName', value)}
-            placeholder="השם שלך"
-            error={formErrors.studentName}
-            maxLength={50}
-            required
-          />
-
-          <FormInput
-            id="parentPhone"
-            label="טלפון *"
-            type="tel"
-            inputMode="tel"
-            value={formData.parentPhone}
-            onChange={(value) => onInputChange('parentPhone', value)}
-            placeholder="05X-XXXXXXX"
-            error={formErrors.parentPhone}
-            maxLength={18}
-            required
-          />
-
-          <FormInput
-            id="parentEmail"
-            label="מייל *"
-            type="email"
-            inputMode="email"
-            value={formData.parentEmail}
-            onChange={(value) => onInputChange('parentEmail', value)}
-            placeholder="your-email@example.com"
-            error={formErrors.parentEmail}
-            maxLength={100}
-            required
-          />
-
-          <FormTextarea
-            id="inquiryMessage"
-            label="תוכן הפנייה *"
-            value={formData.inquiryMessage}
-            onChange={(value) => onInputChange('inquiryMessage', value)}
-            placeholder="כתבי כאן את תוכן הפנייה..."
-            error={formErrors.inquiryMessage}
-            maxLength={1000}
-            required
-          />
-
-          {emailSendingStatusBlock(emailStatus)}
-
-          <SubmitButton isSubmitting={isSubmitting} />
-        </form>
-      </CardContent>
-    </Card>
-  );
-}
-
-function emailSendingStatusBlock(emailStatus) {
-  if (!emailStatus) return null;
-
-  return (
-    <div className={`p-3 rounded-lg text-sm text-center ${emailStatus.includes('בהצלחה')
-        ? 'bg-green-100 text-green-800 border border-green-200'
-        : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
-      }`}>
-      {emailStatus}
-    </div>
-  );
-}
-
-function FormInput({
-  id,
-  label,
-  type = "text",
-  value,
-  onChange,
-  placeholder,
-  error,
-  required = false,
-  maxLength,
-  inputMode
-}) {
+function ValidatedInput({ id, label, type = 'text', value, onChange, error, maxLength }) {
   return (
     <div>
       <Label htmlFor={id} className="white-text">{label}</Label>
-      <Input
-        id={id}
-        name={id}
-        type={type}
-        inputMode={inputMode}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        required={required}
-        maxLength={maxLength}
-        aria-invalid={Boolean(error)}
-        aria-describedby={error ? `${id}-error` : undefined}
-        className={`mt-1 bg-gray-700 text-white placeholder:text-gray-400 ${error ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-600'}`}
-      />
-      {error && (
-        <p id={`${id}-error`} className="mt-1.5 text-sm text-red-400" role="alert">
-          {error}
-        </p>
-      )}
+      <Input id={id} type={type} value={value} onChange={e => onChange(e.target.value)} maxLength={maxLength} aria-invalid={Boolean(error)} className={`mt-1 bg-gray-700 text-white ${error ? 'border-red-500' : 'border-gray-600'}`} />
+      {error && <p className="mt-1.5 text-sm text-red-400" role="alert">{error}</p>}
     </div>
   );
 }
 
-function FormTextarea({ id, label, value, onChange, placeholder, error, required = false, maxLength }) {
+function ContactRow({ icon, title, main, details }) {
   return (
-    <div>
-      <Label htmlFor={id} className="white-text">{label}</Label>
-      <Textarea
-        id={id}
-        name={id}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        rows={5}
-        required={required}
-        maxLength={maxLength}
-        aria-invalid={Boolean(error)}
-        aria-describedby={error ? `${id}-error` : undefined}
-        className={`mt-1 bg-gray-700 text-white placeholder:text-gray-400 ${error ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-600'}`}
-      />
-      <div className="mt-1 flex items-start justify-between gap-3">
-        {error ? (
-          <p id={`${id}-error`} className="text-sm text-red-400" role="alert">
-            {error}
-          </p>
-        ) : <span />}
-        {maxLength && (
-          <span className="text-xs text-gray-500">
-            {value.length}/{maxLength}
-          </span>
-        )}
-      </div>
+    <div className="flex items-start gap-4">
+      <div className="w-12 h-12 bg-pink-600 rounded-full flex items-center justify-center text-white shrink-0">{icon}</div>
+      <div><h4 className="font-semibold white-text">{title}</h4><p className="text-gray-300">{main}</p>{details.map(detail => <p key={detail} className="text-sm text-gray-400">{detail}</p>)}</div>
     </div>
-  );
-}
-
-function SubmitButton({ isSubmitting }) {
-  return (
-    <Button
-      type="submit"
-      disabled={isSubmitting}
-      className="w-full btn-gold text-lg py-6 transform hover:scale-105 transition-all duration-300"
-    >
-      {isSubmitting ? (
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-          שולח הודעה...
-        </div>
-      ) : (
-        <div className="flex items-center gap-2">
-          <Send className="w-5 h-5" />
-          שלח פנייה
-        </div>
-      )}
-    </Button>
-  );
-}
-
-function ContactInformation() {
-  return (
-    <div className="space-y-8">
-      <ContactDetailsCard />
-      <FrequentlyAskedQuestions />
-      <EncouragementCard />
-    </div>
-  );
-}
-
-function ContactDetailsCard() {
-  const contactDetails = [
-    {
-      icon: <Phone className="w-6 h-6 text-white" />,
-      title: "מזכירות",
-      main: "03-3130565",
-      details: ["שלוחה 1: מענה אנושי (10:00-16:00)", "שלוחה 8: השארת הודעות"]
-    },
-    {
-      icon: <Mail className="w-6 h-6 text-white" />,
-      title: "מייל",
-      main: "b0527182273@gmail.com",
-      details: ["נחזור אליך תוך 24 שעות"]
-    },
-    {
-      icon: <Clock className="w-6 h-6 text-white" />,
-      title: "שעות פעילות",
-      main: "ראשון - חמישי: 10:00-16:00",
-      details: ["מחוץ לשעות: השארת הודעות"]
-    }
-  ];
-
-  return (
-    <Card className="darker-bg border-gray-700 elegant-shadow">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold white-text">פרטי יצירת קשר</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {contactDetails.map((contact, index) => (
-          <ContactDetailItem key={index} {...contact} />
-        ))}
-      </CardContent>
-    </Card>
-  );
-}
-
-function ContactDetailItem({ icon, title, main, details }) {
-  return (
-    <div className="flex items-center gap-4">
-      <div className="w-12 h-12 bg-pink-600 rounded-full flex items-center justify-center">
-        {icon}
-      </div>
-      <div>
-        <h4 className="font-semibold white-text">{title}</h4>
-        <p className="text-gray-300">{main}</p>
-        {details.map((detail, index) => (
-          <p key={index} className="text-sm text-gray-400">{detail}</p>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function FrequentlyAskedQuestions() {
-  const faqItems = [
-    {
-      question: "מה כולל שיעור ההכרות?",
-      answer: "שיעור הכרות חינם הוא שיעור מלא בן 45-60 דקות שבו הבת יכולה להכיר את האווירה, המורות והקבוצה ללא התחייבות."
-    },
-    {
-      question: "איך יודעים איזה שיעור מתאים?",
-      answer: "לאחר הפנייה שלך, נתקשר ונתייעץ איתך על הגיל, הרמה והעדפות כדי להמליץ על הקבוצה המתאימה ביותר."
-    },
-    {
-      question: "מה צריך להביא לשיעור הראשון?",
-      answer: "בגדי ספורט נוחים, בקבוק מים וחיוך! פרטי הציוד המדויק נמסור לך בשיחת הטלפון."
-    }
-  ];
-
-  return (
-    <Card className="darker-bg border-gray-700 elegant-shadow">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold white-text">שאלות נפוצות</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {faqItems.map((faq, index) => (
-          <FaqItem key={index} {...faq} isLast={index === faqItems.length - 1} />
-        ))}
-      </CardContent>
-    </Card>
-  );
-}
-
-function FaqItem({ question, answer, isLast }) {
-  return (
-    <div className={!isLast ? "border-b border-gray-700 pb-4" : ""}>
-      <h5 className="font-semibold white-text mb-2">{question}</h5>
-      <p className="text-gray-300 text-sm leading-relaxed">{answer}</p>
-    </div>
-  );
-}
-
-function EncouragementCard() {
-  return (
-    <Card className="darker-bg border-gray-700 elegant-shadow">
-      <CardContent className="p-6 text-center">
-        <Heart className="w-12 h-12 pink-text mx-auto mb-4" />
-        <h4 className="font-bold white-text mb-2">מתרגשות לפגוש אותך!</h4>
-        <p className="text-gray-300">
-          כאן עבורך עם כל שאלה ובקשה. מחכות לך בסטודיו עם המון אנרגיה טובה😆
-        </p>
-      </CardContent>
-    </Card>
   );
 }

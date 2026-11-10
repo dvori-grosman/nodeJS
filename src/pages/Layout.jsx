@@ -1,253 +1,121 @@
-
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Phone, Mail, MapPin, Menu, X } from "lucide-react";
+import { ArrowUpLeft, Mail, Menu, Phone, X } from "lucide-react";
+import { SITE_CONTACT } from "@/config/site";
 
-// --- קומפוננטות עזר של הלייאאוט --- //
+const navLinks = [
+  { name: "ראשי", page: "Home" },
+  { name: "אודות", page: "About" },
+  { name: "חוגים", page: "Classes" },
+  { name: "סניפים", page: "Locations" },
+  { name: "הופעות", page: "Performances" },
+  { name: "חנות", page: "Shop" },
+  { name: "יצירת קשר", page: "Contact" },
+  { name: "הרשמה", page: "Registration", cta: true },
+];
 
-// קומפוננטת כותרת עליונה (Header)
-function AppHeader() {
+const previewStyles = `
+  :root {
+    --ax-bg:#0d0d0d;
+    --ax-bg-2:#151515;
+    --ax-cream:#f2eee7;
+    --ax-muted:#999893;
+    --ax-line:rgba(255,255,255,.15);
+    --ax-accent:#d6ff3f;
+    --ax-gold:#d6b34d;
+    --ax-pink:#d86b95;
+  }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--ax-bg)!important; }
+  * { box-sizing:border-box; }
+  .ax-inner-shell { min-height:100vh; background:var(--ax-bg); color:var(--ax-cream); direction:rtl; font-family:Arial,Helvetica,sans-serif; }
+  .ax-inner-container { width:min(1440px,calc(100% - 64px)); margin:0 auto; }
+  .ax-inner-header { position:sticky; top:0; z-index:50; min-height:86px; background:rgba(13,13,13,.84); backdrop-filter:blur(16px); border-bottom:1px solid var(--ax-line); }
+  .ax-inner-nav { min-height:86px; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:38px; }
+  .ax-inner-brand { display:flex; align-items:center; gap:12px; color:var(--ax-cream); text-decoration:none; }
+  .ax-inner-brand img { width:46px; height:46px; object-fit:contain; filter:grayscale(1) brightness(2); }
+  .ax-inner-brand span { font-size:14px; font-weight:700; }
+  .ax-inner-mark { color:#646464; font-size:11px; letter-spacing:.15em; justify-self:center; }
+  .ax-inner-links { display:flex; gap:22px; align-items:center; }
+  .ax-inner-links a { color:#c4c2bc; font-size:13px; text-decoration:none; transition:.2s; white-space:nowrap; }
+  .ax-inner-links a:hover,.ax-inner-links a.active { color:var(--ax-accent); }
+  .ax-inner-links a.cta { border:1px solid var(--ax-line); border-radius:999px; padding:12px 18px; }
+  .ax-inner-menu { display:none; border:0; background:none; color:white; cursor:pointer; }
+  .ax-inner-mobile { border-top:1px solid var(--ax-line); background:#101010; }
+  .ax-inner-mobile a { display:block; padding:16px 24px; color:white; text-decoration:none; border-bottom:1px solid var(--ax-line); }
+  .ax-preview-main { min-height:70vh; background:var(--ax-bg); color:var(--ax-cream); }
+  .ax-preview-main > * { margin-top:0!important; }
+  .ax-preview-main .dark-bg,.ax-preview-main .darker-bg,.ax-preview-main .bg-gray-900,.ax-preview-main .bg-slate-900,.ax-preview-main .bg-gray-800,.ax-preview-main .bg-slate-800 { background:var(--ax-bg)!important; background-color:var(--ax-bg)!important; }
+  .ax-preview-main section,.ax-preview-main .border-gray-700,.ax-preview-main .border-gray-800,.ax-preview-main .border-slate-700 { border-color:var(--ax-line)!important; }
+  .ax-preview-main h1,.ax-preview-main h2,.ax-preview-main h3,.ax-preview-main h4,.ax-preview-main h5,.ax-preview-main h6 { font-family:Arial,Helvetica,sans-serif!important; letter-spacing:-.045em!important; color:var(--ax-cream); }
+  .ax-preview-main h1 { font-size:clamp(58px,8vw,126px)!important; line-height:.88!important; font-weight:500!important; margin-bottom:34px!important; }
+  .ax-preview-main h2 { font-size:clamp(42px,5.5vw,82px)!important; line-height:.96!important; font-weight:500!important; }
+  .ax-preview-main h3 { font-weight:500!important; }
+  .ax-preview-main .gold-text { color:var(--ax-accent)!important; }
+  .ax-preview-main .pink-text { color:var(--ax-pink)!important; }
+  .ax-preview-main .white-text,.ax-preview-main .text-white { color:var(--ax-cream)!important; }
+  .ax-preview-main .text-gray-300,.ax-preview-main .text-gray-400,.ax-preview-main .text-gray-500 { color:var(--ax-muted)!important; }
+  .ax-preview-main .elegant-shadow,.ax-preview-main [class*="shadow"] { box-shadow:none!important; }
+  .ax-preview-main [class*="rounded-xl"],.ax-preview-main [class*="rounded-lg"],.ax-preview-main [class*="rounded-2xl"] { border-radius:0!important; }
+  .ax-preview-main [class*="Card"],.ax-preview-main .card,.ax-preview-main [class*="bg-gray-700"],.ax-preview-main [class*="bg-gray-800"] { background:#111!important; }
+  .ax-preview-main .btn-gold,.ax-preview-main button.btn-gold,.ax-preview-main a.btn-gold { background:var(--ax-accent)!important; color:#111!important; border:1px solid var(--ax-accent)!important; border-radius:999px!important; padding:14px 24px!important; box-shadow:none!important; transform:none!important; }
+  .ax-preview-main .btn-gold:hover { background:transparent!important; color:var(--ax-accent)!important; }
+  .ax-preview-main input,.ax-preview-main textarea,.ax-preview-main select { background:#111!important; border:1px solid var(--ax-line)!important; color:var(--ax-cream)!important; border-radius:0!important; box-shadow:none!important; }
+  .ax-preview-main input:focus,.ax-preview-main textarea:focus,.ax-preview-main select:focus { border-color:var(--ax-accent)!important; outline:none!important; box-shadow:none!important; }
+  .ax-preview-main label { color:#d6d3cc!important; }
+  .ax-preview-main .max-w-7xl,.ax-preview-main .max-w-6xl,.ax-preview-main .max-w-5xl { max-width:1440px!important; padding-left:32px!important; padding-right:32px!important; }
+  .ax-preview-main .py-20,.ax-preview-main .py-16,.ax-preview-main .py-12 { padding-top:84px!important; padding-bottom:84px!important; }
+  .ax-preview-main table { border-color:var(--ax-line)!important; }
+  .ax-preview-main tr,.ax-preview-main td,.ax-preview-main th { border-color:var(--ax-line)!important; }
+  .ax-inner-footer { background:#080808; border-top:1px solid var(--ax-line); color:var(--ax-cream); }
+  .ax-inner-footer-top { display:grid; grid-template-columns:minmax(0,1.2fr) .8fr; gap:70px; padding:92px 0 72px; }
+  .ax-inner-footer h2 { margin:0; font-size:clamp(58px,8vw,126px); line-height:.84; letter-spacing:-.07em; font-weight:500; }
+  .ax-inner-footer h2 span { color:transparent; -webkit-text-stroke:1px rgba(242,238,231,.55); }
+  .ax-inner-footer-meta { display:flex; flex-direction:column; justify-content:flex-end; gap:18px; color:#8d8b86; font-size:13px; }
+  .ax-inner-contact { display:flex; align-items:center; gap:11px; }
+  .ax-inner-footer-link { margin-top:12px; width:82px; height:82px; border:1px solid var(--ax-line); border-radius:50%; display:grid; place-items:center; color:white; }
+  .ax-inner-footer-link:hover { background:var(--ax-accent); color:#111; border-color:var(--ax-accent); }
+  .ax-inner-footer-bottom { border-top:1px solid var(--ax-line); padding:24px 0 34px; display:flex; justify-content:space-between; gap:20px; color:#696969; font-size:11px; }
+  @media(max-width:1120px){.ax-inner-links{display:none}.ax-inner-menu{display:block}.ax-inner-mark{justify-self:end}}
+  @media(max-width:760px){.ax-inner-container{width:min(100% - 28px,1440px)}.ax-inner-header,.ax-inner-nav{min-height:72px}.ax-inner-brand span,.ax-inner-mark{display:none}.ax-preview-main .max-w-7xl,.ax-preview-main .max-w-6xl,.ax-preview-main .max-w-5xl{padding-left:14px!important;padding-right:14px!important}.ax-inner-footer-top{grid-template-columns:1fr;gap:42px;padding-top:70px}.ax-inner-footer-bottom{flex-direction:column}}
+`;
+
+export default function AppLayout({ children }) {
   const location = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const navLinks = [
-    { name: "בית", page: "Home" },
-    { name: "אודות", page: "About" },
-    { name: "שיעורים", page: "Classes" },
-    { name: "סניפים", page: "Locations" },
-    { name: "מופעים", page: "Performances" },
-    { name: "חנות", page: "Shop" },
-    { name: "הרשמה", page: "Registration", extraClass: "gentle-text-glow" },
-    { name: "צור קשר", page: "Contact", extraClass: "gentle-pink-transition" },
-  ];
+  useEffect(() => { document.title = "ריקוד ברוח הטובה — Preview"; }, []);
+  useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
-  // פונקציה לבדיקה אם הקישור פעיל
-  const isActiveLink = (pageName) => {
-    return location.pathname === createPageUrl(pageName) || (pageName === "Home" && location.pathname === "/");
-  };
+  const active = (page) => location.pathname === createPageUrl(page) || (page === "Home" && location.pathname === "/");
 
   return (
-    <header className="sticky top-0 z-50 darker-bg elegant-shadow border-b border-gray-800">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex justify-between items-center h-20">
-          {/* לוגו */}
-          <Link to={createPageUrl("Home")} className="flex-shrink-0">
-            <img src="/logo.png" alt="לוגו ריקוד ברוח הטובה" className="h-16 w-auto" />
-          </Link>
-
-          {/* ניווט למסך רחב */}
-          <nav className="hidden md:flex items-center gap-10">
-            {navLinks.map(link => (
-              <Link
-                key={link.page}
-                to={createPageUrl(link.page)}
-                className={`font-medium text-lg transition-colors duration-300 ${isActiveLink(link.page) ? "active-nav" : "white-text hover-gold"} ${link.extraClass || ''}`}
-              >
-                {link.name}
-              </Link>
-            ))}
+    <div className="ax-inner-shell">
+      <style>{previewStyles}</style>
+      <header className="ax-inner-header">
+        <div className="ax-inner-container ax-inner-nav">
+          <Link to="/" className="ax-inner-brand"><img src="/logo.png" alt="לוגו ריקוד ברוח הטובה" /><span>ריקוד ברוח הטובה</span></Link>
+          <div className="ax-inner-mark">AXTRA DIRECTION / PREVIEW</div>
+          <nav className="ax-inner-links">
+            {navLinks.map(link => <Link key={link.page} to={createPageUrl(link.page)} className={`${active(link.page) ? "active" : ""} ${link.cta ? "cta" : ""}`}>{link.name}</Link>)}
           </nav>
-
-          {/* כפתור תפריט למובייל */}
-          <button className="md:hidden p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            {isMobileMenuOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6 text-white" />}
-          </button>
+          <button className="ax-inner-menu" onClick={() => setMenuOpen(v => !v)} aria-label="תפריט">{menuOpen ? <X size={25}/> : <Menu size={25}/>}</button>
         </div>
-      </div>
-
-      {/* תפריט נפתח למובייל */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-darker-bg/95 backdrop-blur-sm absolute top-20 left-0 w-full">
-          <nav className="flex flex-col items-center gap-6 py-8">
-            {navLinks.map(link => (
-              <Link
-                key={link.page}
-                to={createPageUrl(link.page)}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`font-medium text-2xl transition-colors duration-300 ${isActiveLink(link.page) ? "active-nav" : "white-text hover-gold"} ${link.extraClass || ''}`}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      )}
-    </header>
-  );
-}
-
-// קומפוננטת כותרת תחתונה (Footer)
-function AppFooter() {
-  return (
-    <footer className="darker-bg text-white mt-20 border-t border-gray-800">
-      <div className="max-w-6xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {/* מידע על החברה */}
-          <div>
-            <div className="flex items-center gap-3 mb-6">
-              <img src="/logo.png" alt="לוגו ריקוד ברוח הטובה" className="h-20 w-auto" />
-            </div>
-            <p className="text-gray-400 leading-relaxed mb-6">
-              ריקוד ברוח הטובה הוקם מתוך חזון, אהבה ושליחות להביא לכל בת במגזר החרדי את מתנת המחול.
-            </p>
-          </div>
-
-          {/* קישורים מהירים */}
-          <div>
-            <h4 className="text-lg font-semibold mb-6 gold-text">קישורים</h4>
-            <div className="space-y-4">
-              <Link to={createPageUrl("About")} className="block text-gray-400 hover:text-white transition-colors">אודות</Link>
-              <Link to={createPageUrl("Classes")} className="block text-gray-400 hover:text-white transition-colors">שיעורים</Link>
-              <Link to={createPageUrl("Locations")} className="block text-gray-400 hover:text-white transition-colors">סניפים</Link>
-              <Link to={createPageUrl("Performances")} className="block text-gray-400 hover:text-white transition-colors">מופעים</Link>
-              <Link to={createPageUrl("Shop")} className="block text-gray-400 hover:text-white transition-colors">חנות</Link>
-            </div>
-          </div>
-
-          {/* פרטי יצירת קשר */}
-          <div>
-            <h4 className="text-lg font-semibold mb-6 gold-text">יצירת קשר</h4>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 text-gray-400"><Phone className="w-5 h-5 pink-text" /><span>03-3130565</span></div>
-              <div className="flex items-center gap-3 text-gray-400"><Mail className="w-5 h-5 pink-text" /><span>b0527182273@gmail.com</span></div>
-              <div className="flex items-center gap-3 text-gray-400"><MapPin className="w-5 h-5 pink-text" /><span>סניפים ברחבי ירושלים והסביבה</span></div>
-            </div>
+        {menuOpen && <div className="ax-inner-mobile">{navLinks.map(link => <Link key={link.page} to={createPageUrl(link.page)}>{link.name}</Link>)}</div>}
+      </header>
+      <main className="ax-preview-main">{children}</main>
+      <footer className="ax-inner-footer">
+        <div className="ax-inner-container ax-inner-footer-top">
+          <h2>בואי<br/><span>לרקוד.</span></h2>
+          <div className="ax-inner-footer-meta">
+            <div className="ax-inner-contact"><Phone size={17}/> <span>{SITE_CONTACT.phone}</span></div>
+            <div className="ax-inner-contact"><Mail size={17}/> <span>{SITE_CONTACT.email}</span></div>
+            <Link className="ax-inner-footer-link" to="/Registration"><ArrowUpLeft size={24}/></Link>
           </div>
         </div>
-
-        {/* זכויות יוצרים */}
-        <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
-          <p>&copy;כל הזכויות שמורות DG בניית אתרים dgrs326@gmail.com </p>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-// הגדרת Schema.org לקידום אתרים
-const schemaData = {
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "ריקוד ברוח הטובה",
-  "description": "חוגי מחול, אקרובטיקה והתעמלות קרקע בירושלים, ביתר ובית שמש. מגוון חוגי מחול לילדות קטנות, נערות ונשים.",
-  "image": "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/debe541b7_.png",
-  "telephone": "03-3130565",
-  "email": "b0527182273@gmail.com",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "ירושלים",
-    "addressCountry": "IL"
-  },
-  "serviceType": ["חוג מחול בירושלים", "חוג מחול בביתר", "חוג מחול בבית שמש", "אקרובטיקה", "התעמלות קרקע בירושלים", "חוג מחול לילדות קטנות"]
-};
-
-
-// --- הקומפוננטה הראשית של הלייאאוט --- //
-
-export default function AppLayout({ children, currentPageName }) {
-  // useEffect לקביעת כותרת העמוד בדפדפן
-  useEffect(() => {
-    document.title = "ריקוד ברוח הטובה";
-  }, []);
-
-  return (
-    <div className="min-h-screen bg-gray-900" dir="rtl" style={{
-      minHeight: '100vh',
-      backgroundColor: '#111827',
-      width: '100%'
-    }}>
-      {/* הגדרת Schema וסגנונות גלובליים */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
-      <style>{`
-        /* ... (הסגנונות הקיימים נשארים כאן) ... */
-        @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Open+Sans:wght@300;400;600;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Playpen+Sans+Hebrew:wght@100&display=swap');
-          
-        :root {
-          --gold: #D4AF37;
-          --deep-black: #1A1A1A;
-          --soft-pink: #E8B4CB;
-          --dark-bg: #111827;
-          --darker-bg: #0F172A;
-        }
-        
-        * {
-          font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
-
-        h1,h2, h3, h4, h5, h6 {
-          font-family: 'Amatic SC', cursive;
-          letter-spacing: 0.05em;
-        }
-
-      
-        .gold-text { color: var(--gold); }
-        .pink-text { color: var(--soft-pink); }
-        .white-text { color: white; }
-        .gold-bg { background-color: var(--gold); }
-        .pink-bg { background-color: var(--soft-pink); }
-        .dark-bg { background-color: var(--dark-bg); }
-        .darker-bg { background-color: var(--darker-bg); }
-        .elegant-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); }
-        
-        .active-nav {
-          color: var(--gold) !important;
-          position: relative;
-        }
-        
-        .active-nav::after {
-          content: '';
-          position: absolute;
-          bottom: -8px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 8px;
-          height: 8px;
-          background-color: var(--gold);
-          border-radius: 50%;
-        }
-
-        @media (max-width: 767px) {
-          .active-nav::after {
-            bottom: -2px;
-            right: -12px;
-            left: auto;
-            transform: none;
-            width: 6px;
-            height: 6px;
-          }
-        }
-        
-        .gentle-text-glow { animation: gentleTextGlow 3s ease-in-out infinite; }
-        .gentle-pink-transition { animation: gentlePinkTransition 4s ease-in-out infinite; }
-        
-        @keyframes gentleTextGlow {
-          0%, 100% { text-shadow: 0 0 4px rgba(212, 175, 55, 0.4); }
-          50% { text-shadow: 0 0 12px rgba(212, 175, 55, 0.8); }
-        }
-        
-        @keyframes gentlePinkTransition {
-          0%, 100% { color: white; }
-          50% { color: var(--soft-pink); }
-        }
-        
-        .btn-gold { background: var(--gold); color: var(--deep-black); border: none; font-weight: 600; padding: 12px 32px; transition: all 0.3s ease; }
-        .btn-gold:hover { background: #B8941F; color: var(--deep-black); transform: translateY(-2px); }
-        .btn-outline-pink { background: transparent; border: 2px solid var(--soft-pink); color: var(--soft-pink); font-weight: 600; padding: 10px 30px; transition: all 0.3s ease; }
-        .btn-outline-pink:hover { background: var(--soft-pink); color: white; transform: translateY(-2px); }
-        
-        .sparkles { position: absolute; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; opacity: 0.7; animation: sparkle 2s infinite; }
-        @keyframes sparkle {
-          0%, 100% { opacity: 0.3; transform: scale(0.8); }
-          50% { opacity: 1; transform: scale(1.2); }
-        }
-      `}</style>
-
-      {/* מבנה העמוד */}
-      <AppHeader />
-      <main className="flex-1">{children}</main>
-      <AppFooter />
+        <div className="ax-inner-container ax-inner-footer-bottom"><span>ריקוד ברוח הטובה — PREVIEW ONLY</span><span>Axtra React inspired visual direction</span></div>
+      </footer>
     </div>
   );
 }
