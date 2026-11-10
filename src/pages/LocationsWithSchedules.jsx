@@ -45,7 +45,7 @@ function ScheduleModal({ branch, onClose }) {
       <button className="absolute inset-0 bg-black/85 backdrop-blur-md" onClick={onClose} aria-label="סגירה" />
       <div className="relative z-10 w-full max-w-xl border border-white/15 bg-[#0b0b0b] p-7 shadow-2xl">
         <div className="mb-8 flex items-start justify-between gap-4">
-          <div><p className="text-[10px] uppercase tracking-[.24em] text-[#D4AF37]">Branch details</p><h2 className="mt-2 text-3xl font-semibold">{branch.name}</h2><p className="mt-2 text-sm text-white/35">{branch.address} · {branch.scheduleYear}</p></div>
+          <div><p className="text-[10px] uppercase tracking-[.24em] text-[#D4AF37]">Branch details</p><h2 className="mt-2 text-3xl font-semibold">{branch.name}</h2><p className="mt-2 text-sm text-white/35">{branch.address}</p></div>
           <Button onClick={onClose} variant="outline" className="h-10 w-10 rounded-full border-white/15 bg-transparent p-0 text-white hover:bg-white/10"><X className="h-5 w-5"/></Button>
         </div>
         <div className="border border-white/10 bg-[#111] px-5 py-5">
