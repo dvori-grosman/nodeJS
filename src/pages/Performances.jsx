@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Helmet } from "react-helmet-async";
 import { Calendar, Download, Play, Star, Heart } from "lucide-react";
@@ -8,10 +7,10 @@ import { Badge } from "@/components/ui/badge";
 
 export default function PerformancesPage() {
   const performances = [
-    { title: "הנבחרת", year: "2023", description: "מופע להקה.", image: "הנבחרת.png", alt: "הנבחרת - מופע מחול" },
-    { title: "לרקוד את הדמעות", year: "2025", description: "מופע מחול.", image: "לרקוד את הדמעות.png", alt: "לרקוד את הדמעות - מופע מחול" },
-    { title: "אהבת עולם", year: "2024", description: "המופע הראשון.", image: "אהבת עולם תשפד.png", alt: "אהבת עולם - 2024" },
-    { title: "אהבת עולם", year: "2025", description: "המופע השני.", image: "אהבת עולם תשפה.png", alt: "אהבת עולם - 2025" },
+    { title: "הנבחרת", year: "2023", image: "הנבחרת.png", alt: "הנבחרת - מופע מחול" },
+    { title: "לרקוד את הדמעות", year: "2025", image: "לרקוד את הדמעות.png", alt: "לרקוד את הדמעות - מופע מחול" },
+    { title: "אהבת עולם", year: "2024", image: "אהבת עולם תשפד.png", alt: "אהבת עולם - 2024" },
+    { title: "אהבת עולם", year: "2025", image: "אהבת עולם תשפה.png", alt: "אהבת עולם - 2025" },
     { title: "משכן", year: "מופע להקה ונשים · 2026", description: "" },
     { title: "חלק מן התמונה", year: "מופע ילדות · 2026", description: "מופע ייחודי לשכבת הצעירות." }
   ];
@@ -48,8 +47,6 @@ export default function PerformancesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold gold-text mb-4">מופעים קודמים</h2>
-
-
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -66,11 +63,13 @@ export default function PerformancesPage() {
                   </Badge>
                 </CardHeader>
 
-                <CardContent>
-                  <p className="text-gray-300 mb-6 leading-relaxed h-24">
-                    {performance.description}
-                  </p>
-                </CardContent>
+                {performance.description && (
+                  <CardContent>
+                    <p className="text-gray-300 mb-6 leading-relaxed">
+                      {performance.description}
+                    </p>
+                  </CardContent>
+                )}
               </Card>
             ))}
           </div>
@@ -79,7 +78,7 @@ export default function PerformancesPage() {
 
       {/* Performance Info */}
       <section className="py-16 dark-bg">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Card className="darker-bg border-gray-700 elegant-shadow">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl font-bold gold-text">
@@ -87,23 +86,18 @@ export default function PerformancesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <h4 className="font-semibold white-text flex items-center gap-2">
-                    <Star className="w-5 h-5 pink-text" />
-                    מה מיוחד במופעים שלנו?
-                  </h4>
-                  <p className="text-gray-300 leading-8">במופעי המחול הרבה מעבר לתנועה ומוזיקה – זו דרך לבטא רגשות, לבנות ביטחון עצמי, להתמיד, להשקיע ולגלות את הכוחות הפנימיים שיש בכל אחת. שפת התנועה היא שפה שבה אנו מביעות משהו ללא מילים, ולכן היא נוגעת יותר, עמוק יותר ומחברת יותר. ביצועים מדהימים, כוריאוגרפיות עוצרות נשימה וחוויה בלתי נשכחת.</p>
-                </div>
-
-
+              <div className="w-full space-y-4">
+                <h4 className="font-semibold white-text flex items-center gap-2">
+                  <Star className="w-5 h-5 pink-text" />
+                  מה מיוחד במופעים שלנו?
+                </h4>
+                <p className="text-gray-300 leading-8 w-full">במופעי המחול הרבה מעבר לתנועה ומוזיקה – זו דרך לבטא רגשות, לבנות ביטחון עצמי, להתמיד, להשקיע ולגלות את הכוחות הפנימיים שיש בכל אחת. שפת התנועה היא שפה שבה אנו מביעות משהו ללא מילים, ולכן היא נוגעת יותר, עמוק יותר ומחברת יותר. ביצועים מדהימים, כוריאוגרפיות עוצרות נשימה וחוויה בלתי נשכחת.</p>
               </div>
 
               <div className="text-center dark-bg p-6 rounded-xl border border-gray-700">
                 <p className="pink-text font-medium italic">
                   מופע המחול מעניק הן לרקדניות והן לצופות חוויה בלתי נשכחת, חיבור לגוף ולנפש.
                 </p>
-                
               </div>
             </CardContent>
           </Card>
